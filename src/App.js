@@ -1,27 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import Button from 'react-bootstrap/Button';
+import { Home, Recipes, About, Admin, NotFound } from './components/Pages';
+import { Header } from './components/Shared';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 
 function App() {
   
   return (
     <div className="App">
-      <header className="App-header">
-      <Button variant="primary">Primary</Button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/recipes" component={Recipes} />
+        <Route path="/about" component={About} />
+        <Route path="/administration" component={Admin} />
+        <Route component={NotFound} />
+      </Switch>
     </div>
   );
 }
