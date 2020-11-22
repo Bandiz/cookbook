@@ -1,0 +1,16 @@
+/* 
+====== 
+NotFound
+======
+*/
+.not-found-page {
+  display: flex;
+  justify-content: center;
+}
+.not-found-container {
+  text-align: center;
+  text-transform: capitalize;
+}
+.section {
+  padding: 5rem 0;
+}

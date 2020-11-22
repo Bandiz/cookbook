@@ -1,0 +1,153 @@
+.recipe-section {
+  text-align: center;
+}
+.recipe {
+  width: var(--smallWidth);
+  max-width: var(--fullWidth);
+  margin: 0 auto;
+  text-align: left;
+  font-size: 0.9rem;
+}
+.recipe .photo {
+  margin: 0 auto;
+  width: 80%;
+  height: 300px;
+}
+.recipe-info {
+  padding-top: 0;
+}
+.recipe-info p {
+  /* text-transform: capitalize; */
+  line-height: 1.8;
+}
+.recipe-info li {
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+.recipe-info h4 {
+  text-transform: uppercase;
+  padding-top: 30px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.icon {
+  font-size: 1.5rem;
+  display: block;
+  margin: 0 auto;
+}
+.details-time-container {
+  max-width: 70%;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.details-time-container span {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.details-time-container p {
+  padding: 30px 0;
+  margin-bottom: 0;
+}
+.details-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.knife {
+  margin-bottom: -20px;
+}
+.time {
+  margin-top: -20px;
+}
+.details-container p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  border-top: dashed 0.3px;
+  border-bottom: dashed 0.3px;
+}
+.time-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.time-container p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  padding-top: 15px;
+}
+@media screen and (max-width: 400px) {
+  .recipe-section {
+    padding: 20px 0;
+  }
+  .section-title {
+    font-size: 1.1rem;
+    margin: 20px 10px;
+  }
+  .details-time-container {
+    margin-top: 10px;
+  }
+  .knife {
+    margin-bottom: -10px;
+  }
+  .time {
+    margin-top: -10px;
+  }
+  .details-container {
+    gap: 2rem;
+  }
+  .time-container {
+    gap: 1rem;
+  }
+  .details-time-container p {
+    padding: 20px 0;
+  }
+  .time-container p {
+    padding: 10px 0;
+  }
+  .recipe-info h4 {
+    padding-top: 10px;
+    font-size: 0.7rem;
+  }
+  .recipe-data ol {
+    padding-left: 0.8rem;
+  }
+  .recipe .photo {
+    margin: 0 auto;
+    height: 100px;
+    width: 80%;
+  }
+}
+.recipe-data {
+  background: var(--primaryLightColor);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--mainBorderRadius);
+  color: var(--primaryColor);
+}
+.recipe-info ol {
+  padding-left: 1.2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .icon {
+    font-size: 2.5rem;
+  }
+  .recipe {
+    font-size: 1.1rem;
+  }
+  .recipe-info h4 {
+    font-size: 1.2rem;
+  }
+  .recipe .photo {
+    margin: 0 auto;
+    width: 100%;
+    height: 300px;
+  }
+}
+@media screen and (min-width: 1200px) {
+}

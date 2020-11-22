@@ -1,12 +1,16 @@
-import React from 'react';
+import React from "react";
+import { useGlobalContext } from "../../../context";
+import "./Home.css";
 
 function Home() {
-    return (
-        <React.Fragment>
-            <p>Home page!</p>            
-        </React.Fragment>
-    )
-
+  const { closeSubmenu } = useGlobalContext();
+  return (
+    <React.Fragment>
+      <div className="home" onMouseOver={closeSubmenu}>
+        Home
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default Home;

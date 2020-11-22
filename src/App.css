@@ -1,35 +1,103 @@
-.App {
+/* 
+====== 
+Variables 
+======
+*/
+:root {
+  --primaryLightColor: rgb(200, 223, 117);
+  --primaryColor: rgb(15, 129, 15);
+  --primaryDarkColor: rgb(8, 85, 8);
+  --mainBlack: #161616;
+  --mainWhite: #fff;
+  --clr-grey: hsl(209, 61%, 16%);
+  --darkGrey: #ecf0e9;
+
+  --mainTransition: all 0.3s linear;
+  --mainSpacing: 0.2rem;
+  --lightShadow: 2px 5px 3px 0px rgba(0, 0, 0, 0.5);
+  --darkShadow: 4px 10px 5px 0px rgba(0, 0, 0, 0.5);
+  --mainBorderRadius: 0.25rem;
+  --smallWidth: 85vw;
+  --maxWidth: 40rem;
+  --fullWidth: 1170px;
+
+  --fontFamily: "Lato", sans-serif;
+
+  --textShadow: 0 -1px 0 #7c7323;
+  --boxShadow: 0 0 0 10px rgb(212, 230, 150);
+}
+/* 
+====== 
+Global Styles 
+======
+*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--fontFamily);
+  margin-bottom: 1.25rem;
+  letter-spacing: var(--mainSpacing);
+}
+p {
+  margin-bottom: 1.25rem;
+}
+ul {
+  list-style-type: none;
+}
+a {
+  text-decoration: none;
+  color: var(--mainBlack);
+}
+img {
+  width: 100%;
+  display: block;
+}
+.section {
+  padding: 3rem 0;
+}
+.section-title {
+  font-size: 2rem;
+  text-transform: capitalize;
+  letter-spacing: var(--mainSpacing);
   text-align: center;
+  margin-bottom: 3.5rem;
+  margin-top: 1rem;
 }
+/* 
+====== 
+Buttons 
+======
+*/
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.btn,
+.btn-primary {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: var(--mainSpacing);
+  color: var(--primaryColor);
+  border: 2px solid var(--primaryColor);
+  padding: 0.45rem 0.8rem;
+  display: inline-block;
+  transition: var(--mainTransition);
+  cursor: pointer;
+  font-size: 0.8rem;
+  background: transparent;
+  border-radius: var(--mainBorderRadius);
+  display: inline-block;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.btn:hover {
+  background: var(--primaryColor);
+  color: var(--mainWhite);
 }
-
-.App-header {
-  background-color: #282c34;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.btn-primary {
+  background: var(--primaryColor);
+  color: var(--mainWhite);
+  border-color: transparent;
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-primary:hover {
+  background: var(--primaryLightColor);
+  color: var(--primaryColor);
 }

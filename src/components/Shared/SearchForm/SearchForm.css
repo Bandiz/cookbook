@@ -1,0 +1,37 @@
+/* 
+====== 
+Form
+======
+*/
+.search {
+    margin-top: 1rem;
+    padding-bottom: 0;
+  }
+  
+  .search-form {
+    width: var(--smallWidth);
+    margin: 0 auto;
+    max-width: var(--maxWidth);
+    background: var(--darkGrey);
+    padding: 2rem 2.5rem;
+    text-transform: capitalize;
+    border-radius: var(--mainBorderRadius);
+    box-shadow: var(--lightShadow);
+  }
+  
+  .form-control label {
+    display: block;
+    margin-bottom: 1.25rem;
+    font-weight: bold;
+    letter-spacing: 0.25rem;
+    color: var(--primaryColor);
+  }
+  .form-control input {
+    width: 100%;
+    border: none;
+    border-color: transparent;
+    background: var(--mainWhite);
+    border-radius: var(--mainBorderRadius);
+    padding: 0.5rem;
+    font-size: 1.2rem;
+  }
