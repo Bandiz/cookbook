@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useGlobalContext } from "../../../../context";
-import Categories from "../../../Pages/Recipes/Categories";
 
 const Submenu = () => {
   const {

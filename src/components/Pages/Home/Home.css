@@ -1,0 +1,107 @@
+/* section */
+.slider {
+  width: 90%;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  /* border-radius: var(--mainBorderRadius);
+  background: var(--mainWhite); */
+  /* box-shadow: var(--lightShadow); */
+  transition: var(--mainTransition);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.img-container {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 1.5rem;
+}
+.recipe-img {
+  width: 100%;
+  display: block;
+  height: auto;
+  object-fit: cover;
+  position: relative;
+}
+.slider-center {
+  position: absolute;
+  width: calc(100% - 40%);
+  height: calc(100% - 40%);
+  top: calc(50% - calc(100% - 40%) / 2);
+  left: calc(50% - calc(100% - 40%) / 2);
+  background: var(--mainWhite);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  padding: 20px;
+}
+.slider-center .title {
+  margin-top: 20px;
+  text-transform: uppercase;
+}
+.slider-center .category {
+  color: var(--primaryColor);
+  margin: 0 0 10px 0;
+}
+.slider-center .btn,
+.btn-primary {
+  margin: 10px auto;
+  font-size: 0.6rem;
+}
+.img-container .prev,
+.img-container .next {
+  position: absolute;
+  top: calc(50% - 1rem);
+  transform: translateY(-50%);
+  background: transparent;
+  color: var(--clr-grey);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-color: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--mainTransition);
+  outline: none;
+  opacity: 0.5;
+}
+.prev {
+  left: 0;
+}
+.next {
+  right: 0;
+}
+
+.img-container:hover .prev,
+.img-container:hover .next {
+  opacity: 1;
+  background: var(--primaryColor);
+  color: var(--mainWhite);
+}
+
+@media screen and (min-width: 992px) {
+  .slider {
+    width: 80%;
+  }
+  .slider-center .title {
+    font-size: 1.2rem;
+  }
+  .slider-center .category {
+    font-size: 1.1rem;
+  }
+  .slider-center .btn,
+  .slider-center .btn-primary {
+    font-size: 0.8rem;
+  }
+  .img-container .prev,
+  .img-container .next {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+  }
+}
+@media (min-width: 992px) {
+}

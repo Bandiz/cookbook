@@ -59,6 +59,7 @@ export const AppProvider = ({ children }) => {
         setSearchTerm,
         /* Recipes-> CATEGORIES */
         filterItems,
+        recipeItems,
       }}
     >
       {children}

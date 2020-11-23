@@ -18,11 +18,11 @@ const links = [
     url: "/recipes",
     text: "Recipes",
     sublinks: [
-      { label: "breakfast", icon: <CgBowl />, subUrl: "/breakfast" },
-      { label: "lunch", icon: <GiHamburger />, subUrl: "/lunch" },
-      { label: "dinner", icon: <GiSteak />, subUrl: "/dinner" },
-      { label: "snacks", icon: <GiFruitBowl />, subUrl: "/snacks" },
-      { label: "soups", icon: <GiCookingPot />, subUrl: "/soups" },
+      { label: "breakfast", icon: <CgBowl />, subUrl: "/category/breakfast" },
+      { label: "lunch", icon: <GiHamburger />, subUrl: "/category/lunch" },
+      { label: "dinner", icon: <GiSteak />, subUrl: "/category/dinner" },
+      { label: "snacks", icon: <GiFruitBowl />, subUrl: "/category/snacks" },
+      { label: "soups", icon: <GiCookingPot />, subUrl: "/category/soups" },
     ],
   },
   {

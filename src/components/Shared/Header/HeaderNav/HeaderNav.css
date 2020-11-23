@@ -45,11 +45,25 @@ Stripe Styles
   display: none;
 }
 /* nav media query */
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 768px) {
+  .nav {
+    margin: 0;
+    padding: 0;
+    height: 16rem;
+  }
   .nav-center {
     display: grid;
-    grid-template-columns: auto 1fr;
+    height: 100%;
+    /* grid-template-columns: auto 1fr; */
     align-items: center;
+  }
+  .nav-header {
+    display: flex;
+    margin: 0 auto;
+  }
+  .nav-logo {
+    height: 70%;
+    width: auto;
   }
   .toggle-btn {
     display: none;
@@ -62,9 +76,6 @@ Stripe Styles
     text-align: center;
     height: 100%;
     align-items: center;
-  }
-  .nav-links li {
-    /* height: 100%; */
   }
   .link-btn {
     display: flex;
@@ -172,7 +183,7 @@ Stripe Styles
   background: var(--mainWhite);
   box-shadow: var(--darkShadow);
   position: absolute;
-  top: 4rem;
+  top: 15.4rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;

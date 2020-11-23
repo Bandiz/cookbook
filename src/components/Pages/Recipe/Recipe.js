@@ -7,9 +7,8 @@ import { BiTime } from "react-icons/bi";
 import "./Recipe.css";
 
 const Recipe = () => {
-  const { id, category } = useParams();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [recipe, setRecipe] = useState(null);
   const [data, setData] = useState(recipesData);
 
   //   if (loading) {
