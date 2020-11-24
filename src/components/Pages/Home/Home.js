@@ -4,6 +4,7 @@ import { useGlobalContext } from "../../../context";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import recipesData from "../Recipes/RecipesData";
 import "./Home.css";
+import Loading from "../../Shared/Loading/Loading";
 
 function Home() {
   const { closeSubmenu } = useGlobalContext();
@@ -31,6 +32,17 @@ function Home() {
       return checkNumber(newIndex);
     });
   };
+  // TEMPORARY COMMENTED
+  //
+  // useEffect(() => {
+  //   let slider = setInterval(() => {
+  //     setIndex((index) => {
+  //       let newIndex = index + 1;
+  //       return checkNumber(newIndex);
+  //     });
+  //   }, 5000);
+  //   return () => clearInterval(slider);
+  // }, [index]);
 
   return (
     <main onMouseOver={closeSubmenu}>
@@ -58,6 +70,7 @@ function Home() {
           </div>
         </div>
       </section>
+      {/* <Loading /> */}
     </main>
   );
 }

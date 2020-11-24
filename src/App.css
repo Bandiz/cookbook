@@ -25,6 +25,22 @@ Variables
 
   --textShadow: 0 -1px 0 #7c7323;
   --boxShadow: 0 0 0 10px rgb(212, 230, 150);
+
+  --fs-nav: 1rem;
+  --fs-nav-s: 0.9rem;
+
+  --fs-title: 1rem;
+  --fs-title-m: 0.8rem;
+  --fs-title-s: 0.6rem;
+
+  --fs-main: 0.8rem;
+  --fs-main-s: 0.6rem;
+
+  --fs-btn: 0.7rem;
+  --fs-btn-s: 0.5rem;
+
+  --fs-symb: 2rem;
+  --fs-symb-s: 1.5rem;
 }
 /* 
 ====== 
