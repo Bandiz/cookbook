@@ -10,9 +10,9 @@ export const AppProvider = ({ children }) => {
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [location, setLocation] = useState({});
   const [page, setPage] = useState({ text: "", sublinks: [] });
-  /* Header-> LOADING */
+  /* Shared-> LOADING */
   const [loading, setLoading] = useState(false);
-  /* Header-> SEARCHFORM */
+  /* Shared-> SEARCHFORM */
   const [searchTerm, setSearchTerm] = useState("a");
   const [recipes, setRecipes] = useState([]);
   /* Recipes-> CATEGORIES */
@@ -52,9 +52,9 @@ export const AppProvider = ({ children }) => {
         closeSubmenu,
         location,
         page,
-        /* Header-> LOADING */
+        /* Shared-> LOADING */
         loading,
-        /* Header-> SEARCHFORM */
+        /* Shared-> SEARCHFORM */
         recipes,
         setSearchTerm,
         /* Recipes-> CATEGORIES */

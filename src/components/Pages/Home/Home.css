@@ -1,5 +1,6 @@
 /* section */
 .slider {
+  display: flex;
   width: 90%;
   margin: 0 auto;
   padding: 1.5rem 2rem;
@@ -29,7 +30,7 @@
   height: calc(100% - 40%);
   top: calc(50% - calc(100% - 40%) / 2);
   left: calc(50% - calc(100% - 40%) / 2);
-  background: var(--mainWhite);
+  background: var(--mainWhite-tr);
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -31,7 +31,7 @@
   font-size: 1rem;
 }
 .icon {
-  font-size: 1.5rem;
+  font-size: var(--fs-symb-s);
   display: block;
   margin: 0 auto;
 }
@@ -81,12 +81,87 @@
   justify-items: center;
   padding-top: 15px;
 }
+.recipe-data {
+  background: var(--primaryLightColor);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--mainBorderRadius);
+  color: var(--primaryColor);
+}
+.recipe-info ol {
+  padding-left: 1.2rem;
+}
+
+/* RATING & SHARING BLOCKS */
+.rating-block,
+.sharing-block {
+  display: flex;
+  flex-direction: column;
+  margin: 40px auto;
+  width: var(--smallWidth);
+  max-width: var(--fullWidth);
+}
+.block-title {
+  font-size: var(--fs-block);
+  font-weight: var(--fw-2);
+  letter-spacing: 1px;
+  text-align: left;
+  margin: 0 0 12px;
+}
+.rating-holder {
+  display: flex;
+  flex-direction: row;
+}
+.rating-stars,
+.icon-list {
+  display: flex;
+  flex-direction: row;
+}
+.rating-star-icon {
+  margin: 0 1px 0 0;
+  font-size: var(--fs-symb-s);
+  color: rgba(243, 193, 30, 0.932);
+}
+.rating-star-icon:hover {
+  color: rgba(243, 168, 30, 0.932);
+}
+.share {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border: 1px solid;
+  box-shadow: var(--lightShadow);
+}
+.share svg{
+  font-size: var(--fs-symb-s);
+}
+.share-fb{
+  color: #3b5998;
+}
+.share-fb:hover{
+  color: white;
+  background:  #3b5998;
+}
+.share-email svg{
+  color: #BB001B;
+  background-color: rgb(231, 231, 231) ;
+}
+.share-print{
+  color: var(--clr-grey);
+}
+
 @media screen and (max-width: 400px) {
+  .recipe {
+    font-size: 70%;
+  }
   .recipe-section {
     padding: 20px 0;
   }
+
   .section-title {
-    font-size: 1.1rem;
+    font-size: var(--fs-title);
     margin: 20px 10px;
   }
   .details-time-container {
@@ -103,6 +178,7 @@
   }
   .time-container {
     gap: 1rem;
+    grid-template-columns: 60px 60px 60px;
   }
   .details-time-container p {
     padding: 20px 0;
@@ -112,10 +188,13 @@
   }
   .recipe-info h4 {
     padding-top: 10px;
-    font-size: 0.7rem;
+    font-size: var(--fs-title-s);
   }
   .recipe-data ol {
     padding-left: 0.8rem;
+  }
+  .recipe-data {
+    font-size: var(--fs-main-s);
   }
   .recipe .photo {
     margin: 0 auto;
@@ -123,25 +202,16 @@
     width: 80%;
   }
 }
-.recipe-data {
-  background: var(--primaryLightColor);
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--mainBorderRadius);
-  color: var(--primaryColor);
-}
-.recipe-info ol {
-  padding-left: 1.2rem;
-}
-
 @media screen and (min-width: 768px) {
   .icon {
-    font-size: 2.5rem;
+    font-size: var(--fs-symb);
   }
   .recipe {
-    font-size: 1.1rem;
+    font-size: var(--fs-main);
+    font-weight: var(--fw-1);
   }
   .recipe-info h4 {
-    font-size: 1.2rem;
+    font-size: var(--fs-title);
   }
   .recipe .photo {
     margin: 0 auto;

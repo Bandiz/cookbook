@@ -9,6 +9,7 @@ Variables
   --primaryDarkColor: rgb(8, 85, 8);
   --mainBlack: #161616;
   --mainWhite: #fff;
+  --mainWhite-tr: rgba(255, 255, 255, 0.9);
   --clr-grey: hsl(209, 61%, 16%);
   --darkGrey: #ecf0e9;
 
@@ -33,14 +34,19 @@ Variables
   --fs-title-m: 0.8rem;
   --fs-title-s: 0.6rem;
 
-  --fs-main: 0.8rem;
+  --fs-main: 0.9rem;
   --fs-main-s: 0.6rem;
+
+  --fs-block: 0.75rem;
 
   --fs-btn: 0.7rem;
   --fs-btn-s: 0.5rem;
 
   --fs-symb: 2rem;
   --fs-symb-s: 1.5rem;
+
+  --fw-1: 400;
+  --fw-2: 600;
 }
 /* 
 ====== 
@@ -75,7 +81,7 @@ img {
   padding: 3rem 0;
 }
 .section-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   text-transform: capitalize;
   letter-spacing: var(--mainSpacing);
   text-align: center;
@@ -99,7 +105,7 @@ Buttons
   display: inline-block;
   transition: var(--mainTransition);
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: var(--fs-btn);
   background: transparent;
   border-radius: var(--mainBorderRadius);
   display: inline-block;
@@ -116,4 +122,10 @@ Buttons
 .btn-primary:hover {
   background: var(--primaryLightColor);
   color: var(--primaryColor);
+}
+@media screen and (max-width: 400px) {
+  .btn,
+  .btn-primary {
+    font-size: var(--fs-btn-s);
+  }
 }
