@@ -11,7 +11,7 @@ Variables
   --mainWhite: #fff;
   --mainWhite-tr: rgba(255, 255, 255, 0.9);
   --clr-grey: hsl(209, 61%, 16%);
-  --darkGrey: #ecf0e9;
+  --darkGrey: rgba(0, 0, 0, 0.05);
 
   --mainTransition: all 0.3s linear;
   --mainSpacing: 0.2rem;
@@ -24,8 +24,11 @@ Variables
 
   --fontFamily: "Lato", sans-serif;
 
+  --shareIconShadow: 2px 2px 1px 0px rgba(0, 0, 0, 0.5);
   --textShadow: 0 -1px 0 #7c7323;
   --boxShadow: 0 0 0 10px rgb(212, 230, 150);
+
+  --line-h: 1.2rem;
 
   --fs-nav: 1rem;
   --fs-nav-s: 0.9rem;
@@ -38,6 +41,7 @@ Variables
   --fs-main-s: 0.6rem;
 
   --fs-block: 0.75rem;
+  --fs-textArea: 1.2rem;
 
   --fs-btn: 0.7rem;
   --fs-btn-s: 0.5rem;

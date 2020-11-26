@@ -13,11 +13,11 @@ const Comment = () => {
             cols="30"
             rows="10"
             title="write your comment"
-            placeholder="Write your comment"
-          ></textarea>
+            placeholder="Write your comment here..."
+          />
         </div>
         <div className="comment-form-identity">
-          <div className="comment-form-title">
+          <div className="comment-form-line">
             <p>Fill in your data below or sign up:</p>
             <ul className="sign-up">
               <li className="sign-up-google">
@@ -29,14 +29,14 @@ const Comment = () => {
             </ul>
           </div>
           <div className="comment-form-fill-in">
-            <input name="email" type="email" id="email" />
-            <input name="name" type="text" id="name" />
-            <input type="url" name="url" id="url" />
+            <input name="email" type="email" id="email" placeholder="Email Address" />
+            <input name="name" type="text" id="name" placeholder="Name" />
+            <input type="url" name="url" id="url" placeholder="Website Address" />
           </div>
+          <button className="btn btn-primary" type="submit">
+            Submit
+          </button>
         </div>
-        <button className="btn btn-primary" type="submit">
-          Submit
-        </button>
       </form>
     </div>
   );
