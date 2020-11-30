@@ -1,7 +1,7 @@
 import React from "react";
 import { useGlobalContext } from "../../../context";
 import "./SearchForm.css";
-import recipesData from "../../Pages/Recipes/RecipesData"
+import recipesData from "../../Pages/Recipes/RecipesData";
 
 const SearchForm = () => {
   const { setSearchTerm } = useGlobalContext();
@@ -10,22 +10,20 @@ const SearchForm = () => {
   const searchRecipe = () => {
     setSearchTerm(searchValue.current.value);
     console.log(searchValue.current.value);
-    recipesData.filter((item)=> {
-      const {title, category} = item;
-      return (
-        <div>{title}</div>
-      )
-    })
+    recipesData.filter((item) => {
+      const { title, category } = item;
+      return <div>{title}</div>;
+    });
   };
   return (
-    <section className="section search">
+    <section className="search">
       <form className="search-form">
         <div className="form-control">
-          <label htmlFor="name">search your favorite recipe</label>
           <input
             type="text"
             id="name"
             ref={searchValue}
+            placeholder="Search"
             onChange={searchRecipe}
           />
         </div>

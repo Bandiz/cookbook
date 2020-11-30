@@ -36,51 +36,10 @@ const Recipe = () => {
               prepTime,
               cookTime,
               totalTime,
-              ingredient1,
-              ingredient2,
-              ingredient3,
-              ingredient4,
-              ingredient5,
-              ingredient6,
-              ingredient7,
-              ingredient8,
-              ingredient9,
-              ingredient10,
-              directions1,
-              directions2,
-              directions3,
-              directions4,
-              directions5,
-              directions6,
-              directions7,
-              directions8,
-              directions9,
-              directions10,
+              ingredient,
+              direction,
             } = item;
-            const ingredients = [
-              ingredient1,
-              ingredient2,
-              ingredient3,
-              ingredient4,
-              ingredient5,
-              ingredient6,
-              ingredient7,
-              ingredient8,
-              ingredient9,
-              ingredient10,
-            ];
-            const directions = [
-              directions1,
-              directions2,
-              directions3,
-              directions4,
-              directions5,
-              directions6,
-              directions7,
-              directions8,
-              directions9,
-              directions10,
-            ];
+
             return (
               <div key={id}>
                 <h2 className="section-title">{title}</h2>
@@ -119,10 +78,10 @@ const Recipe = () => {
                       <span className="recipe-data">Ingredients</span>
                     </h4>
                     <ul>
-                      {ingredients.map((ingredient, index) => {
-                        return ingredient ? (
+                      {ingredient.map((ing, index) => {
+                        return ing ? (
                           <li className="recipe-ingredient" key={index}>
-                            {ingredient}
+                            {ing}
                           </li>
                         ) : null;
                       })}
@@ -131,10 +90,10 @@ const Recipe = () => {
                       <span className="recipe-data">Directions</span>
                     </h4>
                     <ol>
-                      {directions.map((direction, index) => {
-                        return direction ? (
+                      {direction.map((dir, index) => {
+                        return dir ? (
                           <li className="recipe-direction" key={index}>
-                            {direction}
+                            {dir}
                           </li>
                         ) : null;
                       })}

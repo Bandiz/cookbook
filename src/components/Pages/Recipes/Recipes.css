@@ -1,5 +1,14 @@
-.section {
-  padding: 5rem 0;
+.recipes-page {
+  display: flex;
+  flex-flow: row wrap;
+}
+section.recipes-section {
+  flex: 80% 1;
+  padding: 3rem 0;
+}
+section.widgets-section {
+  flex: 20% 1;
+  margin: 0 auto;
 }
 .section-title {
   font-size: 2rem;
@@ -47,7 +56,8 @@
   padding: 1rem 0;
   border-bottom: 0.5px solid var(--darkGrey);
 }
-.item-text p, .item-text a{
+.item-text p,
+.item-text a {
   margin: 0 auto;
   margin-bottom: 0.5rem;
 }

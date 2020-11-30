@@ -14,7 +14,7 @@ const RecipeList = () => {
   // }
 
   return (
-    <section className="section">
+    <section>
       <h2 className="section-title">recipes</h2>
       <div className="recipes-center">
         {recipesData.map((recipe) => {
