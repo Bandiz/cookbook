@@ -1,0 +1,23 @@
+section.post-section {
+  display: flex;
+  flex-flow: column wrap;
+  padding: 2rem 0;
+  justify-items: center;
+  align-items: center;
+}
+.post-center {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-title {
+  margin: 1rem auto;
+  font-size: var(--fs-title-post);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: var(--fw-2);
+}
+.post-img {
+  max-width: 200px;
+  height: auto;
+}
