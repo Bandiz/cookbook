@@ -1,22 +1,25 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import links from "./components/Shared/Header/HeaderNav/NavData";
-import recipesData from "./components/Pages/Recipes/RecipesData";
+//import recipesData from "./components/Pages/Recipes/RecipesData";
 
+const url = "https://localhost:44329/api/Recipe/";
 const AppContext = React.createContext();
 
-export const AppProvider = ({ children }) => {
+const AppProvider = ({ children }) => {
   /* Header-> NAVBAR */
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [location, setLocation] = useState({});
   const [page, setPage] = useState({ text: "", sublinks: [] });
   /* Shared-> LOADING */
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   /* Shared-> SEARCHFORM */
   const [searchTerm, setSearchTerm] = useState("a");
   const [recipes, setRecipes] = useState([]);
+  /* Recipes-> ID */
+  // const [recipeId, setRecipeId] = useState([]);
   /* Recipes-> CATEGORIES */
-  const [recipeItems, setRecipeItems] = useState(recipesData);
+  //const [recipeItems, setRecipeItems] = useState(recipesData);
 
   /* Header-> NAVBAR */
   const openSidebar = () => {
@@ -34,11 +37,45 @@ export const AppProvider = ({ children }) => {
   const closeSubmenu = () => {
     setIsSubmenuOpen(false);
   };
-  /* Recipes-> CATEGORIES */
-  const filterItems = (category) => {
-    const newItems = recipesData.filter((item) => item.category === category);
-    setRecipeItems(newItems);
+  // /* Recipes-> CATEGORIES */
+  // const filterItems = (category) => {
+  //   const newItems = recipesData.filter((item) => item.category === category);
+  //   setRecipeItems(newItems);
+  // };
+
+  const fetchRecipes = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(url);
+      const recipes = await response.json();
+      setRecipes(recipes);
+      console.log(recipes);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  // const fetchRecipeId = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(`${url}${id}`);
+  //     const recipeId = await response.json();
+  //     console.log(recipeId);
+  //     setRecipeId(recipeId);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchRecipeId();
+  // }, []);
 
   return (
     <AppContext.Provider
@@ -57,9 +94,11 @@ export const AppProvider = ({ children }) => {
         /* Shared-> SEARCHFORM */
         recipes,
         setSearchTerm,
+        /* Recipes-> ID */
+        // recipeId,
         /* Recipes-> CATEGORIES */
-        filterItems,
-        recipeItems,
+        // filterItems,
+        // recipeItems,
       }}
     >
       {children}
@@ -70,3 +109,4 @@ export const AppProvider = ({ children }) => {
 export const useGlobalContext = () => {
   return useContext(AppContext);
 };
+export { AppContext, AppProvider };

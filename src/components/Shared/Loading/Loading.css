@@ -1,6 +1,6 @@
 /* LOADING BARS */
 
-/* .loader,
+.loader,
 .loader:before,
 .loader:after {
   background: transparent;
@@ -59,7 +59,9 @@
     box-shadow: 0 -2em;
     height: 5em;
   }
-} */
+}
+
+/*
 .loading-container {
   position: relative;
   display: grid;
@@ -73,7 +75,7 @@
   border: 1px solid;
   transform-origin: center;
   text-align: center;
-  /* animation: 2s steak infinite linear; */
+  // animation: 2s steak infinite linear;
 }
 .steak svg {
   transform: rotate(-30deg);
@@ -86,12 +88,12 @@
 }
 .player {
   position: absolute;
-  /* bottom: calc(50%);
-  left: calc(50%); */
+  // bottom: calc(50%);
+  // left: calc(50%);
   height: 50px;
   width: 60px;
   z-index: 1;
-  /* border: 1px solid; */
+  // border: 1px solid; 
 }
 .player * {
   position: absolute;
@@ -118,11 +120,11 @@
   border-bottom-left-radius: 5px;
 }
 .player .arm {
-  /* height: 3px;
-  width: 10px; */
+  // height: 3px;
+  width: 10px;
   top: 14px;
   left: calc(50% - 0.5px);
-  /* background-color: #000; */
+  // background-color: #000;
   animation: 0.4s run alternate infinite linear;
 }
 .player .arm + .arm {
@@ -214,3 +216,4 @@
     transform: rotate(80deg);
   }
 }
+*/
