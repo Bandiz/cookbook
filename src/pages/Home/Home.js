@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../../../context";
+import { useGlobalContext } from "../../context";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import recipesData from "../Recipes/RecipesData";
 import "./Home.css";
-import Loading from "../../Shared/Loading/Loading";
+// import Loading from "../../Shared/Loading/Loading";
 
 function Home() {
   const { closeSubmenu } = useGlobalContext();

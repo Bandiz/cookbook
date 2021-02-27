@@ -6,11 +6,11 @@ import {
   Admin,
   NotFound,
   Category,
-} from "./components/Pages";
+} from "./pages";
 import { Header } from "./components/Shared/";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Recipe from "./components/Pages/Recipe/Recipe";
+import Recipe from "./pages/Recipe/Recipe";
 
 function App() {
   return (

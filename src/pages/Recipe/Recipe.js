@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Loading from "../../Shared/Loading/Loading";
+import Loading from "../../components/Shared/Loading/Loading";
 import { useParams, Link } from "react-router-dom";
 
 import { GiKnifeFork } from "react-icons/gi";

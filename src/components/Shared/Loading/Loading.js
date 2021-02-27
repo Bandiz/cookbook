@@ -1,6 +1,6 @@
 import React from "react";
 import "./Loading.css";
-import { GiSteak } from "react-icons/gi";
+// import { GiSteak } from "react-icons/gi";
 
 const Loading = () => {
   return (

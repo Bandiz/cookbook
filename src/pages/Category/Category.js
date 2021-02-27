@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useGlobalContext } from "../../../context";
+import { useGlobalContext } from "../../context";
 import recipesData from "../Recipes/RecipesData";
 
 function Category() {

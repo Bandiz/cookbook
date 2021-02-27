@@ -1,7 +1,7 @@
 import React from "react";
-import Loading from "../../Shared/Loading/Loading";
+import Loading from "../../components/Shared/Loading/Loading";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../../../context";
+import { useGlobalContext } from "../../context";
 
 const RecipeList = () => {
   const { recipes, loading } = useGlobalContext();
