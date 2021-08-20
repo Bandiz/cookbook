@@ -7,7 +7,7 @@ import {
 } from "react-icons/gi";
 import { CgBowl } from "react-icons/cg";
 
-const links = [
+export const links = [
   {
     id: 1,
     url: "/",

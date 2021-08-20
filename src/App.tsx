@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Home,
-  Recipes,
-  About,
-  Admin,
-  NotFound,
-  Category,
-} from "./pages";
-import { Header } from "./components/Shared/";
+import { Home, Recipes, About, Admin, NotFound, Category } from "./pages";
+import { Header } from "./components/Shared";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Recipe from "./pages/Recipe/Recipe";
