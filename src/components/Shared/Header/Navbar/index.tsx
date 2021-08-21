@@ -56,10 +56,6 @@ const Navbar = () => {
             <button className="link-btn" onClick={handleClick}>
               Recipes
             </button>
-            {/* <Link to="" className="link-btn" onClick={handleClick}>
-              Recipes
-            </Link> */}
-
             <Menu
               anchorEl={openSubmenu}
               keepMounted

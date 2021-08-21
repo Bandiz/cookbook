@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import links from "./components/Shared/Header/HeaderNav/NavData";
 //import recipesData from "./components/Pages/Recipes/RecipesData";
 
 const url = "https://localhost:44329/api/Recipe/";
@@ -28,15 +27,7 @@ const AppProvider = ({ children }) => {
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
-  const openSubmenu = (text, coordinates) => {
-    const page = links.find((link) => link.text === text);
-    setPage(page);
-    setLocation(coordinates);
-    setIsSubmenuOpen(true);
-  };
-  const closeSubmenu = () => {
-    setIsSubmenuOpen(false);
-  };
+
   // /* Recipes-> CATEGORIES */
   // const filterItems = (category) => {
   //   const newItems = recipesData.filter((item) => item.category === category);
@@ -85,8 +76,7 @@ const AppProvider = ({ children }) => {
         openSidebar,
         closeSidebar,
         isSubmenuOpen,
-        openSubmenu,
-        closeSubmenu,
+
         location,
         page,
         /* Shared-> LOADING */
