@@ -8,7 +8,7 @@ import "./Recipe.css";
 import RateShare from "./Rate&Share";
 import Comment from "./Comment";
 
-const url = "https://localhost:44329/api/Recipe/";
+const url = "https://localhost:44329/api/v1/Recipe/";
 
 const Recipe = () => {
   const { id } = useParams();
