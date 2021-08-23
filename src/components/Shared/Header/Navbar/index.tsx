@@ -13,11 +13,30 @@ import { ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
 import logo from "../Logo/icon.png";
 import "./HeaderNav.scss";
 import useStyles from "./styles";
+import Hamburger from "../Hamburger";
 
 const Navbar = () => {
   const [openSubmenu, setOpenSubmenu] = useState<null | HTMLElement>(null);
+  const [openHamburger, setOpenHamburger] = useState(false);
 
   const classes = useStyles();
+
+  const menuLinks = [
+    { label: "Home", url: "/" },
+    {
+      label: "Recipes",
+      url: "/recipes",
+      sublinks: [
+        { label: "breakfast", icon: <CgBowl />, subUrl: "/category/breakfast" },
+        { label: "lunch", icon: <GiHamburger />, subUrl: "/category/lunch" },
+        { label: "dinner", icon: <GiSteak />, subUrl: "/category/dinner" },
+        { label: "snacks", icon: <GiFruitBowl />, subUrl: "/category/snacks" },
+        { label: "soups", icon: <GiCookingPot />, subUrl: "/category/soups" },
+      ],
+    },
+    { label: "About", url: "/about" },
+    { label: "Admin", url: "/administration" },
+  ];
 
   const sublinks = [
     { label: "breakfast", icon: <CgBowl />, subUrl: "/category/breakfast" },
@@ -35,16 +54,28 @@ const Navbar = () => {
     setOpenSubmenu(null);
   };
 
+  const handleOpenHamburber = () => {
+    setOpenHamburger(true);
+  };
+  const handleCloseHamburber = () => {
+    setOpenHamburger(false);
+  };
+
   return (
     <nav className="nav">
       <div className="nav-center">
         <div className="nav-header">
-          <Link to="/">
+          <Link to="/" className="nav-link-logo">
             <img src={logo} className="nav-logo" alt="logo" />
           </Link>
-          <button className="nav-btn">
+          <button className="nav-btn" onClick={handleOpenHamburber}>
             <FaBars />
           </button>
+          <Hamburger
+            menuLinks={menuLinks}
+            handleClose={handleCloseHamburber}
+            open={openHamburger}
+          />
         </div>
         <ul className="nav-links">
           <li>
