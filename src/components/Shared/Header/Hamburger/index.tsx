@@ -3,12 +3,7 @@ import { Logo } from "../Logo";
 
 import { Drawer } from "@material-ui/core";
 import useStyles from "./styles";
-
-export type HamburgerProps = {
-  open: boolean;
-  handleClose: () => void;
-  menuLinks: { label: string; url: string }[];
-};
+import { HamburgerProps } from "../types";
 
 export default function Hamburger({
   menuLinks,
