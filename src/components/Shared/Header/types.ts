@@ -1,18 +1,17 @@
-export type HamburgerProps = {
-  open: boolean;
-  handleClose: () => void;
-  menuLinks: { label: string; url: string }[];
-};
-
 type Sublinks = {
   label: string;
   icon: any;
   subUrl: string;
 };
 
-export type SubmenuProps = {
-  open: any;
+export type HamburgerProps = {
+  open: boolean;
   handleClose: () => void;
+  menuLinks: { label: string; sublinks?: Sublinks[]; url: string }[];
+};
+
+export type SubmenuProps = {
+  handleClose?: () => void;
   menuLinks: {
     label: string;
     sublinks?: Sublinks[];
