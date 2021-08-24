@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
+import { Menu, Link } from "@material-ui/core";
 import { FaBars } from "react-icons/fa";
 import {
   GiHamburger,
@@ -11,6 +11,7 @@ import {
 import { CgBowl } from "react-icons/cg";
 import logo from "../Logo/icon.png";
 import "./HeaderNav.scss";
+
 import Hamburger from "../Hamburger";
 import Submenu from "../Submenu";
 
@@ -43,11 +44,12 @@ const Navbar = () => {
     setOpenSubmenu(null);
   };
 
-  const handleOpenHamburber = () => {
+  const handleOpenHamburger = () => {
     setOpenHamburger(true);
   };
-  const handleCloseHamburber = () => {
+  const handleCloseHamburger = () => {
     setOpenHamburger(false);
+    handleCloseSubmenu();
   };
 
   return (
@@ -55,15 +57,15 @@ const Navbar = () => {
       <nav className="nav">
         <div className="nav-center">
           <div className="nav-header">
-            <Link to="/" className="nav-link-logo">
+            <Link href="/" className="nav-link-logo">
               <img src={logo} className="nav-logo" alt="logo" />
             </Link>
-            <button className="nav-btn" onClick={handleOpenHamburber}>
+            <button className="nav-btn" onClick={handleOpenHamburger}>
               <FaBars />
             </button>
             <Hamburger
               menuLinks={menuLinks}
-              handleClose={handleCloseHamburber}
+              handleClose={handleCloseHamburger}
               open={openHamburger}
             />
           </div>
@@ -73,21 +75,38 @@ const Navbar = () => {
               return label === "Recipes" ? (
                 <>
                   <Link
-                    to="#"
+                    href={url}
                     key={index}
                     className="link-btn"
-                    onClick={handleOpenSubmenu}
+                    onMouseOver={handleOpenSubmenu}
                   >
                     {label}
                   </Link>
-                  <Submenu
-                    menuLinks={menuLinks}
-                    handleClose={handleCloseSubmenu}
-                    open={openSubmenu}
-                  />
+                  <Menu
+                    anchorEl={openSubmenu}
+                    keepMounted
+                    open={Boolean(openSubmenu)}
+                    onClose={handleCloseSubmenu}
+                    onMouseLeave={handleCloseSubmenu}
+                    getContentAnchorEl={null}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    style={{ position: "absolute" }}
+                  >
+                    <Submenu
+                      menuLinks={menuLinks}
+                      handleClose={handleCloseSubmenu}
+                    />
+                  </Menu>
                 </>
               ) : (
-                <Link to={url} key={index} className="link-btn">
+                <Link href={url} key={index} className="link-btn">
                   {label}
                 </Link>
               );
