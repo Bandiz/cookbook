@@ -1,16 +1,16 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { AppProvider } from "./context";
+import { StylesProvider } from "@material-ui/core";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StylesProvider injectFirst>
     <AppProvider>
       <App />
     </AppProvider>
-  </React.StrictMode>,
+  </StylesProvider>,
   document.getElementById("root")
 );
 
