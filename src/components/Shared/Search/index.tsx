@@ -1,7 +1,7 @@
 import SearchIcon from "@material-ui/icons/Search";
 import { InputBase } from "@material-ui/core";
 
-import "./SearchForm.scss";
+import "./Search.scss";
 
 export default function Search() {
   return (
