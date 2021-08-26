@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Loading from "../../components/Shared/Loading/Loading";
+import { useState, useEffect } from "react";
+import Loading from "../../components/Shared/Loading";
 import { useParams, Link } from "react-router-dom";
 
 import { GiKnifeFork } from "react-icons/gi";
 import { BiTime } from "react-icons/bi";
-import "./Recipe.css";
-import RateShare from "./Rate&Share";
-import Comment from "./Comment";
+import "./Recipe.scss";
+import Rate from "../../components/Rate";
+import Comment from "../../components/Comment";
+import Share from "../../components/Share";
+import { Search } from "../../components/Shared";
 
 const url = "https://localhost:44329/api/v1/Recipe/";
 
@@ -41,7 +43,7 @@ const Recipe = () => {
     image,
     title,
     categories,
-    //amount,
+    description,
     prepTimeMinutes,
     cookTimeMinutes,
     totalTimeMinutes,
@@ -50,14 +52,19 @@ const Recipe = () => {
   } = recipe;
 
   return (
-    <section className="section recipe-section">
+    <div className="recipe-block">
+      <Search />
       <Link to="/recipes" className="btn btn-primary">
         back to recipes
       </Link>
-      <div className="recipe-block">
+      <section className="recipe-section">
         <h2 className="section-title">{title}</h2>
         <div className="recipe">
-          <img src={`/assets/images/item-${id}.jpeg`} alt={title} className="photo" />
+          <img
+            src={`/assets/images/item-${id}.jpeg`}
+            alt={title}
+            className="photo"
+          />
           <div className="details-time-container">
             <GiKnifeFork className="icon knife" />
             <div className="details-container">
@@ -69,7 +76,7 @@ const Recipe = () => {
               </p>
               <p>
                 <span className="recipe-data">Amount </span>
-                "AMOUNT"
+                {description}
               </p>
             </div>
             <BiTime className="icon time" />
@@ -117,10 +124,11 @@ const Recipe = () => {
             </ol>
           </div>
         </div>
-      </div>
-      <RateShare />
-      <Comment />
-    </section>
+        <Rate />
+        <Share />
+        <Comment />
+      </section>
+    </div>
   );
 };
 export default Recipe;
