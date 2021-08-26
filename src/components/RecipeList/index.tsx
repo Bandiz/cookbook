@@ -1,10 +1,19 @@
-import Loading from "../Shared/Loading";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../../context";
+
+import Loading from "../Shared/Loading";
+import { useGlobalContext } from "../../RecipesContext";
+
 import "./RecipeList.scss";
 
 export default function RecipeList() {
-  const { recipes, loading } = useGlobalContext();
+  const { loading, recipes, fetchRecipes } = useGlobalContext();
+
+  useEffect(() => {
+    if (recipes.length === 0) {
+      fetchRecipes();
+    }
+  }, []);
 
   if (loading) {
     return <Loading />;

@@ -1,32 +1,26 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, createContext, ReactNode } from "react";
+import { Recipe } from "./types";
 //import recipesData from "./components/Pages/Recipes/RecipesData";
 
 const url = "https://localhost:44329/api/v1/Recipe/";
-const AppContext = React.createContext();
+export const RecipesContext = createContext({} as RecipesContextObject);
 
-const AppProvider = ({ children }) => {
-  /* Header-> NAVBAR */
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  // const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
-  const [location, setLocation] = useState({});
-  const [page, setPage] = useState({ text: "", sublinks: [] });
+interface RecipesContextObject {
+  recipes: Recipe[];
+  loading: boolean;
+  fetchRecipes: () => Promise<void>;
+}
+
+export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
   /* Shared-> LOADING */
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   /* Shared-> SEARCHFORM */
-  const [searchTerm, setSearchTerm] = useState("a");
-  const [recipes, setRecipes] = useState([]);
+  // const [searchTerm, setSearchTerm] = useState("a");
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   /* Recipes-> ID */
   // const [recipeId, setRecipeId] = useState([]);
   /* Recipes-> CATEGORIES */
   //const [recipeItems, setRecipeItems] = useState(recipesData);
-
-  /* Header-> NAVBAR */
-  // const openSidebar = () => {
-  //   setIsSidebarOpen(true);
-  // };
-  // const closeSidebar = () => {
-  //   setIsSidebarOpen(false);
-  // };
 
   // /* Recipes-> CATEGORIES */
   // const filterItems = (category) => {
@@ -40,16 +34,15 @@ const AppProvider = ({ children }) => {
       const response = await fetch(url);
       const recipes = await response.json();
       setRecipes(recipes);
-      console.log(recipes);
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchRecipes();
-  }, []);
+  // useEffect(() => {
+  //   fetchRecipes();
+  // }, []);
 
   // const fetchRecipeId = async () => {
   //   setLoading(true);
@@ -69,34 +62,23 @@ const AppProvider = ({ children }) => {
   // }, []);
 
   return (
-    <AppContext.Provider
+    <RecipesContext.Provider
       value={{
-        /* Header-> NAVBAR */
-        // isSidebarOpen,
-        // openSidebar,
-        // closeSidebar,
-        // isSubmenuOpen,
-
-        location,
-        page,
-        /* Shared-> LOADING */
         loading,
-        /* Shared-> SEARCHFORM */
         recipes,
-        setSearchTerm,
         /* Recipes-> ID */
         // recipeId,
         /* Recipes-> CATEGORIES */
         // filterItems,
         // recipeItems,
+        fetchRecipes,
       }}
     >
       {children}
-    </AppContext.Provider>
+    </RecipesContext.Provider>
   );
 };
 
 export const useGlobalContext = () => {
-  return useContext(AppContext);
+  return useContext(RecipesContext);
 };
-export { AppContext, AppProvider };
