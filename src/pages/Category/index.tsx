@@ -1,18 +1,14 @@
-import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useGlobalContext } from "../../context";
-import recipesData from "../Recipes/RecipesData";
+// import recipesData from "../Recipes/RecipesData";
 
 function Category() {
-  const { filterItems, recipeItems } = useGlobalContext();
-  const { category } = useParams();
-  const [data, setData] = useState(recipesData);
+  // const { category } = useParams();
+  // const [data, setData] = useState(recipesData);
 
   return (
     <section className="section">
-      <h2 className="section-title">{category} recipes</h2>
+      <h2 className="section-title">category recipes</h2>
       <div className="recipes-center">
-        {data.map((item) => {
+        {/* {data.map((item) => {
           const { title, id, image, totalTime } = item;
           if (
             item.category.localeCompare(category, undefined, {
@@ -37,7 +33,7 @@ function Category() {
               </article>
             );
           }
-        })}
+        })} */}
       </div>
     </section>
   );

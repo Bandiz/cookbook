@@ -8,9 +8,9 @@ import { Search } from "../../components/Shared";
 
 function Home() {
   const [index, setIndex] = useState(0);
-  const { id, title, image, category } = recipesData[index];
+  const { _id, title, image, categories } = recipesData[index];
 
-  const checkNumber = (number) => {
+  const checkNumber = (number: number) => {
     if (number > recipesData.length - 1) {
       return 0;
     }
@@ -48,15 +48,15 @@ function Home() {
       <Search />
       <section className="slider">
         <div className="img-container">
-          <Link to={`/recipe/${id}`}>
+          <Link to={`/recipe/${_id}`}>
             <img src={image} alt={title} className="recipe-img" />
           </Link>
           <div className="slider-center">
             <h4 className="title">{title}</h4>
-            <Link to={`/category/${category}`}>
-              <p className="category">{category}</p>
+            <Link to={`/category/${categories}`}>
+              <p className="category">{categories}</p>
             </Link>
-            <Link to={`/recipe/${id}`} className="btn btn-primary">
+            <Link to={`/recipe/${_id}`} className="btn btn-primary">
               read more
             </Link>
           </div>

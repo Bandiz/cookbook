@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 //import recipesData from "./components/Pages/Recipes/RecipesData";
 
-const url = "https://localhost:44329/api/Recipe/";
+const url = "https://localhost:44329/api/v1/Recipe/";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   /* Header-> NAVBAR */
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [location, setLocation] = useState({});
   const [page, setPage] = useState({ text: "", sublinks: [] });
   /* Shared-> LOADING */
@@ -21,12 +21,12 @@ const AppProvider = ({ children }) => {
   //const [recipeItems, setRecipeItems] = useState(recipesData);
 
   /* Header-> NAVBAR */
-  const openSidebar = () => {
-    setIsSidebarOpen(true);
-  };
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
+  // const openSidebar = () => {
+  //   setIsSidebarOpen(true);
+  // };
+  // const closeSidebar = () => {
+  //   setIsSidebarOpen(false);
+  // };
 
   // /* Recipes-> CATEGORIES */
   // const filterItems = (category) => {
@@ -72,10 +72,10 @@ const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         /* Header-> NAVBAR */
-        isSidebarOpen,
-        openSidebar,
-        closeSidebar,
-        isSubmenuOpen,
+        // isSidebarOpen,
+        // openSidebar,
+        // closeSidebar,
+        // isSubmenuOpen,
 
         location,
         page,

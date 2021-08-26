@@ -13,7 +13,7 @@ import { Search } from "../../components/Shared";
 const url = "https://localhost:44329/api/v1/Recipe/";
 
 const Recipe = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: any }>();
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState(null);
 
@@ -39,17 +39,18 @@ const Recipe = () => {
   if (!recipe) {
     return <h2 className="section-title">no recipe to display</h2>;
   }
-  const {
-    image,
-    title,
-    categories,
-    description,
-    prepTimeMinutes,
-    cookTimeMinutes,
-    totalTimeMinutes,
-    ingredients,
-    instructions,
-  } = recipe;
+  console.log(recipe);
+  // const {
+  //   image,
+  //   title,
+  //   categories,
+  //   description,
+  //   prepTimeMinutes,
+  //   cookTimeMinutes,
+  //   totalTimeMinutes,
+  //   ingredients,
+  //   instructions,
+  // } = recipe;
 
   return (
     <div className="recipe-block">
@@ -57,7 +58,7 @@ const Recipe = () => {
       <Link to="/recipes" className="btn btn-primary">
         back to recipes
       </Link>
-      <section className="recipe-section">
+      {/* <section className="recipe-section">
         <h2 className="section-title">{title}</h2>
         <div className="recipe">
           <img
@@ -127,7 +128,7 @@ const Recipe = () => {
         <Rate />
         <Share />
         <Comment />
-      </section>
+      </section> */}
     </div>
   );
 };
