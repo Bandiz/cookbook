@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../../context";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
-import recipesData from "../Recipes/RecipesData";
-import "./Home.css";
+import recipesData from "../Recipes/RecipesData.json";
+import "./Home.scss";
+import { Search } from "../../components/Shared";
 // import Loading from "../../Shared/Loading/Loading";
 
 function Home() {
-  const { closeSubmenu } = useGlobalContext();
   const [index, setIndex] = useState(0);
   const { id, title, image, category } = recipesData[index];
 
@@ -45,7 +44,8 @@ function Home() {
   // }, [index]);
 
   return (
-    <main onMouseOver={closeSubmenu}>
+    <div>
+      <Search />
       <section className="slider">
         <div className="img-container">
           <Link to={`/recipe/${id}`}>
@@ -71,7 +71,7 @@ function Home() {
         </div>
       </section>
       {/* <Loading /> */}
-    </main>
+    </div>
   );
 }
 
