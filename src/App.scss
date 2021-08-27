@@ -115,6 +115,7 @@ Buttons
   background: transparent;
   border-radius: var(--mainBorderRadius);
   display: inline-block;
+  margin: 0 auto;
 }
 .btn:hover {
   background: var(--primaryColor);
