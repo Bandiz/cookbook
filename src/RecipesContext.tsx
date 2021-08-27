@@ -1,14 +1,16 @@
-import React, { useState, useContext, createContext, ReactNode } from "react";
+import { useState, useContext, createContext, ReactNode } from "react";
 import { Recipe } from "./types";
 //import recipesData from "./components/Pages/Recipes/RecipesData";
 
 const url = "https://localhost:44329/api/v1/Recipe/";
+
 export const RecipesContext = createContext({} as RecipesContextObject);
 
 interface RecipesContextObject {
   recipes: Recipe[];
   loading: boolean;
   fetchRecipes: () => Promise<void>;
+  fetchRecipe: (id: number) => Promise<Recipe>;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
@@ -18,7 +20,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
   // const [searchTerm, setSearchTerm] = useState("a");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   /* Recipes-> ID */
-  // const [recipeId, setRecipeId] = useState([]);
+  // const [recipeId, setRecipeId] = useState<Recipe>();
   /* Recipes-> CATEGORIES */
   //const [recipeItems, setRecipeItems] = useState(recipesData);
 
@@ -44,19 +46,25 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
   //   fetchRecipes();
   // }, []);
 
-  // const fetchRecipeId = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch(`${url}${id}`);
-  //     const recipeId = await response.json();
-  //     console.log(recipeId);
-  //     setRecipeId(recipeId);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchRecipeId = async (id: number) => {
+    const recipe = recipes.find((x) => x.id === id);
+
+    if (recipe) {
+      return recipe;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}${id}`);
+      const recipe = await response.json();
+      setLoading(false);
+      setRecipes((prev) => [...prev, recipe]);
+      return recipe;
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
   // useEffect(() => {
   //   fetchRecipeId();
   // }, []);
@@ -67,11 +75,11 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         loading,
         recipes,
         /* Recipes-> ID */
-        // recipeId,
         /* Recipes-> CATEGORIES */
         // filterItems,
         // recipeItems,
         fetchRecipes,
+        fetchRecipe: fetchRecipeId,
       }}
     >
       {children}

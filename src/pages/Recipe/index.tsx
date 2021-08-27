@@ -1,56 +1,45 @@
 import { useState, useEffect } from "react";
-import Loading from "../../components/Shared/Loading";
 import { useParams, Link } from "react-router-dom";
 
-import { GiKnifeFork } from "react-icons/gi";
-import { BiTime } from "react-icons/bi";
-import "./Recipe.scss";
+import Loading from "../../components/Shared/Loading";
 import Rate from "../../components/Rate";
 import Comment from "../../components/Comment";
 import Share from "../../components/Share";
 import { Search } from "../../components/Shared";
+import { useGlobalContext } from "../../RecipesContext";
+import { Recipe } from "../../types";
 
-const url = "https://localhost:44329/api/v1/Recipe/";
+import { GiKnifeFork } from "react-icons/gi";
+import { BiTime } from "react-icons/bi";
+import "./Recipe.scss";
 
-const Recipe = () => {
+const RecipePage = () => {
   const { id } = useParams<{ id: any }>();
-  const [loading, setLoading] = useState(false);
-  const [recipe, setRecipe] = useState(null);
+  const [recipe, setRecipe] = useState<Recipe>();
+
+  const { loading, fetchRecipe } = useGlobalContext();
 
   useEffect(() => {
-    setLoading(true);
-    async function getRecipe() {
-      try {
-        const response = await fetch(`${url}${id}`);
-        const data = await response.json();
-        console.log(data);
-        setRecipe(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    }
-    getRecipe();
+    fetchRecipe(id).then(setRecipe);
   }, [id]);
+
   if (loading) {
     return <Loading />;
   }
   if (!recipe) {
     return <h2 className="section-title">no recipe to display</h2>;
   }
-  console.log(recipe);
-  // const {
-  //   image,
-  //   title,
-  //   categories,
-  //   description,
-  //   prepTimeMinutes,
-  //   cookTimeMinutes,
-  //   totalTimeMinutes,
-  //   ingredients,
-  //   instructions,
-  // } = recipe;
+  const {
+    imageUrl,
+    title,
+    categories,
+    description,
+    prepTimeMinutes,
+    cookTimeMinutes,
+    totalTimeMinutes,
+    ingredients,
+    instructions,
+  } = recipe;
 
   return (
     <div className="recipe-block">
@@ -58,42 +47,38 @@ const Recipe = () => {
       <Link to="/recipes" className="btn btn-primary">
         back to recipes
       </Link>
-      {/* <section className="recipe-section">
+      <section className="recipe-section">
         <h2 className="section-title">{title}</h2>
         <div className="recipe">
-          <img
-            src={`/assets/images/item-${id}.jpeg`}
-            alt={title}
-            className="photo"
-          />
+          <img src={imageUrl} alt={title} className="photo" />
           <div className="details-time-container">
             <GiKnifeFork className="icon knife" />
             <div className="details-container">
-              <p>
+              <div>
                 <span className="recipe-data">Category </span>
                 {categories.map((category, index) => {
-                  return <div key={index}>{category}</div>;
+                  return <p key={index}>{category}</p>;
                 })}
-              </p>
-              <p>
+              </div>
+              <div>
                 <span className="recipe-data">Amount </span>
                 {description}
-              </p>
+              </div>
             </div>
             <BiTime className="icon time" />
             <div className="time-container">
-              <p>
+              <div>
                 <span className="recipe-data">Prep Time </span>
-                {prepTimeMinutes}
-              </p>
-              <p>
+                {prepTimeMinutes} min
+              </div>
+              <div>
                 <span className="recipe-data">Cook Time </span>
-                {cookTimeMinutes}
-              </p>
-              <p>
+                {cookTimeMinutes} min
+              </div>
+              <div>
                 <span className="recipe-data">Total Time </span>
-                {totalTimeMinutes}
-              </p>
+                {totalTimeMinutes} min
+              </div>
             </div>
           </div>
           <div className="recipe-info">
@@ -101,10 +86,10 @@ const Recipe = () => {
               <span className="recipe-data">Ingredients</span>
             </h4>
             <ul>
-              {ingredients.map((ingredient) => {
-                const { id, amount, measurementType, name } = ingredient;
+              {ingredients.map((ingredient, index) => {
+                const { measurementType, name, amount } = ingredient;
                 return ingredient ? (
-                  <li key={id} className="recipe-ingredient">
+                  <li key={index} className="recipe-ingredient">
                     {amount} {measurementType} {name}
                   </li>
                 ) : null;
@@ -114,11 +99,10 @@ const Recipe = () => {
               <span className="recipe-data">instructions</span>
             </h4>
             <ol>
-              {instructions.map((instruction) => {
-                const { id, description } = instruction;
+              {instructions.map((instruction, index) => {
                 return instruction ? (
-                  <li key={id} className="recipe-instruction">
-                    {description}
+                  <li key={index} className="recipe-instruction">
+                    {instruction.description}
                   </li>
                 ) : null;
               })}
@@ -128,8 +112,8 @@ const Recipe = () => {
         <Rate />
         <Share />
         <Comment />
-      </section> */}
+      </section>
     </div>
   );
 };
-export default Recipe;
+export default RecipePage;
