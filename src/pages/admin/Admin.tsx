@@ -10,10 +10,9 @@ const Admin = () => {
   const onSuccess = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
-    console.log(response);
-    debugger;
+    console.log((response as GoogleLoginResponse).tokenId);
   };
-  
+
   const onFailure = (error: any) => {
     console.log(error);
     debugger;
