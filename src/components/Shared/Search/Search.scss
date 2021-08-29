@@ -1,0 +1,34 @@
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px auto 10px;
+  width: 80%;
+  max-width: 300px;
+  border: 1px solid var(--darkGrey);
+  border-radius: var(--mainBorderRadius);
+  box-shadow: var(--lightShadow);
+
+  .search-icon {
+    height: 100%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  svg {
+    transition: 0.2s ease-in;
+  }
+
+  &:hover {
+    svg {
+      color: var(--primaryColor);
+    }
+  }
+
+  .inputRoot {
+    width: 100%;
+  }
+}

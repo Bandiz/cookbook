@@ -48,6 +48,8 @@
         width: 10rem;
         height: 3rem;
         transition: var(--mainTransition);
+        z-index: 1301;
+        text-decoration: none;
 
         &:hover {
           background: var(--primaryColor);
@@ -60,7 +62,7 @@
 
 @media screen and (max-width: 768px) {
   .nav {
-    height: 5rem;
+    height: 90px;
 
     .nav-center {
       flex-direction: row;
@@ -68,17 +70,25 @@
 
       .nav-header {
         display: flex;
-        width: 80%;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
 
-        .nav-logo {
-          height: 60px;
-          width: auto;
+        .nav-link-logo {
+          margin: 0 auto;
+          justify-content: center;
+          display: flex;
+
+          .nav-logo {
+            height: 100px;
+            width: auto;
+          }
         }
 
         .nav-btn {
           display: flex;
+          position: absolute;
+          right: 20px;
           font-size: 1rem;
           padding: 0.25rem 0.75rem;
           cursor: pointer;

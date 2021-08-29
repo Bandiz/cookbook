@@ -1,16 +1,16 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { AppProvider } from "./context";
+import { RecipesProvider } from "./RecipesContext";
+import { StylesProvider } from "@material-ui/core";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AppProvider>
+  <StylesProvider injectFirst>
+    <RecipesProvider>
       <App />
-    </AppProvider>
-  </React.StrictMode>,
+    </RecipesProvider>
+  </StylesProvider>,
   document.getElementById("root")
 );
 

@@ -1,9 +1,15 @@
-import React from "react";
-import { Home, Recipes, About, Admin, NotFound, Category } from "./pages";
+import {
+  Recipes,
+  Recipe,
+  About,
+  Admin,
+  NotFound,
+  Category,
+  Home,
+} from "./pages";
 import { Header } from "./components/Shared";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
-import Recipe from "./pages/Recipe/Recipe";
 
 function App() {
   return (
@@ -16,7 +22,7 @@ function App() {
         <Route path="/about" component={About} />
         <Route path="/administration" component={Admin} />
         <Route path="/recipe/:id" component={Recipe} />
-        <Route path="*" component={NotFound} />
+        <Route component={NotFound} />
       </Switch>
     </Router>
   );

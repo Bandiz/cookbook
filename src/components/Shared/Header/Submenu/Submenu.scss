@@ -1,0 +1,33 @@
+.submenu {
+  display: flex;
+  flex-wrap: wrap;
+  width: 400px;
+  align-items: center;
+  margin: 10px auto;
+
+  .item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 2px 0;
+    flex: 0 1 50%;
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .label {
+      text-transform: capitalize;
+    }
+
+    &:hover {
+      background-color: transparent;
+      .icon,
+      .label {
+        color: var(--primaryColor);
+      }
+    }
+  }
+}

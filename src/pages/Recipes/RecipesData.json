@@ -1,0 +1,334 @@
+[
+  {
+    "_id": 5,
+    "title": "Simple Oatmeal Pancakes",
+    "categories": ["Breakfast"],
+    "image": "/assets/images/item-1.jpeg",
+    "description": "8 pancakes",
+    "prepTimeMinutes": 5,
+    "cookTimeMinutes": 20,
+    "totalTimeMinutes": 25,
+    "ingredients": [
+      {
+        "id": 0,
+        "amount": 2,
+        "measurementType": "cups",
+        "name": "old-fashioned rolled oats (GF if desired)",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "amount": 1,
+        "measurementType": "cup  (250 mL)",
+        "name": "unsweetened plant-based milk",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "amount": 1,
+        "measurementType": "cup (100 g)",
+        "name": "apple sauce*",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "amount": 2,
+        "measurementType": "Tbsp (30 mL)",
+        "name": "maple syrup",
+        "position": 3
+      },
+      {
+        "id": 4,
+        "amount": 1,
+        "measurementType": "Tbsp (15 mL)",
+        "name": "coconut oil, melted",
+        "position": 4
+      },
+      {
+        "id": 5,
+        "amount": 1,
+        "measurementType": "tsp (4 g)",
+        "name": "baking powder",
+        "position": 5
+      },
+      {
+        "id": 6,
+        "amount": 2,
+        "measurementType": "tsp (8 g)",
+        "name": "ground cinnamon",
+        "position": 6
+      }
+    ],
+    "instructions": [
+      {
+        "id": 0,
+        "description": "In a food processor, blend the oatmeal into a flour.",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "description": "Combine all the ingredients in a bowl.",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "description": "Preheat a large frying pan on medium-high heat. If your pan isn't non-stick, add a small bit of oil, and when hot, spoon about 1/4 cup of batter onto the pan and let cook. Flip when the top of the pancakes are bubbly and the sides look firm, about 2-3 minutes. Cook the other side for another 2-3 minutes.",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "description": "Top with desired toppings and enjoy.",
+        "position": 3
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "title": "Simple Oatmeal Pancakes",
+    "categories": ["Dinner"],
+    "image": "/assets/images/item-2.jpeg",
+    "description": "8 pancakes",
+    "prepTimeMinutes": 5,
+    "cookTimeMinutes": 20,
+    "totalTimeMinutes": 25,
+    "ingredients": [
+      {
+        "id": 0,
+        "amount": 2,
+        "measurementType": "cups",
+        "name": "old-fashioned rolled oats (GF if desired)",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "amount": 1,
+        "measurementType": "cup  (250 mL)",
+        "name": "unsweetened plant-based milk",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "amount": 1,
+        "measurementType": "cup (100 g)",
+        "name": "apple sauce*",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "amount": 2,
+        "measurementType": "Tbsp (30 mL)",
+        "name": "maple syrup",
+        "position": 3
+      },
+      {
+        "id": 4,
+        "amount": 1,
+        "measurementType": "Tbsp (15 mL)",
+        "name": "coconut oil, melted",
+        "position": 4
+      },
+      {
+        "id": 5,
+        "amount": 1,
+        "measurementType": "tsp (4 g)",
+        "name": "baking powder",
+        "position": 5
+      },
+      {
+        "id": 6,
+        "amount": 2,
+        "measurementType": "tsp (8 g)",
+        "name": "ground cinnamon",
+        "position": 6
+      }
+    ],
+    "instructions": [
+      {
+        "id": 0,
+        "description": "In a food processor, blend the oatmeal into a flour.",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "description": "Combine all the ingredients in a bowl.",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "description": "Preheat a large frying pan on medium-high heat. If your pan isn't non-stick, add a small bit of oil, and when hot, spoon about 1/4 cup of batter onto the pan and let cook. Flip when the top of the pancakes are bubbly and the sides look firm, about 2-3 minutes. Cook the other side for another 2-3 minutes.",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "description": "Top with desired toppings and enjoy.",
+        "position": 3
+      }
+    ]
+  },
+  {
+    "_id": 3,
+    "title": "Simple Oatmeal Pancakes",
+    "categories": ["Lunch"],
+    "image": "/assets/images/item-5.jpeg",
+    "description": "8 pancakes",
+    "prepTimeMinutes": 5,
+    "cookTimeMinutes": 20,
+    "totalTimeMinutes": 25,
+    "ingredients": [
+      {
+        "id": 0,
+        "amount": 2,
+        "measurementType": "cups",
+        "name": "old-fashioned rolled oats (GF if desired)",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "amount": 1,
+        "measurementType": "cup  (250 mL)",
+        "name": "unsweetened plant-based milk",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "amount": 1,
+        "measurementType": "cup (100 g)",
+        "name": "apple sauce*",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "amount": 2,
+        "measurementType": "Tbsp (30 mL)",
+        "name": "maple syrup",
+        "position": 3
+      },
+      {
+        "id": 4,
+        "amount": 1,
+        "measurementType": "Tbsp (15 mL)",
+        "name": "coconut oil, melted",
+        "position": 4
+      },
+      {
+        "id": 5,
+        "amount": 1,
+        "measurementType": "tsp (4 g)",
+        "name": "baking powder",
+        "position": 5
+      },
+      {
+        "id": 6,
+        "amount": 2,
+        "measurementType": "tsp (8 g)",
+        "name": "ground cinnamon",
+        "position": 6
+      }
+    ],
+    "instructions": [
+      {
+        "id": 0,
+        "description": "In a food processor, blend the oatmeal into a flour.",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "description": "Combine all the ingredients in a bowl.",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "description": "Preheat a large frying pan on medium-high heat. If your pan isn't non-stick, add a small bit of oil, and when hot, spoon about 1/4 cup of batter onto the pan and let cook. Flip when the top of the pancakes are bubbly and the sides look firm, about 2-3 minutes. Cook the other side for another 2-3 minutes.",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "description": "Top with desired toppings and enjoy.",
+        "position": 3
+      }
+    ]
+  },
+  {
+    "_id": 4,
+    "title": "Simple lunch Pancakes",
+    "categories": ["Lunch"],
+    "image": "/assets/images/item-4.jpeg",
+    "description": "8 pancakes",
+    "prepTimeMinutes": 5,
+    "cookTimeMinutes": 20,
+    "totalTimeMinutes": 25,
+    "ingredients": [
+      {
+        "id": 0,
+        "amount": 2,
+        "measurementType": "cups",
+        "name": "old-fashioned rolled oats (GF if desired)",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "amount": 1,
+        "measurementType": "cup  (250 mL)",
+        "name": "unsweetened plant-based milk",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "amount": 1,
+        "measurementType": "cup (100 g)",
+        "name": "apple sauce*",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "amount": 2,
+        "measurementType": "Tbsp (30 mL)",
+        "name": "maple syrup",
+        "position": 3
+      },
+      {
+        "id": 4,
+        "amount": 1,
+        "measurementType": "Tbsp (15 mL)",
+        "name": "coconut oil, melted",
+        "position": 4
+      },
+      {
+        "id": 5,
+        "amount": 1,
+        "measurementType": "tsp (4 g)",
+        "name": "baking powder",
+        "position": 5
+      },
+      {
+        "id": 6,
+        "amount": 2,
+        "measurementType": "tsp (8 g)",
+        "name": "ground cinnamon",
+        "position": 6
+      }
+    ],
+    "instructions": [
+      {
+        "id": 0,
+        "description": "In a food processor, blend the oatmeal into a flour.",
+        "position": 0
+      },
+      {
+        "id": 1,
+        "description": "Combine all the ingredients in a bowl.",
+        "position": 1
+      },
+      {
+        "id": 2,
+        "description": "Preheat a large frying pan on medium-high heat. If your pan isn't non-stick, add a small bit of oil, and when hot, spoon about 1/4 cup of batter onto the pan and let cook. Flip when the top of the pancakes are bubbly and the sides look firm, about 2-3 minutes. Cook the other side for another 2-3 minutes.",
+        "position": 2
+      },
+      {
+        "id": 3,
+        "description": "Top with desired toppings and enjoy.",
+        "position": 3
+      }
+    ]
+  }
+]

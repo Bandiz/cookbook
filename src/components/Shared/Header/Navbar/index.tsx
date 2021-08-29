@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
+import { Menu, Link } from "@material-ui/core";
 import { FaBars } from "react-icons/fa";
 import {
   GiHamburger,
@@ -9,115 +9,112 @@ import {
   GiCookingPot,
 } from "react-icons/gi";
 import { CgBowl } from "react-icons/cg";
-import { ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
 import logo from "../Logo/icon.png";
 import "./HeaderNav.scss";
-import useStyles from "./styles";
+
+import Hamburger from "../Hamburger";
+import Submenu from "../Submenu";
 
 const Navbar = () => {
   const [openSubmenu, setOpenSubmenu] = useState<null | HTMLElement>(null);
+  const [openHamburger, setOpenHamburger] = useState(false);
 
-  const classes = useStyles();
-
-  const sublinks = [
-    { label: "breakfast", icon: <CgBowl />, subUrl: "/category/breakfast" },
-    { label: "lunch", icon: <GiHamburger />, subUrl: "/category/lunch" },
-    { label: "dinner", icon: <GiSteak />, subUrl: "/category/dinner" },
-    { label: "snacks", icon: <GiFruitBowl />, subUrl: "/category/snacks" },
-    { label: "soups", icon: <GiCookingPot />, subUrl: "/category/soups" },
+  const menuLinks = [
+    { label: "Home", url: "/" },
+    {
+      label: "Recipes",
+      url: "/recipes",
+      sublinks: [
+        { label: "breakfast", icon: <CgBowl />, subUrl: "/category/breakfast" },
+        { label: "lunch", icon: <GiHamburger />, subUrl: "/category/lunch" },
+        { label: "dinner", icon: <GiSteak />, subUrl: "/category/dinner" },
+        { label: "snacks", icon: <GiFruitBowl />, subUrl: "/category/snacks" },
+        { label: "soups", icon: <GiCookingPot />, subUrl: "/category/soups" },
+      ],
+    },
+    { label: "About", url: "/about" },
+    { label: "Admin", url: "/administration" },
   ];
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpenSubmenu = (event: React.MouseEvent<any>) => {
     setOpenSubmenu(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleCloseSubmenu = () => {
     setOpenSubmenu(null);
   };
 
+  const handleOpenHamburger = () => {
+    setOpenHamburger(true);
+  };
+  const handleCloseHamburger = () => {
+    setOpenHamburger(false);
+    handleCloseSubmenu();
+  };
+
   return (
-    <nav className="nav">
-      <div className="nav-center">
-        <div className="nav-header">
-          <Link to="/">
-            <img src={logo} className="nav-logo" alt="logo" />
-          </Link>
-          <button className="nav-btn">
-            <FaBars />
-          </button>
-        </div>
-        <ul className="nav-links">
-          <li>
-            <Link to="/" className="link-btn">
-              Home
+    <>
+      <nav className="nav">
+        <div className="nav-center">
+          <div className="nav-header">
+            <Link href="/" className="nav-link-logo">
+              <img src={logo} className="nav-logo" alt="logo" />
             </Link>
-          </li>
-          <li>
-            <button className="link-btn" onClick={handleClick}>
-              Recipes
+            <button className="nav-btn" onClick={handleOpenHamburger}>
+              <FaBars />
             </button>
-            {/* <Link to="" className="link-btn" onClick={handleClick}>
-              Recipes
-            </Link> */}
-
-            <Menu
-              anchorEl={openSubmenu}
-              keepMounted
-              open={Boolean(openSubmenu)}
-              onClose={handleClose}
-              getContentAnchorEl={null}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-            >
-              <div className={classes.submenu}>
-                <MenuItem
-                  className={classes.item}
-                  onClick={handleClose}
-                  component={Link}
-                  to={`/recipes`}
-                >
-                  Show All
-                </MenuItem>
-                {sublinks.map((link, index) => {
-                  const { label, icon, subUrl } = link;
-
-                  return (
-                    <MenuItem
-                      className={classes.item}
-                      onClick={handleClose}
-                      key={index}
-                      component={Link}
-                      to={subUrl}
-                    >
-                      <ListItemIcon className={classes.icon}>
-                        {icon}
-                      </ListItemIcon>
-                      <ListItemText className={classes.label} primary={label} />
-                    </MenuItem>
-                  );
-                })}
-              </div>
-            </Menu>
-          </li>
-          <li>
-            <Link to="/about" className="link-btn">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link to="/administration" className="link-btn">
-              Admin
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </nav>
+            <Hamburger
+              menuLinks={menuLinks}
+              handleClose={handleCloseHamburger}
+              open={openHamburger}
+            />
+          </div>
+          <div className="nav-links">
+            {menuLinks.map((link, index) => {
+              const { label, url } = link;
+              return label === "Recipes" ? (
+                <>
+                  <Link
+                    href={url}
+                    key={index}
+                    className="link-btn"
+                    onMouseOver={handleOpenSubmenu}
+                  >
+                    {label}
+                  </Link>
+                  <Menu
+                    anchorEl={openSubmenu}
+                    keepMounted
+                    open={Boolean(openSubmenu)}
+                    onClose={handleCloseSubmenu}
+                    onMouseLeave={handleCloseSubmenu}
+                    getContentAnchorEl={null}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    style={{ position: "absolute" }}
+                  >
+                    <Submenu
+                      menuLinks={menuLinks}
+                      handleClose={handleCloseSubmenu}
+                    />
+                  </Menu>
+                </>
+              ) : (
+                <Link href={url} key={index} className="link-btn">
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </nav>
+    </>
   );
 };
 export default Navbar;

@@ -1,5 +1,5 @@
 import Header from "./Header";
-import Loading from "./Loading/Loading";
-import SearchForm from "./SearchForm/SearchForm";
+import Loading from "./Loading";
+import Search from "./Search";
 
-export { Header, Loading, SearchForm };
+export { Header, Loading, Search };
