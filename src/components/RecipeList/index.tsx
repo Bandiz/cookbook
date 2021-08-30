@@ -1,32 +1,30 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Loading from "../Shared/Loading";
-import { useGlobalContext } from "../../RecipesContext";
+// import { useGlobalContext } from "../../RecipesContext";
 import { Recipe } from "../../types";
 
 import "./RecipeList.scss";
 
-export default function RecipeList() {
-  const { loading, recipes, fetchRecipes } = useGlobalContext();
-
-  useEffect(() => {
-    if (recipes.length === 0) {
-      fetchRecipes();
-    }
-  }, []);
-
+export default function RecipeList({
+  recipes,
+  loading,
+  category,
+}: {
+  recipes: Recipe[];
+  loading: boolean;
+  category?: string;
+}) {
   if (loading) {
     return <Loading />;
   }
   if (recipes.length < 1) {
-    return (
-      <h2 className="section-title">no recipes matched your search criteria</h2>
-    );
+    return <h2 className="section-title">No recipes to display</h2>;
   }
   return (
     <section className="recipes-section">
-      <h2 className="section-title">Recipes</h2>
+      <h2 className="section-title">{category ? category : "All Recipes"}</h2>
       <div className="recipes">
         {recipes.map((recipe: Recipe, index) => {
           const { title, id, imageUrl, categories, totalTimeMinutes } = recipe;

@@ -1,42 +1,40 @@
-// import recipesData from "../Recipes/RecipesData";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-function Category() {
-  // const { category } = useParams();
-  // const [data, setData] = useState(recipesData);
+import RecipeList from "../../components/RecipeList";
+import { Search } from "../../components/Shared";
+import { useGlobalContext } from "../../RecipesContext";
+import { Recipe } from "../../types";
+
+import "./Category.scss";
+
+export default function Category() {
+  const { category } = useParams<{ category: string }>();
+  const { loading, recipes, fetchRecipes } = useGlobalContext();
+
+  useEffect(() => {
+    if (recipes.length === 0) {
+      fetchRecipes();
+    }
+  }, []);
+
+  const recipesByCategory: Recipe[] = [];
+  recipes.map((c) =>
+    c.categories.forEach((x) => {
+      if (x.toLowerCase() === category) {
+        recipesByCategory.push(c);
+      }
+    })
+  );
 
   return (
-    <section className="section">
-      <h2 className="section-title">category recipes</h2>
-      <div className="recipes-center">
-        {/* {data.map((item) => {
-          const { title, id, image, totalTime } = item;
-          if (
-            item.category.localeCompare(category, undefined, {
-              sensitivity: "accent",
-            }) === 0
-          ) {
-            return (
-              <article className="recipe-item" key={id}>
-                <header>
-                  <h4>{title}</h4>
-                </header>
-                <img src={image} alt={title} className="photo" />
-                <div className="item-info">
-                  <div className="item-text">
-                    <h4>{item.category}</h4>
-                    <p>Total time: {totalTime}</p>
-                  </div>
-                  <Link to={`/recipe/${id}`} className="btn btn-primary">
-                    read more
-                  </Link>
-                </div>
-              </article>
-            );
-          }
-        })} */}
-      </div>
-    </section>
+    <div className="category-page">
+      <Search />
+      <RecipeList
+        category={category}
+        recipes={recipesByCategory}
+        loading={loading}
+      />
+    </div>
   );
 }
-
-export default Category;
