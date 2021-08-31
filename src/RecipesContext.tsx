@@ -1,39 +1,30 @@
 import { useState, useContext, createContext, ReactNode } from "react";
-import { Recipe } from "./types";
-//import recipesData from "./components/Pages/Recipes/RecipesData";
+import { Recipe, UserSession } from "./types";
 
-const url = "https://localhost:44329/api/v1/Recipe/";
+const url = "https://localhost:44329/api/";
 
 export const RecipesContext = createContext({} as RecipesContextObject);
 
 interface RecipesContextObject {
   recipes: Recipe[];
   loading: boolean;
+  userData: UserSession | undefined;
   fetchRecipes: () => Promise<void>;
   fetchRecipe: (id: number) => Promise<Recipe>;
+  fetchUserData: (tokenId: string) => Promise<void>;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
-  /* Shared-> LOADING */
   const [loading, setLoading] = useState(false);
-  /* Shared-> SEARCHFORM */
-  // const [searchTerm, setSearchTerm] = useState("a");
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  /* Recipes-> ID */
-  // const [recipeId, setRecipeId] = useState<Recipe>();
-  /* Recipes-> CATEGORIES */
-  //const [recipeItems, setRecipeItems] = useState(recipesData);
 
-  // /* Recipes-> CATEGORIES */
-  // const filterItems = (category) => {
-  //   const newItems = recipesData.filter((item) => item.category === category);
-  //   setRecipeItems(newItems);
-  // };
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+
+  const [userData, setUserData] = useState<UserSession>();
 
   const fetchRecipes = async () => {
     setLoading(true);
     try {
-      const response = await fetch(url);
+      const response = await fetch(`${url}v1/Recipe`);
       const recipes = await response.json();
       setRecipes(recipes);
       setLoading(false);
@@ -42,9 +33,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
       setLoading(false);
     }
   };
-  // useEffect(() => {
-  //   fetchRecipes();
-  // }, []);
 
   const fetchRecipeId = async (id: number) => {
     const recipe = recipes.find((x) => x.id === id);
@@ -55,7 +43,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${url}${id}`);
+      const response = await fetch(`${url}v1/Recipe/${id}`);
       const recipe = await response.json();
       setLoading(false);
       setRecipes((prev) => [...prev, recipe]);
@@ -65,21 +53,29 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
       setLoading(false);
     }
   };
-  // useEffect(() => {
-  //   fetchRecipeId();
-  // }, []);
+
+  const fetchUserData = async (tokenId: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}token?t=${tokenId}`);
+      const userData = (await response.json()) as UserSession;
+      setUserData(userData);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   return (
     <RecipesContext.Provider
       value={{
         loading,
         recipes,
-        /* Recipes-> ID */
-        /* Recipes-> CATEGORIES */
-        // filterItems,
-        // recipeItems,
         fetchRecipes,
         fetchRecipe: fetchRecipeId,
+        userData,
+        fetchUserData,
       }}
     >
       {children}

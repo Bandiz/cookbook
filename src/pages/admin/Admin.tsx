@@ -1,17 +1,25 @@
-import React from "react";
 import GoogleLogin, {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
+import { useHistory } from "react-router-dom";
+import { useGlobalContext } from "../../RecipesContext";
 
 import styles from "./Admin.module.scss";
 
 const Admin = () => {
+  const { userData, fetchUserData } = useGlobalContext();
+  const history = useHistory();
+
   const onSuccess = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
-    console.log((response as GoogleLoginResponse).tokenId);
+    const tokenId = (response as GoogleLoginResponse).tokenId;
+    fetchUserData(tokenId);
+    history.push("/Recipes");
   };
+
+  console.log("data from BE", userData);
 
   const onFailure = (error: any) => {
     console.log(error);

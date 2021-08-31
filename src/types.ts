@@ -23,3 +23,15 @@ export type Recipe = {
   instructions: Instructions[];
   ingredients: Ingredients[];
 };
+
+export type User = {
+  email: string;
+  isAdmin: boolean;
+  lastName: string;
+  name: string;
+};
+
+export type UserSession = {
+  token: string;
+  user: User;
+};
