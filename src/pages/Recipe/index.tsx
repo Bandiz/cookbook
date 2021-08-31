@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 
-import Loading from "../../components/Shared/Loading";
 import Rate from "../../components/Rate";
 import Comment from "../../components/Comment";
 import Share from "../../components/Share";
@@ -17,15 +16,12 @@ const RecipePage = () => {
   const { id } = useParams<{ id: any }>();
   const [recipe, setRecipe] = useState<Recipe>();
 
-  const { loading, fetchRecipe } = useGlobalContext();
+  const { fetchRecipe } = useGlobalContext();
 
   useEffect(() => {
     fetchRecipe(id).then(setRecipe);
   }, [id]);
 
-  if (loading) {
-    return <Loading />;
-  }
   if (!recipe) {
     return <h2 className="section-title">no recipe to display</h2>;
   }

@@ -4,7 +4,6 @@ import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import recipesData from "../Recipes/RecipesData.json";
 import "./Home.scss";
 import { Search } from "../../components/Shared";
-// import Loading from "../../Shared/Loading/Loading";
 
 function Home() {
   const [index, setIndex] = useState(0);
@@ -70,7 +69,6 @@ function Home() {
           </div>
         </div>
       </section>
-      {/* <Loading /> */}
     </div>
   );
 }

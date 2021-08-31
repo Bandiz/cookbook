@@ -1,29 +1,33 @@
-import {
-  Recipes,
-  Recipe,
-  About,
-  Admin,
-  NotFound,
-  Category,
-  Home,
-} from "./pages";
-import { Header } from "./components/Shared";
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import { Header, Loading } from "./components/Shared";
+import * as ROUTES from "./constants/routes";
 import "./App.scss";
+
+const Home = lazy(() => import("./pages/Home"));
+const Recipes = lazy(() => import("./pages/Recipes"));
+const Recipe = lazy(() => import("./pages/Recipe"));
+const Category = lazy(() => import("./pages/Category"));
+const About = lazy(() => import("./pages/About"));
+const Admin = lazy(() => import("./pages/Admin"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
     <Router>
       <Header />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/recipes" component={Recipes} />
-        <Route path="/category/:category" component={Category} />
-        <Route path="/about" component={About} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/recipe/:id" component={Recipe} />
-        <Route component={NotFound} />
-      </Switch>
+      <Suspense fallback={<Loading />}>
+        <Switch>
+          <Route exact path={ROUTES.HOME} component={Home} />
+          <Route path={ROUTES.RECIPES} component={Recipes} />
+          <Route path={ROUTES.CATEGORY} component={Category} />
+          <Route path={ROUTES.ABOUT} component={About} />
+          <Route path={ROUTES.ADMIN} component={Admin} />
+          <Route path={ROUTES.RECIPE} component={Recipe} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </Router>
   );
 }

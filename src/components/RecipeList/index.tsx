@@ -1,24 +1,18 @@
 import { Link } from "react-router-dom";
 
-import Loading from "../Shared/Loading";
 import { Recipe, User } from "../../types";
 
 import "./RecipeList.scss";
 
 export default function RecipeList({
   recipes,
-  loading,
   category,
   user,
 }: {
   recipes: Recipe[];
-  loading: boolean;
   category?: string;
   user?: User;
 }) {
-  if (loading) {
-    return <Loading />;
-  }
   if (recipes.length < 1) {
     return <h2 className="section-title">No recipes to display</h2>;
   }

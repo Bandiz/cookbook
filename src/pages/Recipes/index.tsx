@@ -7,7 +7,7 @@ import { useGlobalContext } from "../../RecipesContext";
 import "./Recipes.scss";
 
 export default function Recipes() {
-  const { loading, userData, recipes, fetchRecipes } = useGlobalContext();
+  const { userData, recipes, fetchRecipes } = useGlobalContext();
 
   useEffect(() => {
     if (recipes.length === 0) {
@@ -18,7 +18,7 @@ export default function Recipes() {
   return (
     <div className="recipes-page">
       <Search />
-      <RecipeList user={userData?.user} recipes={recipes} loading={loading} />
+      <RecipeList user={userData?.user} recipes={recipes} />
     </div>
   );
 }

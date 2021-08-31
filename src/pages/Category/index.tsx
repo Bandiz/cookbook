@@ -10,7 +10,7 @@ import "./Category.scss";
 
 export default function Category() {
   const { category } = useParams<{ category: string }>();
-  const { loading, recipes, fetchRecipes } = useGlobalContext();
+  const { recipes, fetchRecipes } = useGlobalContext();
 
   useEffect(() => {
     if (recipes.length === 0) {
@@ -30,11 +30,7 @@ export default function Category() {
   return (
     <div className="category-page">
       <Search />
-      <RecipeList
-        category={category}
-        recipes={recipesByCategory}
-        loading={loading}
-      />
+      <RecipeList category={category} recipes={recipesByCategory} />
     </div>
   );
 }
