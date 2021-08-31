@@ -12,12 +12,15 @@ import "./Hamburger.scss";
 
 import { HamburgerProps } from "../types";
 import Submenu from "../Submenu";
+import { useGlobalContext } from "../../../../RecipesContext";
 
 export default function Hamburger({
   menuLinks,
   handleClose,
   open,
 }: HamburgerProps) {
+  const { userData } = useGlobalContext();
+
   return (
     <Drawer
       anchor="top"
@@ -52,6 +55,15 @@ export default function Hamburger({
           </Accordion>
         );
       })}
+      {userData?.user.isAdmin && (
+        <Accordion className="accordion" expanded={false}>
+          <AccordionSummary>
+            <Link className="link-text" to={"/admin"} onClick={handleClose}>
+              Admin
+            </Link>
+          </AccordionSummary>
+        </Accordion>
+      )}
     </Drawer>
   );
 }

@@ -20,7 +20,7 @@ function App() {
         <Route path="/recipes" component={Recipes} />
         <Route path="/category/:category" component={Category} />
         <Route path="/about" component={About} />
-        <Route path="/administration" component={Admin} />
+        <Route path="/admin" component={Admin} />
         <Route path="/recipe/:id" component={Recipe} />
         <Route component={NotFound} />
       </Switch>

@@ -14,8 +14,10 @@ import "./HeaderNav.scss";
 
 import Hamburger from "../Hamburger";
 import Submenu from "../Submenu";
+import { useGlobalContext } from "../../../../RecipesContext";
 
 const Navbar = () => {
+  const { userData } = useGlobalContext();
   const [openSubmenu, setOpenSubmenu] = useState<null | HTMLElement>(null);
   const [openHamburger, setOpenHamburger] = useState(false);
 
@@ -33,7 +35,6 @@ const Navbar = () => {
       ],
     },
     { label: "About", url: "/about" },
-    { label: "Admin", url: "/administration" },
   ];
 
   const handleOpenSubmenu = (event: React.MouseEvent<any>) => {
@@ -73,10 +74,9 @@ const Navbar = () => {
             {menuLinks.map((link, index) => {
               const { label, url } = link;
               return label === "Recipes" ? (
-                <>
+                <div key={index}>
                   <Link
                     href={url}
-                    key={index}
                     className="link-btn"
                     onMouseOver={handleOpenSubmenu}
                   >
@@ -104,13 +104,18 @@ const Navbar = () => {
                       handleClose={handleCloseSubmenu}
                     />
                   </Menu>
-                </>
+                </div>
               ) : (
                 <Link href={url} key={index} className="link-btn">
                   {label}
                 </Link>
               );
             })}
+            {userData?.user.isAdmin && (
+              <Link href={"/admin"} className="link-btn">
+                Admin
+              </Link>
+            )}
           </div>
         </div>
       </nav>

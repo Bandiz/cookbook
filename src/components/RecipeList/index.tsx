@@ -1,9 +1,7 @@
-// import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Loading from "../Shared/Loading";
-// import { useGlobalContext } from "../../RecipesContext";
-import { Recipe } from "../../types";
+import { Recipe, User } from "../../types";
 
 import "./RecipeList.scss";
 
@@ -11,10 +9,12 @@ export default function RecipeList({
   recipes,
   loading,
   category,
+  user,
 }: {
   recipes: Recipe[];
   loading: boolean;
   category?: string;
+  user?: User;
 }) {
   if (loading) {
     return <Loading />;
@@ -52,6 +52,11 @@ export default function RecipeList({
                 <Link to={`/recipe/${id}`} className="btn btn-primary">
                   read more
                 </Link>
+                {user?.isAdmin && (
+                  <Link to="#" className="btn btn-primary">
+                    edit
+                  </Link>
+                )}
               </div>
             </article>
           );
