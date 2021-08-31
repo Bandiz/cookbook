@@ -11,6 +11,7 @@ import { Recipe } from "../../types";
 import { GiKnifeFork } from "react-icons/gi";
 import { BiTime } from "react-icons/bi";
 import "./Recipe.scss";
+import { RECIPES } from "../../constants/routes";
 
 const RecipePage = () => {
   const { id } = useParams<{ id: any }>();
@@ -40,7 +41,7 @@ const RecipePage = () => {
   return (
     <div className="recipe-block">
       <Search />
-      <Link to="/recipes" className="btn btn-primary">
+      <Link to={RECIPES} className="btn btn-primary">
         back to recipes
       </Link>
       <section className="recipe-section">

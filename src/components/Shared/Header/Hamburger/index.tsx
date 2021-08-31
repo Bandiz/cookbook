@@ -13,6 +13,7 @@ import "./Hamburger.scss";
 import { HamburgerProps } from "../types";
 import Submenu from "../Submenu";
 import { useGlobalContext } from "../../../../RecipesContext";
+import { ADMIN } from "../../../../constants/routes";
 
 export default function Hamburger({
   menuLinks,
@@ -58,7 +59,7 @@ export default function Hamburger({
       {userData?.user.isAdmin && (
         <Accordion className="accordion" expanded={false}>
           <AccordionSummary>
-            <Link className="link-text" to={"/admin"} onClick={handleClose}>
+            <Link className="link-text" to={ADMIN} onClick={handleClose}>
               Admin
             </Link>
           </AccordionSummary>

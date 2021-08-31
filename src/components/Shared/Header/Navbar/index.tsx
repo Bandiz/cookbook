@@ -15,6 +15,7 @@ import "./HeaderNav.scss";
 import Hamburger from "../Hamburger";
 import Submenu from "../Submenu";
 import { useGlobalContext } from "../../../../RecipesContext";
+import { ABOUT, ADMIN, HOME, RECIPES } from "../../../../constants/routes";
 
 const Navbar = () => {
   const { userData } = useGlobalContext();
@@ -22,10 +23,10 @@ const Navbar = () => {
   const [openHamburger, setOpenHamburger] = useState(false);
 
   const menuLinks = [
-    { label: "Home", url: "/" },
+    { label: "Home", url: HOME },
     {
       label: "Recipes",
-      url: "/recipes",
+      url: RECIPES,
       sublinks: [
         { label: "breakfast", icon: <CgBowl />, subUrl: "/category/breakfast" },
         { label: "lunch", icon: <GiHamburger />, subUrl: "/category/lunch" },
@@ -34,7 +35,7 @@ const Navbar = () => {
         { label: "soups", icon: <GiCookingPot />, subUrl: "/category/soups" },
       ],
     },
-    { label: "About", url: "/about" },
+    { label: "About", url: ABOUT },
   ];
 
   const handleOpenSubmenu = (event: React.MouseEvent<any>) => {
@@ -58,7 +59,7 @@ const Navbar = () => {
       <nav className="nav">
         <div className="nav-center">
           <div className="nav-header">
-            <Link href="/" className="nav-link-logo">
+            <Link href={HOME} className="nav-link-logo">
               <img src={logo} className="nav-logo" alt="logo" />
             </Link>
             <button className="nav-btn" onClick={handleOpenHamburger}>
@@ -112,7 +113,7 @@ const Navbar = () => {
               );
             })}
             {userData?.user.isAdmin && (
-              <Link href={"/admin"} className="link-btn">
+              <Link href={ADMIN} className="link-btn">
                 Admin
               </Link>
             )}
