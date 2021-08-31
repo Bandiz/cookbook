@@ -33,7 +33,7 @@ export default function RecipeList({
                       return (
                         <Link
                           key={index}
-                          to={`/category/${category}`}
+                          to={`/category/${category.toLowerCase()}`}
                           className="category-link"
                         >
                           {category}
