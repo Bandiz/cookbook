@@ -1,0 +1,19 @@
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .admin-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+
+    .text {
+      margin: 0 20px 0;
+      font-family: var(--fontFamily);
+    }
+  }
+}
