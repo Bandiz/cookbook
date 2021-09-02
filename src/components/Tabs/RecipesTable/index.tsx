@@ -23,7 +23,7 @@ export default function RecipesTable() {
   }, []);
 
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={12}>
       <Typography variant="h6" className="title">
         List of Recipes
       </Typography>

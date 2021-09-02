@@ -1,11 +1,15 @@
 .admin-tabs {
   flex-grow: 1;
+  display: flex;
   width: 100%;
 
-  .MuiTab-textColorPrimary.Mui-selected {
+  .MuiTab-textColorInherit.Mui-selected {
     color: (var(--primaryColor));
   }
-  .PrivateTabIndicator-colorPrimary-2 {
+  .PrivateTabIndicator-colorSecondary-3 {
     background-color: (var(--primaryColor));
+  }
+  .tab-panel {
+    width: 100%;
   }
 }

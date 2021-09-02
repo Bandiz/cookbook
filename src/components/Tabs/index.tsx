@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppBar, Box, Tab, Tabs, Typography } from "@material-ui/core";
+import { Box, Tab, Tabs, Typography } from "@material-ui/core";
 
 import RecipesTable from "./RecipesTable";
 import CategoriesTable from "./CategoriesTable";
@@ -18,8 +18,8 @@ function TabPanel(props: TabPanelProps) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`scrollable-force-tabpanel-${index}`}
-      aria-labelledby={`scrollable-force-tab-${index}`}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
       {value === index && (
@@ -33,13 +33,13 @@ function TabPanel(props: TabPanelProps) {
 
 function a11yProps(index: number) {
   return {
-    id: `scrollable-force-tab-${index}`,
-    "aria-controls": `scrollable-force-tabpanel-${index}`,
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
 
 export default function AdminTabs() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<Number>(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -47,33 +47,31 @@ export default function AdminTabs() {
 
   return (
     <div className="admin-tabs">
-      <AppBar position="static" color="default">
-        <Tabs
-          className="tabs"
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="on"
-          indicatorColor="primary"
-          textColor="primary"
-          aria-label="scrollable force tabs example"
-        >
-          <Tab label="Users" {...a11yProps(0)} />
-          <Tab label="Categories" {...a11yProps(1)} />
-          <Tab label="Recipes" {...a11yProps(2)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel index={0} value={value}>
-        List of Users, role change
-      </TabPanel>
-      <TabPanel index={1} value={value}>
-        List of all categories, Add/Delete/Edit? category
-        <CategoriesTable />
-      </TabPanel>
-      <TabPanel index={2} value={value}>
-        Add a new recipe, Link to Recipes
-        <RecipesTable />
-      </TabPanel>
+      <Tabs
+        orientation="vertical"
+        variant="scrollable"
+        className="tabs"
+        value={value}
+        onChange={handleChange}
+        aria-label="vertical tabs example"
+      >
+        <Tab label="Users" {...a11yProps(0)} />
+        <Tab label="Categories" {...a11yProps(1)} />
+        <Tab label="Recipes" {...a11yProps(2)} />
+      </Tabs>
+      <div className="tab-panel">
+        <TabPanel index={0} value={value}>
+          List of Users, role change
+        </TabPanel>
+        <TabPanel index={1} value={value}>
+          List of all categories, Add/Delete/Edit? category
+          <CategoriesTable />
+        </TabPanel>
+        <TabPanel index={2} value={value}>
+          Add a new recipe, Link to Recipes
+          <RecipesTable />
+        </TabPanel>
+      </div>
     </div>
   );
 }
