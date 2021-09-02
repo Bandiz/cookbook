@@ -11,6 +11,7 @@ const Recipe = lazy(() => import("./pages/Recipe"));
 const Category = lazy(() => import("./pages/Category"));
 const About = lazy(() => import("./pages/About"));
 const Admin = lazy(() => import("./pages/Admin"));
+const CreateRecipe = lazy(() => import("./pages/CreateRecipe"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path={ROUTES.ABOUT} component={About} />
           <Route path={ROUTES.ADMIN} component={Admin} />
           <Route path={ROUTES.RECIPE} component={Recipe} />
+          <Route path={ROUTES.CREATE_RECIPE} component={CreateRecipe} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

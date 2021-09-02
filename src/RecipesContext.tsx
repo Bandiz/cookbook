@@ -12,6 +12,7 @@ interface RecipesContextObject {
   fetchRecipes: () => Promise<void>;
   fetchRecipe: (id: number) => Promise<Recipe>;
   fetchUserData: (tokenId: string) => Promise<void>;
+  addRecipe: (id: number) => Promise<Recipe>;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
@@ -67,6 +68,20 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     }
   };
 
+  const addRecipe = async (id: number) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}v1/Recipe/${id}`, { method: "PUT" });
+      const newRecipe = await response.json();
+      setLoading(false);
+      setRecipes((prev) => [...prev, newRecipe]);
+      return newRecipe;
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   return (
     <RecipesContext.Provider
       value={{
@@ -76,6 +91,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         fetchRecipe: fetchRecipeId,
         userData,
         fetchUserData,
+        addRecipe,
       }}
     >
       {children}
