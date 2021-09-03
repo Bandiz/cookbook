@@ -14,6 +14,7 @@ import { useGlobalContext } from "../../../RecipesContext";
 import AddItem from "../ListLayout/AddItem";
 import ListItems from "../ListLayout";
 import { Link } from "react-router-dom";
+import { CREATE_RECIPE } from "../../../constants/routes";
 
 export default function RecipesTable() {
   const { recipes, fetchRecipes } = useGlobalContext();
@@ -29,7 +30,7 @@ export default function RecipesTable() {
       </Typography>
       <div style={{ backgroundColor: "var(--darkGrey)" }}>
         <List>
-          <AddItem text="recipe" />
+          <AddItem url={CREATE_RECIPE} />
           {recipes.map((recipe, index) => {
             return (
               <ListItem key={index}>
