@@ -9,28 +9,32 @@ import { Recipe } from "../../types";
 import "./Category.scss";
 
 export default function Category() {
-  const { category } = useParams<{ category: string }>();
-  const { recipes, fetchRecipes } = useGlobalContext();
+    const { category } = useParams<{ category: string }>();
+    const { recipes, fetchRecipes } = useGlobalContext();
+    const { categories, fetchCategories } = useGlobalContext();
 
-  useEffect(() => {
-    if (recipes.length === 0) {
-      fetchRecipes();
-    }
-  }, []);
+    useEffect(() => {
+        if (recipes.length === 0) {
+            fetchRecipes();
+        }
+        fetchCategories();
+    }, []);
 
-  const recipesByCategory: Recipe[] = [];
-  recipes.map((c) =>
-    c.categories.forEach((x) => {
-      if (x.toLowerCase() === category) {
-        recipesByCategory.push(c);
-      }
-    })
-  );
+    console.log(categories);
 
-  return (
-    <div className="category-page">
-      <Search />
-      <RecipeList category={category} recipes={recipesByCategory} />
-    </div>
-  );
+    const recipesByCategory: Recipe[] = [];
+    recipes.map((c) =>
+        c.categories.forEach((x) => {
+            if (x.toLowerCase() === category) {
+                recipesByCategory.push(c);
+            }
+        })
+    );
+
+    return (
+        <div className="category-page">
+            <Search />
+            <RecipeList category={category} recipes={recipesByCategory} />
+        </div>
+    );
 }

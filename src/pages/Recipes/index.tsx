@@ -7,18 +7,18 @@ import { useGlobalContext } from "../../RecipesContext";
 import "./Recipes.scss";
 
 export default function Recipes() {
-  const { userData, recipes, fetchRecipes } = useGlobalContext();
+    const { userData, recipes, fetchRecipes } = useGlobalContext();
 
-  useEffect(() => {
-    if (recipes.length === 0) {
-      fetchRecipes();
-    }
-  }, []);
+    useEffect(() => {
+        if (recipes.length === 0) {
+            fetchRecipes();
+        }
+    }, []);
 
-  return (
-    <div className="recipes-page">
-      <Search />
-      <RecipeList user={userData?.user} recipes={recipes} />
-    </div>
-  );
+    return (
+        <div className="recipes-page">
+            <Search />
+            <RecipeList user={userData?.user} recipes={recipes} />
+        </div>
+    );
 }

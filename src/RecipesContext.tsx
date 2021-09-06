@@ -1,104 +1,114 @@
 import { useState, useContext, createContext, ReactNode } from "react";
-import { Recipe, UserSession } from "./types";
-
-const url = "https://localhost:44329/api/";
+import { _categories, _recipeById, _recipes, _token } from "./contextApi/apiUrl";
+import { Category, Recipe, UserSession } from "./types";
 
 export const RecipesContext = createContext({} as RecipesContextObject);
 
 interface RecipesContextObject {
-  recipes: Recipe[];
-  loading: boolean;
-  userData: UserSession | undefined;
-  fetchRecipes: () => Promise<void>;
-  fetchRecipe: (id: number) => Promise<Recipe>;
-  fetchUserData: (tokenId: string) => Promise<void>;
-  addRecipe: (id: number) => Promise<Recipe>;
+    recipes: Recipe[];
+    loading: boolean;
+    userData: UserSession | null;
+    logout: () => void;
+    fetchRecipes: () => Promise<void>;
+    fetchRecipe: (id: string) => Promise<Recipe>;
+    fetchUserData: (tokenId: string) => Promise<void>;
+    categories: Category[];
+    fetchCategories: () => Promise<void>;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-  const [userData, setUserData] = useState<UserSession>();
+    const [userData, setUserData] = useState<UserSession | null>(null);
 
-  const fetchRecipes = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${url}v1/Recipe`);
-      const recipes = await response.json();
-      setRecipes(recipes);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+    const [categories, setCategories] = useState<Category[]>([]);
 
-  const fetchRecipeId = async (id: number) => {
-    const recipe = recipes.find((x) => x.id === id);
+    const fetchRecipes = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(_recipes);
+            const recipes = await response.json();
+            setRecipes(recipes);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
 
-    if (recipe) {
-      return recipe;
-    }
+    const fetchRecipeId = async (id: string) => {
+        const recipe = recipes.find((x) => x.id === id);
 
-    setLoading(true);
-    try {
-      const response = await fetch(`${url}v1/Recipe/${id}`);
-      const recipe = await response.json();
-      setLoading(false);
-      setRecipes((prev) => [...prev, recipe]);
-      return recipe;
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+        if (recipe) {
+            return recipe;
+        }
 
-  const fetchUserData = async (tokenId: string) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${url}token?t=${tokenId}`);
-      const userData = (await response.json()) as UserSession;
-      setUserData(userData);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+        setLoading(true);
+        try {
+            const response = await fetch(`${_recipeById}${id}`);
+            const recipe = await response.json();
+            setLoading(false);
+            setRecipes((prev) => [...prev, recipe]);
+            return recipe;
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
 
-  const addRecipe = async (id: number) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${url}v1/Recipe/${id}`, { method: "PUT" });
-      const newRecipe = await response.json();
-      setLoading(false);
-      setRecipes((prev) => [...prev, newRecipe]);
-      return newRecipe;
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+    const fetchUserData = async (tokenId: string) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${_token}${tokenId}`);
+            const userData = (await response.json()) as UserSession;
+            setUserData(userData);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
 
-  return (
-    <RecipesContext.Provider
-      value={{
-        loading,
-        recipes,
-        fetchRecipes,
-        fetchRecipe: fetchRecipeId,
-        userData,
-        fetchUserData,
-        addRecipe,
-      }}
-    >
-      {children}
-    </RecipesContext.Provider>
-  );
+    const fetchCategories = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(_categories);
+            const categories = await response.json();
+            setCategories(categories);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
+
+    const logout = () => {
+        setUserData(null);
+    };
+
+    console.log("context loaded");
+
+    return (
+        <RecipesContext.Provider
+            value={{
+                loading,
+                recipes,
+                fetchRecipes,
+                fetchRecipe: fetchRecipeId,
+                userData,
+                fetchUserData,
+                categories,
+                fetchCategories,
+                logout,
+            }}
+        >
+            {children}
+        </RecipesContext.Provider>
+    );
 };
 
 export const useGlobalContext = () => {
-  return useContext(RecipesContext);
+    return useContext(RecipesContext);
 };

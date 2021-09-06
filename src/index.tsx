@@ -6,12 +6,12 @@ import { RecipesProvider } from "./RecipesContext";
 import { StylesProvider } from "@material-ui/core";
 
 ReactDOM.render(
-  <StylesProvider injectFirst>
-    <RecipesProvider>
-      <App />
-    </RecipesProvider>
-  </StylesProvider>,
-  document.getElementById("root")
+    <StylesProvider injectFirst>
+        <RecipesProvider>
+            <App />
+        </RecipesProvider>
+    </StylesProvider>,
+    document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
