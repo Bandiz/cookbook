@@ -1,15 +1,22 @@
 .admin-tabs {
-  flex-grow: 1;
-  display: flex;
-  width: 100%;
-
-  .MuiTab-textColorInherit.Mui-selected {
-    color: (var(--primaryColor));
-  }
-  .PrivateTabIndicator-colorSecondary-3 {
-    background-color: (var(--primaryColor));
-  }
-  .tab-panel {
+    flex-grow: 1;
+    display: flex;
     width: 100%;
-  }
+
+    .tab-wrapper {
+        font-size: 1rem;
+        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0.00938em;
+    }
+    .MuiTab-textColorInherit.Mui-selected {
+        color: (var(--primaryColor));
+    }
+    .PrivateTabIndicator-colorSecondary-3 {
+        background-color: (var(--primaryColor));
+    }
+    .tab-panel {
+        width: 100%;
+    }
 }

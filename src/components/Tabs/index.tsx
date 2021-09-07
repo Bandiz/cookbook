@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Tab, Tabs, Typography } from "@material-ui/core";
+import { Box, Tab, Tabs } from "@material-ui/core";
 
 import RecipesTable from "./RecipesTable";
 import CategoriesTable from "./CategoriesTable";
@@ -24,7 +24,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <div className="tab-wrapper">{children}</div>
                 </Box>
             )}
         </div>
@@ -64,7 +64,7 @@ export default function AdminTabs() {
                     List of Users, role change
                 </TabPanel>
                 <TabPanel index={1} value={value}>
-                    List of all categories, Add/Delete/Edit? category
+                    List of all categories, Add/Delete category
                     <CategoriesTable />
                 </TabPanel>
                 <TabPanel index={2} value={value}>
