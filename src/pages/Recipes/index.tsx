@@ -5,20 +5,22 @@ import RecipeList from "../../components/RecipeList";
 import { useGlobalContext } from "../../RecipesContext";
 
 import "./Recipes.scss";
+import { getRecipes } from "../../api/getRecipes";
 
 export default function Recipes() {
-    const { userData, recipes, fetchRecipes } = useGlobalContext();
+    const { recipes } = useGlobalContext();
+    const { getRecipesRequest } = getRecipes();
 
     useEffect(() => {
         if (recipes.length === 0) {
-            fetchRecipes();
+            getRecipesRequest();
         }
     }, []);
 
     return (
         <div className="recipes-page">
             <Search />
-            <RecipeList user={userData?.user} recipes={recipes} />
+            <RecipeList recipes={recipes} />
         </div>
     );
 }

@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
+import { useGlobalContext } from "../../RecipesContext";
 
-import { Recipe, User } from "../../types";
+import { Recipe } from "../../types";
 
 import "./RecipeList.scss";
 
-export default function RecipeList({ recipes, category, user }: { recipes: Recipe[]; category?: string; user?: User }) {
+interface RecipeListProps {
+    recipes: Recipe[];
+    category?: string;
+}
+
+export default function RecipeList({ recipes, category }: RecipeListProps) {
+    const { userData } = useGlobalContext();
+
     if (recipes.length < 1) {
         return <h2 className="section-title">No recipes to display</h2>;
     }
@@ -38,7 +46,7 @@ export default function RecipeList({ recipes, category, user }: { recipes: Recip
                                 <Link to={`/recipe/${id}`} className="btn btn-primary">
                                     read more
                                 </Link>
-                                {user?.isAdmin && (
+                                {userData && userData.user.isAdmin && (
                                     <Link to="#" className="btn btn-primary">
                                         edit
                                     </Link>
