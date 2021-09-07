@@ -1,21 +1,23 @@
 import { Link } from "react-router-dom";
+
 import { Logo } from "../Logo";
+import { HamburgerProps } from "../types";
+import { useGlobalContext } from "../../../../RecipesContext";
+import { ADMIN } from "../../../../constants/routes";
 
 import {
     Accordion,
-    // AccordionDetails,
+    AccordionDetails,
     AccordionSummary,
     Drawer,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import "./Hamburger.scss";
 
-import { HamburgerProps } from "../types";
-// import Submenu from "../Submenu";
-import { useGlobalContext } from "../../../../RecipesContext";
-import { ADMIN } from "../../../../constants/routes";
-
-export default function Hamburger({ menuLinks, handleClose, open }: HamburgerProps) {
+export default function Hamburger({ menuLinks, handleClose, open, categories }: HamburgerProps) {
     const { userData } = useGlobalContext();
 
     return (
@@ -30,7 +32,7 @@ export default function Hamburger({ menuLinks, handleClose, open }: HamburgerPro
                 <Logo />
             </div>
             {menuLinks.map((link, index) => {
-                const { label, url } = link;
+                const { label, url, sublinks } = link;
                 return label === "Recipes" ? (
                     <Accordion key={index} className="accordion">
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -38,9 +40,28 @@ export default function Hamburger({ menuLinks, handleClose, open }: HamburgerPro
                                 {label}
                             </Link>
                         </AccordionSummary>
-                        {/* <AccordionDetails>
-              <Submenu menuLinks={menuLinks} handleClose={handleClose} />
-            </AccordionDetails> */}
+                        <AccordionDetails className="categories">
+                            {sublinks &&
+                                categories.map((category, index) => {
+                                    const icon = sublinks
+                                        .filter((c) => c.label == category)
+                                        .map((c, index) => {
+                                            return <div key={index}>{c.icon}</div>;
+                                        });
+                                    return (
+                                        <MenuItem
+                                            className="item"
+                                            onClick={handleClose}
+                                            key={index}
+                                            component={Link}
+                                            to={`/category/${category.toLowerCase()}`}
+                                        >
+                                            <ListItemIcon className="icon">{icon}</ListItemIcon>
+                                            <ListItemText className="label" primary={category} />
+                                        </MenuItem>
+                                    );
+                                })}
+                        </AccordionDetails>
                     </Accordion>
                 ) : (
                     <Accordion key={index} className="accordion" expanded={false}>

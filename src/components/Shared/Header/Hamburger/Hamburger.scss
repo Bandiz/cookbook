@@ -1,48 +1,82 @@
 .drawer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 
-  .logo {
-    width: 90px;
-    margin-bottom: 10px;
-  }
-
-  .accordion {
-    width: 80%;
-    box-shadow: none;
-
-    &::before {
-      background-color: transparent;
+    .logo {
+        width: 90px;
+        margin-bottom: 10px;
     }
 
-    .link-text {
-      margin-bottom: 10px;
+    .accordion {
+        width: 80%;
+        box-shadow: none;
 
-      &:hover {
-        color: var(--primaryColor);
-        font-weight: 400;
-      }
+        &::before {
+            background-color: transparent;
+        }
+
+        .link-text {
+            margin-bottom: 10px;
+
+            &:hover {
+                color: var(--primaryColor);
+                font-weight: 400;
+            }
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            width: 400px;
+            align-items: center;
+            margin: 10px auto;
+
+            .item {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin: 2px 0;
+                flex: 0 1 50%;
+
+                .icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .label {
+                    text-transform: capitalize;
+                }
+
+                &:hover {
+                    background-color: transparent;
+                    .icon,
+                    .label {
+                        color: var(--primaryColor);
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
 @media (min-width: 768px) {
-  body {
-    overflow: visible !important;
-  }
-  .MuiDrawer-paper {
-    transform: translateY(-375.6px) !important;
-    visibility: hidden !important;
-  }
-  .MuiBackdrop-root {
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-  .MuiDrawer-root,
-  .MuiDrawer-modal {
-    visibility: hidden !important;
-    opacity: 0 !important;
-  }
+    body {
+        overflow: visible !important;
+    }
+    .MuiDrawer-paper {
+        transform: translateY(-375.6px) !important;
+        visibility: hidden !important;
+    }
+    .MuiBackdrop-root {
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+    .MuiDrawer-root,
+    .MuiDrawer-modal {
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
 }
