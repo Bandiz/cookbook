@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, TextField, Tooltip } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -13,7 +13,7 @@ type AddItemProps = {
 };
 
 function AddItem({ categoryName, handleChange, handleAddSubmit, url }: AddItemProps) {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
         <ListItem>
@@ -22,7 +22,7 @@ function AddItem({ categoryName, handleChange, handleAddSubmit, url }: AddItemPr
                     <IconButton
                         disabled={url ? false : categoryName !== '' ? false : true}
                         type={url ? 'button' : 'submit'}
-                        onClick={() => url && history.push(url)}
+                        onClick={() => url && navigate(url)}
                         className="button"
                     >
                         <Tooltip title="Add">

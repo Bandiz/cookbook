@@ -1,25 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { GiKnifeFork } from 'react-icons/gi';
+import { BiTime } from 'react-icons/bi';
 
+import './Recipe.scss';
 import Rate from '../../components/Rate';
 import Comment from '../../components/Comment';
 import Share from '../../components/Share';
 import { Search } from '../../components/Shared';
 import { useGlobalContext } from '../../RecipesContext';
 import { Recipe } from '../../types';
-
-import { GiKnifeFork } from 'react-icons/gi';
-import { BiTime } from 'react-icons/bi';
-import './Recipe.scss';
 import { RECIPES } from '../../constants/routes';
 
 const RecipePage = () => {
-    const { id } = useParams<{ id: any }>();
+    const { id } = useParams();
     const [recipe, setRecipe] = useState<Recipe>();
 
     const { fetchRecipe } = useGlobalContext();
 
     useEffect(() => {
+        if (!id) {
+            return;
+        }
         fetchRecipe(id).then(setRecipe);
     }, [id]);
 

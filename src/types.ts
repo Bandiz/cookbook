@@ -12,7 +12,7 @@ export type Ingredients = {
 };
 
 export type Recipe = {
-    id: number;
+    id: string;
     categories: string[];
     imageUrl: string;
     title: string;

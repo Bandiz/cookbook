@@ -10,9 +10,9 @@ interface RecipesContextObject {
     loading: boolean;
     userData: UserSession | undefined;
     fetchRecipes: () => Promise<void>;
-    fetchRecipe: (id: number) => Promise<Recipe>;
+    fetchRecipe: (id: string) => Promise<Recipe>;
     fetchUserData: (tokenId: string) => Promise<void>;
-    addRecipe: (id: number) => Promise<Recipe>;
+    addRecipe: (id: string) => Promise<Recipe>;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
@@ -35,7 +35,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         }
     };
 
-    const fetchRecipeId = async (id: number) => {
+    const fetchRecipeId = async (id: string) => {
         const recipe = recipes.find((x) => x.id === id);
 
         if (recipe) {
@@ -68,7 +68,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         }
     };
 
-    const addRecipe = async (id: number) => {
+    const addRecipe = async (id: string) => {
         setLoading(true);
         try {
             const response = await fetch(`${url}v1/Recipe/${id}`, { method: 'PUT' });

@@ -9,7 +9,7 @@ import { Recipe } from '../../types';
 import './Category.scss';
 
 export default function Category() {
-    const { category } = useParams<{ category: string }>();
+    const { category } = useParams();
     const { recipes, fetchRecipes } = useGlobalContext();
 
     useEffect(() => {
