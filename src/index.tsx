@@ -1,17 +1,17 @@
-import ReactDOM from "react-dom";
-import "./index.scss";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
-import { RecipesProvider } from "./RecipesContext";
-import { StylesProvider } from "@material-ui/core";
+import ReactDOM from 'react-dom';
+import './index.scss';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+import { RecipesProvider } from './RecipesContext';
+import { StylesProvider } from '@material-ui/core';
 
 ReactDOM.render(
-  <StylesProvider injectFirst>
-    <RecipesProvider>
-      <App />
-    </RecipesProvider>
-  </StylesProvider>,
-  document.getElementById("root")
+    <StylesProvider injectFirst>
+        <RecipesProvider>
+            <App />
+        </RecipesProvider>
+    </StylesProvider>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
