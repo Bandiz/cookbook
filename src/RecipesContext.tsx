@@ -1,8 +1,6 @@
 import { useState, useContext, createContext, ReactNode } from 'react';
 import { Recipe, UserSession } from './types';
 
-const url = 'https://localhost:44329/api/';
-
 export const RecipesContext = createContext({} as RecipesContextObject);
 
 interface RecipesContextObject {
@@ -25,7 +23,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     const fetchRecipes = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${url}v1/Recipe`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}v1/Recipe`);
             const recipes = await response.json();
             setRecipes(recipes);
             setLoading(false);
@@ -44,7 +42,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
 
         setLoading(true);
         try {
-            const response = await fetch(`${url}v1/Recipe/${id}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}v1/Recipe/${id}`);
             const recipe = await response.json();
             setLoading(false);
             setRecipes((prev) => [...prev, recipe]);
@@ -58,7 +56,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     const fetchUserData = async (tokenId: string) => {
         setLoading(true);
         try {
-            const response = await fetch(`${url}token?t=${tokenId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}token?t=${tokenId}`);
             const userData = (await response.json()) as UserSession;
             setUserData(userData);
             setLoading(false);
@@ -71,7 +69,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     const addRecipe = async (id: string) => {
         setLoading(true);
         try {
-            const response = await fetch(`${url}v1/Recipe/${id}`, { method: 'PUT' });
+            const response = await fetch(`${process.env.REACT_APP_API_URL}v1/Recipe/${id}`, { method: 'PUT' });
             const newRecipe = await response.json();
             setLoading(false);
             setRecipes((prev) => [...prev, newRecipe]);
