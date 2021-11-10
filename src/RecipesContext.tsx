@@ -9,7 +9,6 @@ interface RecipesContextObject {
     userData?: UserSession | null;
     fetchRecipes: () => Promise<void>;
     fetchRecipe: (id: string) => Promise<Recipe>;
-    fetchUserData: (tokenId: string) => Promise<void>;
     addRecipe: (id: string) => Promise<Recipe>;
     updateRecipe: (recipe: Recipe) => void;
     setSession: (session: UserSession) => void;
@@ -55,20 +54,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
             setLoading(false);
         }
     };
-
-    const fetchUserData = async (tokenId: string) => {
-        setLoading(true);
-        try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}v1/token?t=${tokenId}`);
-            const userData = (await response.json()) as UserSession;
-            setUserData(userData);
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            setLoading(false);
-        }
-    };
-
     const addRecipe = async (id: string) => {
         setLoading(true);
         try {
@@ -106,7 +91,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
                 fetchRecipes,
                 fetchRecipe: fetchRecipeId,
                 userData,
-                fetchUserData,
                 addRecipe,
                 updateRecipe,
                 setSession: setUserData,

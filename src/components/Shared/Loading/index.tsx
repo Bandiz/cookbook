@@ -11,7 +11,7 @@ export default function Loading() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <g id="runing-man" clip-path="url(#clip0)">
+                <g id="runing-man" clipPath="url(#clip0)">
                     <g id="lower-right-leg">
                         <path
                             id="Vector"
@@ -107,7 +107,7 @@ export default function Loading() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <g id="meat 1" clip-path="url(#clip0)">
+                <g id="meat 1" clipPath="url(#clip0)">
                     <g id="body">
                         <path
                             id="Vector"
