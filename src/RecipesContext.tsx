@@ -11,6 +11,7 @@ interface RecipesContextObject {
     fetchRecipe: (id: string) => Promise<Recipe>;
     fetchUserData: (tokenId: string) => Promise<void>;
     addRecipe: (id: string) => Promise<Recipe>;
+    updateRecipe: (recipe: Recipe) => void;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
@@ -80,6 +81,17 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         }
     };
 
+    const updateRecipe = (recipe: Recipe) => {
+        setRecipes((prev) =>
+            prev.map((x) => {
+                if (x.id === recipe.id) {
+                    return recipe;
+                }
+                return x;
+            })
+        );
+    };
+
     return (
         <RecipesContext.Provider
             value={{
@@ -90,6 +102,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
                 userData,
                 fetchUserData,
                 addRecipe,
+                updateRecipe,
             }}
         >
             {children}
