@@ -1,9 +1,10 @@
 import ReactDOM from 'react-dom';
+import { StylesProvider } from '@mui/styles';
+
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { RecipesProvider } from './RecipesContext';
-import { StylesProvider } from '@material-ui/core';
 
 ReactDOM.render(
     <StylesProvider injectFirst>

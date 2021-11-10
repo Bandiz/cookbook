@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Logo } from '../Logo';
+import { Accordion, AccordionDetails, AccordionSummary, Drawer } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { Accordion, AccordionDetails, AccordionSummary, Drawer } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import './Hamburger.scss';
-
+import { Logo } from '../Logo';
 import { HamburgerProps } from '../types';
 import Submenu from '../Submenu';
 import { useGlobalContext } from '../../../../RecipesContext';

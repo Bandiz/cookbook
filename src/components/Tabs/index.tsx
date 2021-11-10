@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Tab, Tabs, Typography } from '@material-ui/core';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 
 import RecipesTable from './RecipesTable';
 import CategoriesTable from './CategoriesTable';

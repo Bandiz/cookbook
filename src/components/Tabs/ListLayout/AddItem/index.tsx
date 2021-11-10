@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, TextField, Tooltip } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, TextField, Tooltip } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import './AddItem.scss';
 

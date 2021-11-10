@@ -1,16 +1,15 @@
 import { useState } from 'react';
-
-import { Menu, Link } from '@material-ui/core';
 import { FaBars } from 'react-icons/fa';
 import { GiHamburger, GiSteak, GiFruitBowl, GiCookingPot } from 'react-icons/gi';
 import { CgBowl } from 'react-icons/cg';
+
 import logo from '../Logo/icon.png';
 import './HeaderNav.scss';
-
 import Hamburger from '../Hamburger';
 import Submenu from '../Submenu';
 import { useGlobalContext } from '../../../../RecipesContext';
 import { ABOUT, ADMIN, HOME, RECIPES } from '../../../../constants/routes';
+import { Link, Menu } from '@mui/material';
 
 const Navbar = () => {
     const { userData } = useGlobalContext();
@@ -76,7 +75,6 @@ const Navbar = () => {
                                         open={Boolean(openSubmenu)}
                                         onClose={handleCloseSubmenu}
                                         onMouseLeave={handleCloseSubmenu}
-                                        getContentAnchorEl={null}
                                         anchorOrigin={{
                                             vertical: 'bottom',
                                             horizontal: 'center',
@@ -96,11 +94,11 @@ const Navbar = () => {
                                 </Link>
                             );
                         })}
-                        {userData?.user.isAdmin && (
-                            <Link href={ADMIN} className="link-btn">
-                                Admin
-                            </Link>
-                        )}
+                        {/* {userData?.user.isAdmin && ( */}
+                        <Link href={ADMIN} className="link-btn">
+                            Admin
+                        </Link>
+                        {/* )} */}
                     </div>
                 </div>
             </nav>

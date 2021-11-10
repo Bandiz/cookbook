@@ -6,12 +6,14 @@ export const RecipesContext = createContext({} as RecipesContextObject);
 interface RecipesContextObject {
     recipes: Recipe[];
     loading: boolean;
-    userData: UserSession | undefined;
+    userData?: UserSession | null;
     fetchRecipes: () => Promise<void>;
     fetchRecipe: (id: string) => Promise<Recipe>;
     fetchUserData: (tokenId: string) => Promise<void>;
     addRecipe: (id: string) => Promise<Recipe>;
     updateRecipe: (recipe: Recipe) => void;
+    setSession: (session: UserSession) => void;
+    clearSession: () => void;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
@@ -19,7 +21,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
 
     const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-    const [userData, setUserData] = useState<UserSession>();
+    const [userData, setUserData] = useState<UserSession | null>();
 
     const fetchRecipes = async () => {
         setLoading(true);
@@ -57,7 +59,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     const fetchUserData = async (tokenId: string) => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}token?t=${tokenId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}v1/token?t=${tokenId}`);
             const userData = (await response.json()) as UserSession;
             setUserData(userData);
             setLoading(false);
@@ -92,6 +94,10 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         );
     };
 
+    const clearSession = () => {
+        setUserData(null);
+    };
+
     return (
         <RecipesContext.Provider
             value={{
@@ -103,6 +109,8 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
                 fetchUserData,
                 addRecipe,
                 updateRecipe,
+                setSession: setUserData,
+                clearSession,
             }}
         >
             {children}

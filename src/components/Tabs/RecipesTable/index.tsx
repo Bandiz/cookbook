@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-
-import { Grid, ListItemAvatar, ListItemText, List, ListItem, Avatar, Typography } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 
 import { useGlobalContext } from '../../../RecipesContext';
 import AddItem from '../ListLayout/AddItem';
 import ListItems from '../ListLayout';
-import { Link } from 'react-router-dom';
 import { CREATE_RECIPE } from '../../../constants/routes';
 
 export default function RecipesTable() {

@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { SubmenuProps } from '../types';
+import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 
-import { ListItemIcon, ListItemText, MenuItem } from '@material-ui/core';
 import './Submenu.scss';
+import { SubmenuProps } from '../types';
 
 export default function Submenu({ handleClose, menuLinks }: SubmenuProps) {
     return (

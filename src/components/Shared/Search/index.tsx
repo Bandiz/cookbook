@@ -1,5 +1,5 @@
-import SearchIcon from '@material-ui/icons/Search';
-import { InputBase } from '@material-ui/core';
+import { InputBase } from '@mui/material';
+import SearchIcon from '@mui/icons-material//Search';
 
 import './Search.scss';
 

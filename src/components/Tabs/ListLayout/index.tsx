@@ -1,4 +1,4 @@
-import { ListItemSecondaryAction } from '@material-ui/core';
+import { ListItemSecondaryAction } from '@mui/material';
 
 import DeleteItem from './DeleteItem';
 import EditItem from './EditItem';

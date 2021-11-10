@@ -10,8 +10,8 @@ import {
     Typography,
     ListItemSecondaryAction,
     TextField,
-} from '@material-ui/core';
-import FolderIcon from '@material-ui/icons/Folder';
+} from '@mui/material';
+import FolderIcon from '@mui/icons-material/Folder';
 
 import AddItem from '../ListLayout/AddItem';
 import EditItem from '../ListLayout/EditItem';

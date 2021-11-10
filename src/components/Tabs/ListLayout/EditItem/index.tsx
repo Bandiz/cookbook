@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { IconButton, Tooltip } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 type EditProps = {
     handleEdit?: (event: any) => void;
