@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import { GiHamburger, GiSteak, GiFruitBowl, GiCookingPot } from 'react-icons/gi';
 import { CgBowl } from 'react-icons/cg';
@@ -10,7 +11,6 @@ import Hamburger from '../Hamburger';
 // import Submenu from '../Submenu';
 import { useGlobalContext } from '../../../../RecipesContext';
 import { ABOUT, ADMIN, HOME, RECIPES } from '../../../../constants/routes';
-import { Link } from 'react-router-dom';
 import { GetCategories } from '../../../../api/categories/getCategories';
 
 const Navbar = () => {

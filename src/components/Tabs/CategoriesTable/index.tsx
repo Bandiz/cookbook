@@ -1,7 +1,7 @@
 import { ChangeEvent, SyntheticEvent, useState } from 'react';
 
-import { Grid, ListItemAvatar, List, ListItem, Avatar, Typography, ListItemSecondaryAction } from '@material-ui/core';
-import FolderIcon from '@material-ui/icons/Folder';
+import { Grid, ListItemAvatar, List, ListItem, Avatar, Typography, ListItemSecondaryAction } from '@mui/material';
+import FolderIcon from '@mui/icons-material/Folder';
 
 import AddItem from '../ListLayout/AddItem';
 import DeleteItem from '../ListLayout/DeleteItem';

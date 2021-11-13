@@ -63,7 +63,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
 
     const logout = () => {
         setUserData(null);
-        httpClient.defaults.headers.authorization = '';
+        httpClient.defaults.headers.common.authorization = '';
     };
 
     const updateRecipe = (recipe: Recipe) => {

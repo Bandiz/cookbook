@@ -7,7 +7,7 @@ interface AuthObject {
     token?: string;
 }
 
-const httpClient = axios.create({ baseURL: `${process.env.REACT_APP_BASE_API_URL}` });
+const httpClient = axios.create({ baseURL: `${process.env.REACT_APP_API_URL}` });
 
 export const AuthContext = createContext<AuthObject>({ isAuthenticated: false, httpClient });
 

@@ -39,7 +39,7 @@ function a11yProps(index: number) {
 }
 
 export default function AdminTabs() {
-    const [value, setValue] = useState<Number>(0);
+    const [value, setValue] = useState(0);
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
