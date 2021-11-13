@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { HOME } from "../../../../constants/routes";
+import { Link } from 'react-router-dom';
+import { HOME } from '../../../../constants/routes';
 
-import logo from "./icon.png";
+import logo from './icon.png';
 
 export const Logo = () => {
     return (

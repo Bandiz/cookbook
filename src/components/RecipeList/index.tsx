@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-import { useGlobalContext } from "../../RecipesContext";
+import { Link } from 'react-router-dom';
+import { useGlobalContext } from '../../RecipesContext';
 
-import { Recipe } from "../../types";
+import { Recipe } from '../../types';
 
-import "./RecipeList.scss";
+import './RecipeList.scss';
 
 interface RecipeListProps {
     recipes: Recipe[];
@@ -18,7 +18,7 @@ export default function RecipeList({ recipes, category }: RecipeListProps) {
     }
     return (
         <section className="recipes-section">
-            <h2 className="section-title">{category ? category : "All Recipes"}</h2>
+            <h2 className="section-title">{category ? category : 'All Recipes'}</h2>
             <div className="recipes">
                 {recipes.map((recipe: Recipe, index) => {
                     const { title, id, imageUrl, categories, totalTimeMinutes } = recipe;

@@ -1,6 +1,6 @@
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle } from 'react-icons/fa';
 
-import "./Comment.scss";
+import './Comment.scss';
 
 export default function Comment() {
     return (

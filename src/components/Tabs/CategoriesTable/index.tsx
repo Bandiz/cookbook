@@ -1,13 +1,13 @@
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from 'react';
 
-import { Grid, ListItemAvatar, List, ListItem, Avatar, Typography, ListItemSecondaryAction } from "@material-ui/core";
-import FolderIcon from "@material-ui/icons/Folder";
+import { Grid, ListItemAvatar, List, ListItem, Avatar, Typography, ListItemSecondaryAction } from '@material-ui/core';
+import FolderIcon from '@material-ui/icons/Folder';
 
-import AddItem from "../ListLayout/AddItem";
-import DeleteItem from "../ListLayout/DeleteItem";
+import AddItem from '../ListLayout/AddItem';
+import DeleteItem from '../ListLayout/DeleteItem';
 
 export default function CategoriesTable() {
-    const [categoryName, setCategoryName] = useState<string>("");
+    const [categoryName, setCategoryName] = useState<string>('');
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCategoryName(event.target.value);
@@ -15,7 +15,7 @@ export default function CategoriesTable() {
     const handleAddSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log(categoryName);
-        setCategoryName("");
+        setCategoryName('');
     };
 
     return (
@@ -23,7 +23,7 @@ export default function CategoriesTable() {
             <Typography variant="h6" className="title">
                 List of Categories
             </Typography>
-            <div style={{ backgroundColor: "var(--darkGrey)" }}>
+            <div style={{ backgroundColor: 'var(--darkGrey)' }}>
                 <List>
                     <AddItem
                         handleAddSubmit={handleAddSubmit}

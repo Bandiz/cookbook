@@ -1,44 +1,49 @@
-import { useCallback } from "react";
-import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from "react-google-login";
-import { useGlobalContext } from "../../RecipesContext";
+import { Alert } from '@mui/material';
+import { useState } from 'react';
+import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
+
+import { GetSession } from '../../api/session/getSession';
+import { useGlobalContext } from '../../RecipesContext';
 
 export default function GoogleButton() {
-    const { userData, fetchUserData, logout } = useGlobalContext();
+    const { userData, clearSession } = useGlobalContext();
+    const { getSessionRequest, getSessionLoading } = GetSession();
+    const [error, setError] = useState<string>();
 
-    const onSuccess = useCallback(
-        (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-            const tokenId = (response as GoogleLoginResponse).tokenId;
-            fetchUserData(tokenId);
-            console.log("signed in", tokenId);
-        },
-        [fetchUserData]
-    );
+    const onSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+        if (response.hasOwnProperty('code')) {
+            return;
+        }
+        getSessionRequest((response as GoogleLoginResponse).tokenId).then((response) => {
+            if (response) {
+                setError(response.error);
+            }
+        });
+    };
 
-    const onFailure = (error: unknown) => {
+    const onFailure = (error: any) => {
         console.log(error);
-        debugger;
     };
 
     return (
-        <>
+        <div className="google-button">
             {userData ? (
                 <GoogleLogout
-                    clientId="817195564279-j5uoj6i8bk13oatgk6i9pa3o3u8ui2k8.apps.googleusercontent.com"
+                    clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
                     buttonText="Logout"
-                    onLogoutSuccess={() => {
-                        console.log("logout");
-                        logout();
-                    }}
+                    onLogoutSuccess={clearSession}
                 />
             ) : (
                 <GoogleLogin
-                    clientId="817195564279-j5uoj6i8bk13oatgk6i9pa3o3u8ui2k8.apps.googleusercontent.com"
+                    disabled={getSessionLoading}
+                    clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
                     onSuccess={onSuccess}
                     onFailure={onFailure}
                     isSignedIn={true}
                     buttonText="Login"
                 />
             )}
-        </>
+            {error && <Alert severity="error">{error}</Alert>}
+        </div>
     );
 }

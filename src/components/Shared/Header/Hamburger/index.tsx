@@ -1,10 +1,4 @@
-import { Link } from "react-router-dom";
-
-import { Logo } from "../Logo";
-import { HamburgerProps } from "../types";
-import { useGlobalContext } from "../../../../RecipesContext";
-import { ADMIN } from "../../../../constants/routes";
-
+import { Link } from 'react-router-dom';
 import {
     Accordion,
     AccordionDetails,
@@ -13,12 +7,18 @@ import {
     ListItemIcon,
     ListItemText,
     MenuItem,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import "./Hamburger.scss";
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-export default function Hamburger({ menuLinks, handleClose, open, categories }: HamburgerProps) {
-    const { userData } = useGlobalContext();
+import './Hamburger.scss';
+import { Logo } from '../Logo';
+import { HamburgerProps } from '../types';
+// import Submenu from '../Submenu';
+import { useGlobalContext } from '../../../../RecipesContext';
+import { ADMIN } from '../../../../constants/routes';
+
+export default function Hamburger({ menuLinks, handleClose, open }: HamburgerProps) {
+    const { userData, categories } = useGlobalContext();
 
     return (
         <Drawer
@@ -26,14 +26,14 @@ export default function Hamburger({ menuLinks, handleClose, open, categories }: 
             open={open}
             onClose={handleClose}
             ModalProps={{ keepMounted: true }}
-            classes={{ paper: "drawer" }}
+            classes={{ paper: 'drawer' }}
         >
             <div className="logo" onClick={handleClose}>
                 <Logo />
             </div>
             {menuLinks.map((link, index) => {
                 const { label, url, sublinks } = link;
-                return label === "Recipes" ? (
+                return label === 'Recipes' ? (
                     <Accordion key={index} className="accordion">
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                             <Link className="link-text" to={url} onClick={handleClose}>
@@ -44,7 +44,7 @@ export default function Hamburger({ menuLinks, handleClose, open, categories }: 
                             {sublinks &&
                                 categories.map((category, index) => {
                                     const icon = sublinks
-                                        .filter((c) => c.label == category)
+                                        .filter((c) => c.label === category)
                                         .map((c, index) => {
                                             return <div key={index}>{c.icon}</div>;
                                         });

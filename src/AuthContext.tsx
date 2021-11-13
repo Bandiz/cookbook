@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import axios, { AxiosInstance } from "axios";
+import { createContext, ReactNode, useContext, useState } from 'react';
+import axios, { AxiosInstance } from 'axios';
 
 interface AuthObject {
     isAuthenticated: boolean;
@@ -16,7 +16,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated] = useState(false);
 
     return (
         <AuthContext.Provider

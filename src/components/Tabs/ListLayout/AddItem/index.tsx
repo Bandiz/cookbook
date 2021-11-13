@@ -1,10 +1,10 @@
-import { ChangeEvent, SyntheticEvent } from "react";
-import { useHistory } from "react-router-dom";
+import { ChangeEvent, SyntheticEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, TextField, Tooltip } from "@material-ui/core";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText, TextField, Tooltip } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import "./AddItem.scss";
+import './AddItem.scss';
 
 type AddItemProps = {
     categoryName?: string;
@@ -14,16 +14,16 @@ type AddItemProps = {
 };
 
 function AddItem({ categoryName, handleChange, handleAddSubmit, url }: AddItemProps) {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
         <ListItem>
             <ListItemAvatar>
                 <Avatar>
                     <IconButton
-                        disabled={url ? false : categoryName !== "" ? false : true}
-                        type={url ? "button" : "submit"}
-                        onClick={() => url && history.push(url)}
+                        disabled={url ? false : categoryName !== '' ? false : true}
+                        type={url ? 'button' : 'submit'}
+                        onClick={() => url && navigate(url)}
                         className="button"
                     >
                         <Tooltip title="Add">

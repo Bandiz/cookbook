@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Box, Tab, Tabs } from "@material-ui/core";
+import { useState } from 'react';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 
-import RecipesTable from "./RecipesTable";
-import CategoriesTable from "./CategoriesTable";
-import "./Tabs.scss";
+import RecipesTable from './RecipesTable';
+import CategoriesTable from './CategoriesTable';
+import './Tabs.scss';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -24,7 +24,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box p={3}>
-                    <div className="tab-wrapper">{children}</div>
+                    <Typography>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -34,14 +34,14 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
     return {
         id: `vertical-tab-${index}`,
-        "aria-controls": `vertical-tabpanel-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
 
 export default function AdminTabs() {
-    const [value, setValue] = useState<number>(0);
+    const [value, setValue] = useState<Number>(0);
 
-    const handleChange = (_event: React.ChangeEvent<unknown>, newValue: number) => {
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     };
 
@@ -64,7 +64,7 @@ export default function AdminTabs() {
                     List of Users, role change
                 </TabPanel>
                 <TabPanel index={1} value={value}>
-                    List of all categories, Add/Delete category
+                    List of all categories, Add/Delete/Edit? category
                     <CategoriesTable />
                 </TabPanel>
                 <TabPanel index={2} value={value}>

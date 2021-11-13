@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
-import recipesData from "../Recipes/RecipesData.json";
-import "./Home.scss";
-import { Search } from "../../components/Shared";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FiChevronRight, FiChevronLeft } from 'react-icons/fi';
+import recipesData from '../Recipes/RecipesData.json';
+import './Home.scss';
+import { Search } from '../../components/Shared';
 
 function Home() {
     const [index, setIndex] = useState(0);
@@ -20,13 +20,13 @@ function Home() {
     };
     const nextRecipe = () => {
         setIndex((index) => {
-            const newIndex = index + 1;
+            let newIndex = index + 1;
             return checkNumber(newIndex);
         });
     };
     const prevRecipe = () => {
         setIndex((index) => {
-            const newIndex = index - 1;
+            let newIndex = index - 1;
             return checkNumber(newIndex);
         });
     };

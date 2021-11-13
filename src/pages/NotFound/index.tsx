@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { HOME } from "../../constants/routes";
-import "./NotFound.scss";
+import { Link } from 'react-router-dom';
+import { HOME } from '../../constants/routes';
+import './NotFound.scss';
 
 const NotFound = () => {
     return (

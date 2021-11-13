@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useAuth } from "../AuthContext";
-import { useGlobalContext } from "../RecipesContext";
-import { Recipe } from "../types";
+import { useAuth } from '../../AuthContext';
+import { useGlobalContext } from '../../RecipesContext';
+import { Recipe } from '../../types';
 
-export function getRecipes() {
+export function GetRecipes() {
     const [loading, setLoading] = useState(false);
     const { httpClient } = useAuth();
     const { setRecipes } = useGlobalContext();

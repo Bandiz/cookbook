@@ -1,7 +1,7 @@
-import SearchIcon from "@material-ui/icons/Search";
-import { InputBase } from "@material-ui/core";
+import { InputBase } from '@mui/material';
+import SearchIcon from '@mui/icons-material//Search';
 
-import "./Search.scss";
+import './Search.scss';
 
 export default function Search() {
     return (
@@ -12,9 +12,9 @@ export default function Search() {
             <InputBase
                 placeholder="Search…"
                 classes={{
-                    root: "inputRoot",
+                    root: 'inputRoot',
                 }}
-                inputProps={{ "aria-label": "search" }}
+                inputProps={{ 'aria-label': 'search' }}
             />
         </div>
     );

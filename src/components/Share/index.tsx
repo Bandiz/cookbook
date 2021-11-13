@@ -1,7 +1,7 @@
-import { AiFillMail, AiFillPrinter } from "react-icons/ai";
-import { FaFacebook } from "react-icons/fa";
+import { AiFillMail, AiFillPrinter } from 'react-icons/ai';
+import { FaFacebook } from 'react-icons/fa';
 
-import "./Share.scss";
+import './Share.scss';
 
 export default function Share() {
     return (

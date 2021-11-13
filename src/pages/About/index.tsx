@@ -1,5 +1,5 @@
-import { Search } from "../../components/Shared";
-import "./About.scss";
+import { Search } from '../../components/Shared';
+import './About.scss';
 
 export default function About() {
     return (

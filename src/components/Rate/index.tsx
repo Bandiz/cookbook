@@ -1,26 +1,26 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { AiFillStar } from "react-icons/ai";
-import "./Rate.scss";
+import { AiFillStar } from 'react-icons/ai';
+import './Rate.scss';
 
 export default function Rate() {
-    const [rate, setRate] = useState("Vote!");
+    const [rate, setRate] = useState('Vote!');
     const Rating = (e: React.MouseEvent) => {
-        const vote = e.currentTarget.id;
-        if (vote === "1") {
-            return setRate("Very Poor");
+        let vote = e.currentTarget.id;
+        if (vote === '1') {
+            return setRate('Very Poor');
         }
-        if (vote === "2") {
-            return setRate("Poor");
+        if (vote === '2') {
+            return setRate('Poor');
         }
-        if (vote === "3") {
-            return setRate("Average");
+        if (vote === '3') {
+            return setRate('Average');
         }
-        if (vote === "4") {
-            return setRate("Good");
+        if (vote === '4') {
+            return setRate('Good');
         }
-        if (vote === "5") {
-            return setRate("Excellent");
+        if (vote === '5') {
+            return setRate('Excellent');
         }
         return rate;
     };
