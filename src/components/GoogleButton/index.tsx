@@ -3,7 +3,7 @@ import { useState } from 'react';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
 
 import { GetSession } from '../../api/session/getSession';
-import { useGlobalContext } from '../../RecipesContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 
 export default function GoogleButton() {
     const { userData, clearSession } = useGlobalContext();

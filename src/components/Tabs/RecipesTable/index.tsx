@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 
-import { useGlobalContext } from '../../../RecipesContext';
+import { useGlobalContext } from '../../../contexts/RecipesContext';
 import AddItem from '../ListLayout/AddItem';
 import ListItems from '../ListLayout';
 import { CREATE_RECIPE } from '../../../constants/routes';

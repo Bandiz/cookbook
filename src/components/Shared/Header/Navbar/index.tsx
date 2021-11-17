@@ -9,7 +9,7 @@ import logo from '../Logo/icon.png';
 import './HeaderNav.scss';
 import Hamburger from '../Hamburger';
 // import Submenu from '../Submenu';
-import { useGlobalContext } from '../../../../RecipesContext';
+import { useGlobalContext } from '../../../../contexts/RecipesContext';
 import { ABOUT, ADMIN, HOME, RECIPES } from '../../../../constants/routes';
 import { GetCategories } from '../../../../api/categories/getCategories';
 

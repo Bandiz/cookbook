@@ -14,7 +14,7 @@ import './Hamburger.scss';
 import { Logo } from '../Logo';
 import { HamburgerProps } from '../types';
 // import Submenu from '../Submenu';
-import { useGlobalContext } from '../../../../RecipesContext';
+import { useGlobalContext } from '../../../../contexts/RecipesContext';
 import { ADMIN } from '../../../../constants/routes';
 
 export default function Hamburger({ menuLinks, handleClose, open }: HamburgerProps) {

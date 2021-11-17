@@ -1,6 +1,7 @@
-import { useState, useContext, createContext, ReactNode } from 'react';
-import { Recipe, UserSession } from './types';
+import { useState, useContext, createContext, ReactNode, useEffect } from 'react';
+import { Recipe, UserSession } from '../types';
 import { useAuth } from './AuthContext';
+import { GetCategories } from '../api/categories/getCategories';
 
 export const RecipesContext = createContext({} as RecipesContextObject);
 
@@ -12,7 +13,7 @@ interface RecipesContextObject {
     logout: () => void;
     fetchRecipe: (id: string) => Promise<Recipe>;
     categories: string[];
-    setCategories: (category: string[]) => void;
+    setCategories: (categories: string[]) => void;
     fetchRecipes: () => Promise<void>;
     updateRecipe: (recipe: Recipe) => void;
     setSession: (session: UserSession) => void;
@@ -27,6 +28,11 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
 
     const [userData, setUserData] = useState<UserSession | null>();
     const [categories, setCategories] = useState<string[]>([]);
+    const { getCategoriesRequest, getCategoriesLoading } = GetCategories();
+
+    useEffect(() => {
+        getCategoriesRequest().then(setCategories);
+    }, []);
 
     const fetchRecipes = async () => {
         setLoading(true);
@@ -84,7 +90,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     return (
         <RecipesContext.Provider
             value={{
-                loading,
+                loading: loading || getCategoriesLoading,
                 recipes,
                 setRecipes,
                 // fetchRecipes,

@@ -1,6 +1,6 @@
 import GoogleButton from '../../components/GoogleButton';
 import AdminTabs from '../../components/Tabs';
-import { useGlobalContext } from '../../RecipesContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 import './Admin.scss';
 
 export default function Admin() {

@@ -8,7 +8,7 @@ import Rate from '../../components/Rate';
 import Comment from '../../components/Comment';
 import Share from '../../components/Share';
 import { Search } from '../../components/Shared';
-import { useGlobalContext } from '../../RecipesContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 import { RECIPES } from '../../constants/routes';
 

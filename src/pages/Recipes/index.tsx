@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import Search from '../../components/Shared/Search';
 import RecipeList from '../../components/RecipeList';
-import { useGlobalContext } from '../../RecipesContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 
 import './Recipes.scss';
 import { GetRecipes } from '../../api/recipes/getRecipes';

@@ -4,8 +4,8 @@ import { StylesProvider } from '@mui/styles';
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { RecipesProvider } from './RecipesContext';
-import { AuthProvider } from './AuthContext';
+import { RecipesProvider } from './contexts/RecipesContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 ReactDOM.render(
     <StylesProvider injectFirst>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { useAuth } from '../../AuthContext';
-import { useGlobalContext } from '../../RecipesContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 
 export function GetRecipes() {

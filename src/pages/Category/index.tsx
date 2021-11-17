@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import RecipeList from '../../components/RecipeList';
 import { Search } from '../../components/Shared';
-import { useGlobalContext } from '../../RecipesContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 
 import './Category.scss';

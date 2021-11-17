@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { useGlobalContext } from '../../RecipesContext';
+import { useGlobalContext } from '../../contexts/RecipesContext';
 import { UserSession } from '../../types';
 
 type GetSessionResponse =
