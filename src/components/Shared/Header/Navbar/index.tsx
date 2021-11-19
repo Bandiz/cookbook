@@ -61,12 +61,7 @@ const Navbar = () => {
                     <button className="nav-btn" onClick={handleOpenHamburger}>
                         <FaBars />
                     </button>
-                    <Hamburger
-                        categories={categories}
-                        menuLinks={menuLinks}
-                        handleClose={handleCloseHamburger}
-                        open={openHamburger}
-                    />
+                    <Hamburger menuLinks={menuLinks} handleClose={handleCloseHamburger} open={openHamburger} />
                 </div>
                 <div className="nav-links">
                     {menuLinks.map((link, index) => {

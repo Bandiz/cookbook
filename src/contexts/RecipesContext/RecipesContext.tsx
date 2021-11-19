@@ -18,7 +18,6 @@ interface RecipesContextObject {
     updateRecipe: (recipe: Recipe) => void;
     setSession: (session: UserSession) => void;
     clearSession: () => void;
-    getCategoriesLoading: boolean;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
@@ -92,7 +91,7 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     return (
         <RecipesContext.Provider
             value={{
-                loading,
+                loading: loading || getCategoriesLoading,
                 recipes,
                 setRecipes,
                 // fetchRecipes,
@@ -105,7 +104,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
                 updateRecipe,
                 setSession: setUserData,
                 clearSession,
-                getCategoriesLoading,
             }}
         >
             {children}

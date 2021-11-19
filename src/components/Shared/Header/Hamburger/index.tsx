@@ -12,10 +12,20 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import './Hamburger.scss';
 import { Logo } from '../Logo';
-import { HamburgerProps } from '../types';
 // import Submenu from '../Submenu';
 import { useGlobalContext } from '../../../../contexts/RecipesContext';
 import { ADMIN } from '../../../../constants/routes';
+
+type Sublinks = {
+    label: string;
+    icon: any;
+};
+
+type HamburgerProps = {
+    open: boolean;
+    handleClose: () => void;
+    menuLinks: { label: string; sublinks?: Sublinks[]; url: string }[];
+};
 
 export default function Hamburger({ menuLinks, handleClose, open }: HamburgerProps) {
     const { userData, categories } = useGlobalContext();
