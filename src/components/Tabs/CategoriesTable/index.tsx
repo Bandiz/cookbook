@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 
 import {
     TextField,
@@ -30,31 +30,55 @@ import DeleteItem from '../ListLayout/DeleteItem';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
-import { useGlobalContext } from '../../../contexts/RecipesContext';
 import { CreateCategory } from '../../../api/categories/createCategory';
+import { useAdmin } from '../../../contexts/AdminContext';
+import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
+import { Category } from '../../../types';
 
 export default function CategoriesTable() {
-    const { categories, getCategoriesLoading } = useGlobalContext();
+    const { categories, setCategories } = useAdmin();
     const [isNew, setIsNew] = useState(false);
+    const [newError, setNewError] = useState<string>();
     const [newCategory, setNewCategory] = useState('');
 
+    const { getCategoriesRequest, getCategoriesLoading } = GetCategoriesList();
     const { createCategoryRequest, createCategoryLoading } = CreateCategory();
+
+    useEffect(() => {
+        if (categories.length > 0) {
+            return;
+        }
+        getCategoriesRequest().then((response) => {
+            if (response.type === 'response') {
+                setCategories(response.payload);
+            }
+        });
+    }, [categories]);
 
     function handleOnNewCategoryChange(event: ChangeEvent<HTMLInputElement>) {
         setNewCategory(event.target.value);
+        if (newError) {
+            setNewError('');
+        }
     }
 
-    function handleSaveNewCategory() {
+    async function handleSaveNewCategory() {
+        const response = await createCategoryRequest(newCategory);
+        if (response.type === 'error') {
+            setNewError(response.error);
+            return;
+        }
         setIsNew(false);
-        createCategoryRequest(newCategory);
+        setCategories([...categories, response.payload]);
     }
 
     function handleCancelNewCategory() {
         setIsNew(false);
         setNewCategory('');
+        setNewError('');
     }
 
-    function CategoryRow(props: { category: string }) {
+    function CategoryRow(props: { category: Category }) {
         const { category } = props;
         const [open, setOpen] = useState(false);
 
@@ -67,7 +91,13 @@ export default function CategoriesTable() {
                         </IconButton>
                     </TableCell>
                     <TableCell component="th" scope="row">
-                        {category}
+                        {category.categoryName}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                        {category.createdBy}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                        {category.createdAt.format('YYYY-DD-MM HH:mm')}
                     </TableCell>
                     <TableCell align="right">
                         <DeleteItem />
@@ -118,22 +148,18 @@ export default function CategoriesTable() {
                 <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
                     List of Categories
                 </Typography>
-                {isNew && (
-                    <IconButton disabled={true}>
-                        <AddCircleIcon />
-                    </IconButton>
-                )}
-                {!isNew && (
-                    <Tooltip title="Add">
+                <Tooltip title="Add">
+                    <span>
                         <IconButton
+                            disabled={isNew}
                             onClick={() => {
                                 setIsNew(true);
                             }}
                         >
                             <AddCircleIcon />
                         </IconButton>
-                    </Tooltip>
-                )}
+                    </span>
+                </Tooltip>
             </Toolbar>
         );
     }
@@ -148,6 +174,8 @@ export default function CategoriesTable() {
                             <TableRow>
                                 <TableCell />
                                 <TableCell>Category name</TableCell>
+                                <TableCell>Created by</TableCell>
+                                <TableCell>Created at</TableCell>
                                 <TableCell align="right">Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -155,7 +183,7 @@ export default function CategoriesTable() {
                             {(getCategoriesLoading || createCategoryLoading) && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={2}
+                                        colSpan={5}
                                         sx={{
                                             p: 0,
                                         }}
@@ -165,28 +193,43 @@ export default function CategoriesTable() {
                                 </TableRow>
                             )}
                             {categories.map((category) => (
-                                <CategoryRow key={category} category={category} />
+                                <CategoryRow key={category.categoryName} category={category} />
                             ))}
                             {isNew && (
                                 <TableRow>
-                                    <TableCell colSpan={2}>
+                                    <TableCell colSpan={4}>
                                         <TextField
                                             variant="standard"
                                             placeholder="Category name"
                                             inputProps={{ 'aria-label': 'new category' }}
                                             onChange={handleOnNewCategoryChange}
+                                            error={Boolean(newError)}
+                                            helperText={newError}
+                                            disabled={createCategoryLoading}
                                         />
                                     </TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="Save">
-                                            <IconButton color="primary" onClick={handleSaveNewCategory}>
-                                                <SaveIcon />
-                                            </IconButton>
+                                            <span>
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={handleSaveNewCategory}
+                                                    disabled={createCategoryLoading}
+                                                >
+                                                    <SaveIcon />
+                                                </IconButton>
+                                            </span>
                                         </Tooltip>
                                         <Tooltip title="Cancel">
-                                            <IconButton color="error" onClick={handleCancelNewCategory}>
-                                                <CancelIcon />
-                                            </IconButton>
+                                            <span>
+                                                <IconButton
+                                                    color="error"
+                                                    onClick={handleCancelNewCategory}
+                                                    disabled={createCategoryLoading}
+                                                >
+                                                    <CancelIcon />
+                                                </IconButton>
+                                            </span>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -195,27 +238,6 @@ export default function CategoriesTable() {
                     </Table>
                 </TableContainer>
             </Paper>
-
-            {/* <div style={{ backgroundColor: 'var(--darkGrey)' }}> */}
-
-            {/* <List>
-                    <AddItem
-                        handleAddSubmit={handleAddSubmit}
-                        handleChange={handleChange}
-                        categoryName={categoryName}
-                    />
-                    <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <FolderIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemSecondaryAction>
-                            <DeleteItem />
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                </List> */}
-            {/* </div> */}
         </Grid>
     );
 }

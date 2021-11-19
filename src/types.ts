@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export type Instructions = {
     id: number;
     description: string;
@@ -38,4 +40,6 @@ export type UserSession = {
 
 export type Category = {
     categoryName: string;
+    createdBy: string;
+    createdAt: Moment;
 };

@@ -4,6 +4,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material';
 import RecipesTable from './RecipesTable';
 import CategoriesTable from './CategoriesTable';
 import './Tabs.scss';
+import { AdminProvider } from '../../contexts/AdminContext';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -46,32 +47,34 @@ export default function AdminTabs() {
     };
 
     return (
-        <section className="admin-tabs">
-            <Box>
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    className="tabs"
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="vertical tabs example"
-                >
-                    <Tab label="Users" {...a11yProps(0)} />
-                    <Tab label="Categories" {...a11yProps(1)} />
-                    <Tab label="Recipes" {...a11yProps(2)} />
-                </Tabs>
-            </Box>
-            <TabPanel index={0} value={value}>
-                List of Users, role change
-            </TabPanel>
-            <TabPanel index={1} value={value}>
-                List of all categories, Add/Delete/Edit? category
-                <CategoriesTable />
-            </TabPanel>
-            <TabPanel index={2} value={value}>
-                Add a new recipe, Link to Recipes
-                <RecipesTable />
-            </TabPanel>
-        </section>
+        <AdminProvider>
+            <section className="admin-tabs">
+                <Box>
+                    <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        className="tabs"
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="vertical tabs example"
+                    >
+                        <Tab label="Users" {...a11yProps(0)} />
+                        <Tab label="Categories" {...a11yProps(1)} />
+                        <Tab label="Recipes" {...a11yProps(2)} />
+                    </Tabs>
+                </Box>
+                <TabPanel index={0} value={value}>
+                    List of Users, role change
+                </TabPanel>
+                <TabPanel index={1} value={value}>
+                    List of all categories, Add/Delete/Edit? category
+                    <CategoriesTable />
+                </TabPanel>
+                <TabPanel index={2} value={value}>
+                    Add a new recipe, Link to Recipes
+                    <RecipesTable />
+                </TabPanel>
+            </section>
+        </AdminProvider>
     );
 }
