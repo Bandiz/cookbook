@@ -30,6 +30,8 @@ import DeleteItem from '../ListLayout/DeleteItem';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { CreateCategory } from '../../../api/categories/createCategory';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
@@ -94,13 +96,25 @@ export default function CategoriesTable() {
                         {category.categoryName}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                        {category.createdBy}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                        {category.createdAt.format('YYYY-DD-MM HH:mm')}
+                        <Tooltip title={category.createdAt.format('YYYY-DD-MM HH:mm')} arrow>
+                            <span>{category.createdBy}</span>
+                        </Tooltip>
                     </TableCell>
                     <TableCell align="right">
-                        <DeleteItem />
+                        <Tooltip title="Edit">
+                            <span>
+                                <IconButton disabled={createCategoryLoading}>
+                                    <EditIcon />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <span>
+                                <IconButton disabled={createCategoryLoading}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
                     </TableCell>
                 </TableRow>
                 {/* <TableRow>
@@ -175,7 +189,6 @@ export default function CategoriesTable() {
                                 <TableCell />
                                 <TableCell>Category name</TableCell>
                                 <TableCell>Created by</TableCell>
-                                <TableCell>Created at</TableCell>
                                 <TableCell align="right">Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -183,7 +196,7 @@ export default function CategoriesTable() {
                             {(getCategoriesLoading || createCategoryLoading) && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={5}
+                                        colSpan={4}
                                         sx={{
                                             p: 0,
                                         }}
@@ -197,7 +210,7 @@ export default function CategoriesTable() {
                             ))}
                             {isNew && (
                                 <TableRow>
-                                    <TableCell colSpan={4}>
+                                    <TableCell colSpan={3}>
                                         <TextField
                                             variant="standard"
                                             placeholder="Category name"
