@@ -10,7 +10,6 @@ interface TabPanelProps {
     index: number;
     value: number;
 }
-
 function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
@@ -18,8 +17,9 @@ function TabPanel(props: TabPanelProps) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
+            id={`full-width-tabpanel-${index}`}
+            aria-labelledby={`full-width-tab-${index}`}
+            className="tab-panel"
             {...other}
         >
             {value === index && (
@@ -46,32 +46,32 @@ export default function AdminTabs() {
     };
 
     return (
-        <div className="admin-tabs">
-            <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                className="tabs"
-                value={value}
-                onChange={handleChange}
-                aria-label="vertical tabs example"
-            >
-                <Tab label="Users" {...a11yProps(0)} />
-                <Tab label="Categories" {...a11yProps(1)} />
-                <Tab label="Recipes" {...a11yProps(2)} />
-            </Tabs>
-            <div className="tab-panel">
-                <TabPanel index={0} value={value}>
-                    List of Users, role change
-                </TabPanel>
-                <TabPanel index={1} value={value}>
-                    List of all categories, Add/Delete/Edit? category
-                    <CategoriesTable />
-                </TabPanel>
-                <TabPanel index={2} value={value}>
-                    Add a new recipe, Link to Recipes
-                    <RecipesTable />
-                </TabPanel>
-            </div>
-        </div>
+        <section className="admin-tabs">
+            <Box>
+                <Tabs
+                    orientation="vertical"
+                    variant="scrollable"
+                    className="tabs"
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="vertical tabs example"
+                >
+                    <Tab label="Users" {...a11yProps(0)} />
+                    <Tab label="Categories" {...a11yProps(1)} />
+                    <Tab label="Recipes" {...a11yProps(2)} />
+                </Tabs>
+            </Box>
+            <TabPanel index={0} value={value}>
+                List of Users, role change
+            </TabPanel>
+            <TabPanel index={1} value={value}>
+                List of all categories, Add/Delete/Edit? category
+                <CategoriesTable />
+            </TabPanel>
+            <TabPanel index={2} value={value}>
+                Add a new recipe, Link to Recipes
+                <RecipesTable />
+            </TabPanel>
+        </section>
     );
 }

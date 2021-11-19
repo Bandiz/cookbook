@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import { GiHamburger, GiSteak, GiFruitBowl, GiCookingPot } from 'react-icons/gi';
@@ -11,7 +11,6 @@ import Hamburger from '../Hamburger';
 // import Submenu from '../Submenu';
 import { useGlobalContext } from '../../../../contexts/RecipesContext';
 import { ABOUT, ADMIN, HOME, RECIPES } from '../../../../constants/routes';
-import { GetCategories } from '../../../../api/categories/getCategories';
 
 const Navbar = () => {
     const { userData } = useGlobalContext();
@@ -19,7 +18,6 @@ const Navbar = () => {
     const [openHamburger, setOpenHamburger] = useState(false);
 
     const { categories } = useGlobalContext();
-    const { getCategoriesRequest } = GetCategories();
 
     const menuLinks = [
         { label: 'Home', url: HOME, sublinks: [] },
@@ -52,10 +50,6 @@ const Navbar = () => {
         setOpenHamburger(false);
         handleCloseSubmenu();
     };
-
-    useEffect(() => {
-        getCategoriesRequest();
-    }, []);
 
     return (
         <nav className="nav">

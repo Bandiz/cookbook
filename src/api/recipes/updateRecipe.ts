@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { useState } from 'react';
+
+import { useAuth } from '../../contexts/AuthContext';
 import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 
@@ -15,6 +16,7 @@ type UpdateRecipeResponse =
 
 export function UpdateRecipe() {
     const { userData, updateRecipe } = useGlobalContext();
+    const { httpClient } = useAuth();
     const [loading, setLoading] = useState(false);
     const request = async (recipe: Partial<Recipe>): Promise<UpdateRecipeResponse> => {
         if (!userData || !userData.token) {
@@ -26,7 +28,7 @@ export function UpdateRecipe() {
 
         setLoading(true);
         try {
-            const response = await axios.put<Recipe>(`${process.env.REACT_APP_API_URL}v1/Recipe/${recipe.id}`, recipe, {
+            const response = await httpClient.put<Recipe>(`v1/Recipe/${recipe.id}`, recipe, {
                 headers: {
                     Authorization: `Bearer ${userData.token}`,
                 },
@@ -37,9 +39,16 @@ export function UpdateRecipe() {
                 payload: response.data,
             };
         } catch (e) {
+            if (e instanceof Error) {
+                return {
+                    type: 'error',
+                    error: e.message,
+                };
+            }
+            //TODO: return error types
             return {
                 type: 'error',
-                error: 'problem with unknowns',
+                error: 'Problem in the backend',
             };
         } finally {
             setLoading(false);
