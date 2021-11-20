@@ -1,16 +1,16 @@
 import { ChangeEvent, ReactNode, useState } from 'react';
 import {
-    Box,
+    // Box,
     Checkbox,
-    Collapse,
+    // Collapse,
     IconButton,
-    Table,
-    TableBody,
+    // Table,
+    // TableBody,
     TableCell,
-    TableHead,
+    // TableHead,
     TableRow,
     Tooltip,
-    Typography,
+    // Typography,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -20,6 +20,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Category } from '../../../types';
+import { UpdateCategoryVisibility } from '../../../api/categories/updateCategoryVisibility';
+import { useAdmin } from '../../../contexts/AdminContext';
 
 interface CategoryRowProps {
     category: Category;
@@ -31,8 +33,27 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     const [editMode, setEditMode] = useState(false);
     const [visible, setVisible] = useState(category.visible);
 
+    const { categories, setCategories } = useAdmin();
+    const { updateCategoryVisibilityRequest, updateCategoryVisibilityLoading } = UpdateCategoryVisibility();
+
     function handleOnVisibilityChange(event: ChangeEvent<HTMLInputElement>) {
         setVisible(event.target.checked);
+    }
+
+    async function handleOnSaveClick() {
+        const response = await updateCategoryVisibilityRequest(category.categoryName, visible);
+        if (response.type === 'error') {
+            return;
+        }
+        setEditMode(false);
+        setCategories(
+            categories.map((x) => {
+                if (x.categoryName === category.categoryName) {
+                    return response.payload;
+                }
+                return x;
+            })
+        );
     }
 
     let tableCells: ReactNode[];
@@ -92,14 +113,17 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
             <TableCell key={2} align="right">
                 <Tooltip title="Save">
                     <span>
-                        <IconButton disabled={disabled} onClick={() => setEditMode(false)}>
+                        <IconButton disabled={disabled || updateCategoryVisibilityLoading} onClick={handleOnSaveClick}>
                             <SaveIcon />
                         </IconButton>
                     </span>
                 </Tooltip>
                 <Tooltip title="Cancel">
                     <span>
-                        <IconButton disabled={disabled} onClick={() => setEditMode(false)}>
+                        <IconButton
+                            disabled={disabled || updateCategoryVisibilityLoading}
+                            onClick={() => setEditMode(false)}
+                        >
                             <CancelIcon />
                         </IconButton>
                     </span>

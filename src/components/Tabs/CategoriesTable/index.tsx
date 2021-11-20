@@ -117,7 +117,7 @@ export default function CategoriesTable() {
                             ))}
                             {isNew && (
                                 <TableRow>
-                                    <TableCell colSpan={3}>
+                                    <TableCell colSpan={2}>
                                         <TextField
                                             variant="standard"
                                             placeholder="Category name"
@@ -128,7 +128,7 @@ export default function CategoriesTable() {
                                             disabled={createCategoryLoading}
                                         />
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell colSpan={3}>
                                         <Checkbox
                                             checked={menuVisible}
                                             onChange={handleOnVisibilityChange}
