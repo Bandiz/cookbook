@@ -1,9 +1,9 @@
-import moment from 'moment';
 import { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Category } from '../../types';
+import { mapCategory } from './mapCategory';
 
 type GetCategoriesListResponse =
     | {
@@ -33,7 +33,7 @@ export function GetCategoriesList() {
             });
             return {
                 type: 'response',
-                payload: response.data.map((x) => ({ ...x, createdAt: moment(x.createdAt) })),
+                payload: response.data.map(mapCategory),
             };
         } catch (e) {
             if (e instanceof Error) {

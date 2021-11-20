@@ -40,6 +40,9 @@ export type UserSession = {
 
 export type Category = {
     categoryName: string;
+    visible: boolean;
+    updatedBy: string;
+    updatedAt: Moment;
     createdBy: string;
     createdAt: Moment;
 };

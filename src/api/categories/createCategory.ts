@@ -1,8 +1,8 @@
-import moment from 'moment';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Category } from '../../types';
+import { mapCategory } from './mapCategory';
 
 type CreateCategoryResponse =
     | {
@@ -16,7 +16,7 @@ export function CreateCategory() {
     const { httpClient } = useAuth();
     const { userData } = useGlobalContext();
 
-    const createCategoryRequest = async (categoryName: string): Promise<CreateCategoryResponse> => {
+    const createCategoryRequest = async (categoryName: string, visible: boolean): Promise<CreateCategoryResponse> => {
         if (!userData || !userData.token) {
             return {
                 type: 'error',
@@ -28,7 +28,7 @@ export function CreateCategory() {
         try {
             const response = await httpClient.post<Category>(
                 `/v1/Category`,
-                { categoryName },
+                { categoryName, visible },
                 {
                     headers: {
                         Authorization: `Bearer ${userData.token}`,
@@ -37,7 +37,7 @@ export function CreateCategory() {
             );
             return {
                 type: 'response',
-                payload: { ...response.data, createdAt: moment(response.data.createdAt) },
+                payload: mapCategory(response.data),
             };
         } catch (e) {
             if (e instanceof Error) {

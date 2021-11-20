@@ -3,12 +3,6 @@ import { useState, ChangeEvent, useEffect } from 'react';
 import {
     TextField,
     Grid,
-    // ListItemAvatar,
-    // List,
-    // ListItem,
-    // Avatar,
-    Typography,
-    // ListItemSecondaryAction,
     TableContainer,
     Paper,
     Table,
@@ -17,45 +11,37 @@ import {
     TableCell,
     TableBody,
     IconButton,
-    Toolbar,
     Tooltip,
+    Checkbox,
 } from '@mui/material';
-// import FolderIcon from '@mui/icons-material/Folder';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import LinearProgress from '@mui/material/LinearProgress';
 
-import AddItem from '../ListLayout/AddItem';
-import DeleteItem from '../ListLayout/DeleteItem';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { CreateCategory } from '../../../api/categories/createCategory';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
-import { Category } from '../../../types';
+import { CategoryRow } from './CategoryRow';
+import { CategoryToolbar } from './CategoryToolbar';
 
 export default function CategoriesTable() {
     const { categories, setCategories } = useAdmin();
     const [isNew, setIsNew] = useState(false);
     const [newError, setNewError] = useState<string>();
-    const [newCategory, setNewCategory] = useState('');
+    const [newCategory, setNewCategory] = useState<string>();
+    const [menuVisible, setMenuVisible] = useState(false);
 
     const { getCategoriesRequest, getCategoriesLoading } = GetCategoriesList();
     const { createCategoryRequest, createCategoryLoading } = CreateCategory();
 
     useEffect(() => {
-        if (categories.length > 0) {
-            return;
-        }
         getCategoriesRequest().then((response) => {
             if (response.type === 'response') {
                 setCategories(response.payload);
             }
         });
-    }, [categories]);
+    }, []);
 
     function handleOnNewCategoryChange(event: ChangeEvent<HTMLInputElement>) {
         setNewCategory(event.target.value);
@@ -64,8 +50,16 @@ export default function CategoriesTable() {
         }
     }
 
+    function handleOnVisibilityChange(event: ChangeEvent<HTMLInputElement>) {
+        setMenuVisible(event.target.checked);
+    }
+
     async function handleSaveNewCategory() {
-        const response = await createCategoryRequest(newCategory);
+        if (!newCategory) {
+            return;
+        }
+
+        const response = await createCategoryRequest(newCategory, menuVisible);
         if (response.type === 'error') {
             setNewError(response.error);
             return;
@@ -80,115 +74,24 @@ export default function CategoriesTable() {
         setNewError('');
     }
 
-    function CategoryRow(props: { category: Category }) {
-        const { category } = props;
-        const [open, setOpen] = useState(false);
-
-        return (
-            <>
-                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    <TableCell>
-                        <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                        </IconButton>
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                        {category.categoryName}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                        <Tooltip title={category.createdAt.format('YYYY-DD-MM HH:mm')} arrow>
-                            <span>{category.createdBy}</span>
-                        </Tooltip>
-                    </TableCell>
-                    <TableCell align="right">
-                        <Tooltip title="Edit">
-                            <span>
-                                <IconButton disabled={createCategoryLoading}>
-                                    <EditIcon />
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <span>
-                                <IconButton disabled={createCategoryLoading}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                    </TableCell>
-                </TableRow>
-                {/* <TableRow>
-                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{ margin: 1 }}>
-                                <Typography variant="h6" gutterBottom component="div">
-                                    History
-                                </Typography>
-                                <Table size="small" aria-label="purchases">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Date</TableCell>
-                                            <TableCell>Customer</TableCell>
-                                            <TableCell align="right">Amount</TableCell>
-                                            <TableCell align="right">Total price ($)</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {row.history.map((historyRow) => (
-                                            <TableRow key={historyRow.date}>
-                                                <TableCell component="th" scope="row">
-                                                    {historyRow.date}
-                                                </TableCell>
-                                                <TableCell>{historyRow.customerId}</TableCell>
-                                                <TableCell align="right">{historyRow.amount}</TableCell>
-                                                <TableCell align="right">
-                                                    {Math.round(historyRow.amount * row.price * 100) / 100}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Box>
-                        </Collapse>
-                    </TableCell>
-                </TableRow> */}
-            </>
-        );
-    }
-
-    function EnhancedTableToolbar() {
-        return (
-            <Toolbar>
-                <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-                    List of Categories
-                </Typography>
-                <Tooltip title="Add">
-                    <span>
-                        <IconButton
-                            disabled={isNew}
-                            onClick={() => {
-                                setIsNew(true);
-                            }}
-                        >
-                            <AddCircleIcon />
-                        </IconButton>
-                    </span>
-                </Tooltip>
-            </Toolbar>
-        );
-    }
-
     return (
         <Grid item>
             <Paper>
-                <EnhancedTableToolbar />
+                <CategoryToolbar
+                    disabled={isNew}
+                    onNewClick={() => {
+                        setIsNew(true);
+                    }}
+                />
                 <TableContainer>
                     <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell />
                                 <TableCell>Category name</TableCell>
+                                <TableCell>Visible</TableCell>
                                 <TableCell>Created by</TableCell>
+                                <TableCell>Updated by</TableCell>
                                 <TableCell align="right">Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -196,7 +99,7 @@ export default function CategoriesTable() {
                             {(getCategoriesLoading || createCategoryLoading) && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={4}
+                                        colSpan={6}
                                         sx={{
                                             p: 0,
                                         }}
@@ -206,7 +109,11 @@ export default function CategoriesTable() {
                                 </TableRow>
                             )}
                             {categories.map((category) => (
-                                <CategoryRow key={category.categoryName} category={category} />
+                                <CategoryRow
+                                    key={category.categoryName}
+                                    category={category}
+                                    disabled={createCategoryLoading}
+                                />
                             ))}
                             {isNew && (
                                 <TableRow>
@@ -219,6 +126,13 @@ export default function CategoriesTable() {
                                             error={Boolean(newError)}
                                             helperText={newError}
                                             disabled={createCategoryLoading}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Checkbox
+                                            checked={menuVisible}
+                                            onChange={handleOnVisibilityChange}
+                                            inputProps={{ 'aria-label': 'is menu visible' }}
                                         />
                                     </TableCell>
                                     <TableCell align="right">
