@@ -53,7 +53,7 @@ export type CategoryDetails = {
 };
 
 export type CategoryRecipe = {
-    id: number;
+    id: string;
     title: string;
     updatedBy: string;
     updatedAt?: Moment;

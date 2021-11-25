@@ -24,6 +24,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { Category } from '../../../types';
 import { UpdateCategoryVisibility } from '../../../api/categories/updateCategoryVisibility';
@@ -31,6 +32,7 @@ import { useAdmin } from '../../../contexts/AdminContext';
 import { DeleteCategory } from '../../../api/categories/deleteCategory';
 import { GetCategoryDetails } from '../../../api/categories/getCategoryDetails';
 import { TableLoader } from './TableLoader';
+import { RemoveFromCategory } from '../../../api/recipes/removeFromCategory';
 
 interface CategoryRowProps {
     category: Category;
@@ -66,6 +68,12 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
             );
         })();
     }, [open, category]);
+
+    useEffect(() => {
+        if (editMode && open) {
+            setOpen(false);
+        }
+    }, [editMode, open]);
 
     function handleOnVisibilityChange(event: ChangeEvent<HTMLInputElement>) {
         setVisible(event.target.checked);
@@ -206,11 +214,27 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
         );
     }
 
-    return (
-        <>
-            <TableRow sx={{ '& > *': { borderBottom: 'unset !important' } }}>
-                {editMode ? <EditMode /> : <DisplayMode />}
-            </TableRow>
+    function CategoryRowDetail() {
+        const { removeFromCategoryRequest, removeFromCategoryLoading } = RemoveFromCategory();
+
+        async function handleOnRemoveFromRecipeClick(recipeId: string) {
+            const response = await removeFromCategoryRequest(recipeId, category.categoryName);
+
+            if (response.type === 'error') {
+                console.error(response.error);
+                return;
+            }
+            setCategories((prev) => [
+                ...prev.map((x) => {
+                    if (x.categoryName === category.categoryName) {
+                        x.recipes = x.recipes?.filter((y) => y.id !== recipeId);
+                    }
+                    return x;
+                }),
+            ]);
+        }
+
+        return (
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -224,10 +248,14 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                                         <TableCell>Title</TableCell>
                                         <TableCell>Created by</TableCell>
                                         <TableCell>Updated by</TableCell>
+                                        <TableCell />
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <TableLoader loading={getCategoryDetailsLoading} colSpan={3} />
+                                    <TableLoader
+                                        loading={getCategoryDetailsLoading || removeFromCategoryLoading}
+                                        colSpan={4}
+                                    />
                                     {category.recipes?.map((x) => (
                                         <TableRow key={x.id}>
                                             <TableCell scope="row">{x.title}</TableCell>
@@ -241,6 +269,20 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                                                     <span>{x.updatedBy}</span>
                                                 </Tooltip>
                                             </TableCell>
+                                            <TableCell align="right">
+                                                <Tooltip title="Remove">
+                                                    <span>
+                                                        <IconButton
+                                                            color="error"
+                                                            onClick={() => {
+                                                                handleOnRemoveFromRecipeClick(x.id);
+                                                            }}
+                                                        >
+                                                            <RemoveCircleIcon />
+                                                        </IconButton>
+                                                    </span>
+                                                </Tooltip>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -249,6 +291,15 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                     </Collapse>
                 </TableCell>
             </TableRow>
+        );
+    }
+
+    return (
+        <>
+            <TableRow sx={{ '& > *': { borderBottom: 'unset !important' } }}>
+                {editMode ? <EditMode /> : <DisplayMode />}
+            </TableRow>
+            <CategoryRowDetail />
         </>
     );
 }
