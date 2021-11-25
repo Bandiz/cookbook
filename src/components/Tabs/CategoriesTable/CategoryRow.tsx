@@ -1,22 +1,22 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
     Button,
-    // Box,
+    Box,
     Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    // Collapse,
+    Collapse,
     IconButton,
-    // Table,
-    // TableBody,
+    Table,
+    TableBody,
     TableCell,
-    // TableHead,
+    TableHead,
     TableRow,
     Tooltip,
-    // Typography,
+    Typography,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -29,6 +29,8 @@ import { Category } from '../../../types';
 import { UpdateCategoryVisibility } from '../../../api/categories/updateCategoryVisibility';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { DeleteCategory } from '../../../api/categories/deleteCategory';
+import { GetCategoryDetails } from '../../../api/categories/getCategoryDetails';
+import { TableLoader } from './TableLoader';
 
 interface CategoryRowProps {
     category: Category;
@@ -43,6 +45,27 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     const { categories, setCategories } = useAdmin();
     const { updateCategoryVisibilityRequest, updateCategoryVisibilityLoading } = UpdateCategoryVisibility();
     const { deleteCategoryRequest, deleteCategoryLoading } = DeleteCategory();
+    const { getCategoryDetailsRequest, getCategoryDetailsLoading } = GetCategoryDetails();
+
+    useEffect(() => {
+        if (!open || typeof category.recipes !== 'undefined') {
+            return;
+        }
+        (async () => {
+            const response = await getCategoryDetailsRequest(category.categoryName);
+            if (response.type === 'error') {
+                return;
+            }
+            setCategories(
+                categories.map((x) => {
+                    if (x.categoryName === category.categoryName) {
+                        return { ...x, recipes: response.payload.recipes };
+                    }
+                    return x;
+                })
+            );
+        })();
+    }, [open, category]);
 
     function handleOnVisibilityChange(event: ChangeEvent<HTMLInputElement>) {
         setVisible(event.target.checked);
@@ -67,10 +90,10 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     function EditMode() {
         return (
             <>
-                <TableCell colSpan={2} component="th" scope="row">
+                <TableCell colSpan={2} scope="row">
                     {category.categoryName}
                 </TableCell>
-                <TableCell colSpan={3} component="th" scope="row">
+                <TableCell colSpan={3} scope="row">
                     <Checkbox
                         checked={visible}
                         onChange={handleOnVisibilityChange}
@@ -123,19 +146,17 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row">
-                    {category.categoryName}
-                </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell scope="row">{category.categoryName}</TableCell>
+                <TableCell scope="row">
                     <Checkbox checked={category.visible} disabled inputProps={{ 'aria-label': 'is menu visible' }} />
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell scope="row">
                     <Tooltip title={category.createdAt.format('YYYY-DD-MM HH:mm')} arrow>
                         <span>{category.createdBy}</span>
                     </Tooltip>
                 </TableCell>
-                <TableCell component="th" scope="row">
-                    <Tooltip title={category.updatedAt.format('YYYY-DD-MM HH:mm')} arrow>
+                <TableCell scope="row">
+                    <Tooltip title={category.updatedAt?.format('YYYY-DD-MM HH:mm') ?? ''} arrow>
                         <span>{category.updatedBy}</span>
                     </Tooltip>
                 </TableCell>
@@ -187,29 +208,47 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
 
     return (
         <>
-            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>{editMode ? <EditMode /> : <DisplayMode />}</TableRow>
-            {/* <TableRow>
+            <TableRow sx={{ '& > *': { borderBottom: 'unset !important' } }}>
+                {editMode ? <EditMode /> : <DisplayMode />}
+            </TableRow>
+            <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
                             <Typography variant="h6" gutterBottom component="div">
-                                History
+                                Recipes
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Date</TableCell>
-                                        <TableCell>Customer</TableCell>
-                                        <TableCell align="right">Amount</TableCell>
-                                        <TableCell align="right">Total price ($)</TableCell>
+                                        <TableCell>Title</TableCell>
+                                        <TableCell>Created by</TableCell>
+                                        <TableCell>Updated by</TableCell>
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>TODO: RECIPE LIST HERE</TableBody>
+                                <TableBody>
+                                    <TableLoader loading={getCategoryDetailsLoading} colSpan={3} />
+                                    {category.recipes?.map((x) => (
+                                        <TableRow key={x.id}>
+                                            <TableCell scope="row">{x.title}</TableCell>
+                                            <TableCell scope="row">
+                                                <Tooltip title={x.createdAt.format('YYYY-DD-MM HH:mm')} arrow>
+                                                    <span>{x.createdBy}</span>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell scope="row">
+                                                <Tooltip title={x.updatedAt?.format('YYYY-DD-MM HH:mm') ?? ''} arrow>
+                                                    <span>{x.updatedBy}</span>
+                                                </Tooltip>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
                             </Table>
                         </Box>
                     </Collapse>
                 </TableCell>
-            </TableRow> */}
+            </TableRow>
         </>
     );
 }

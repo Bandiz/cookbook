@@ -42,7 +42,21 @@ export type Category = {
     categoryName: string;
     visible: boolean;
     updatedBy: string;
-    updatedAt: Moment;
+    updatedAt?: Moment;
+    createdBy: string;
+    createdAt: Moment;
+    recipes?: CategoryRecipe[];
+};
+
+export type CategoryDetails = {
+    recipes: CategoryRecipe[];
+};
+
+export type CategoryRecipe = {
+    id: number;
+    title: string;
+    updatedBy: string;
+    updatedAt?: Moment;
     createdBy: string;
     createdAt: Moment;
 };
