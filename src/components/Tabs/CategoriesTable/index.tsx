@@ -1,5 +1,4 @@
 import { useState, ChangeEvent, useEffect } from 'react';
-
 import {
     TextField,
     Grid,
@@ -14,16 +13,15 @@ import {
     Tooltip,
     Checkbox,
 } from '@mui/material';
-
-import LinearProgress from '@mui/material/LinearProgress';
-
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
+
 import { CreateCategory } from '../../../api/categories/createCategory';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
 import { CategoryRow } from './CategoryRow';
 import { CategoryToolbar } from './CategoryToolbar';
+import { TableLoader } from './TableLoader';
 
 export default function CategoriesTable() {
     const { categories, setCategories } = useAdmin();
@@ -96,18 +94,7 @@ export default function CategoriesTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {(getCategoriesLoading || createCategoryLoading) && (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={6}
-                                        sx={{
-                                            p: 0,
-                                        }}
-                                    >
-                                        <LinearProgress />
-                                    </TableCell>
-                                </TableRow>
-                            )}
+                            <TableLoader loading={getCategoriesLoading || createCategoryLoading} colSpan={6} />
                             {categories.map((category) => (
                                 <CategoryRow
                                     key={category.categoryName}
