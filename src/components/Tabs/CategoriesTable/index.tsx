@@ -24,7 +24,7 @@ import { CategoryToolbar } from './CategoryToolbar';
 import { TableLoader } from './TableLoader';
 
 export default function CategoriesTable() {
-    const { categories, setCategories } = useAdmin();
+    const { categories, setCategories, categoriesLoaded } = useAdmin();
     const [isNew, setIsNew] = useState(false);
     const [newError, setNewError] = useState<string>();
     const [newCategory, setNewCategory] = useState<string>();
@@ -34,12 +34,17 @@ export default function CategoriesTable() {
     const { createCategoryRequest, createCategoryLoading } = CreateCategory();
 
     useEffect(() => {
-        getCategoriesRequest().then((response) => {
-            if (response.type === 'response') {
-                setCategories(response.payload);
+        if (categoriesLoaded) {
+            return;
+        }
+        (async () => {
+            const response = await getCategoriesRequest();
+            if (response.type !== 'response') {
+                return;
             }
-        });
-    }, []);
+            setCategories(response.payload);
+        })();
+    }, [categoriesLoaded]);
 
     function handleOnNewCategoryChange(event: ChangeEvent<HTMLInputElement>) {
         setNewCategory(event.target.value);
@@ -72,6 +77,59 @@ export default function CategoriesTable() {
         setNewError('');
     }
 
+    function NewRow() {
+        if (!isNew) {
+            return null;
+        }
+
+        return (
+            <TableRow>
+                <TableCell colSpan={2}>
+                    <TextField
+                        variant="standard"
+                        placeholder="Category name"
+                        inputProps={{ 'aria-label': 'new category' }}
+                        onChange={handleOnNewCategoryChange}
+                        error={Boolean(newError)}
+                        helperText={newError}
+                        disabled={createCategoryLoading}
+                    />
+                </TableCell>
+                <TableCell colSpan={3}>
+                    <Checkbox
+                        checked={menuVisible}
+                        onChange={handleOnVisibilityChange}
+                        inputProps={{ 'aria-label': 'is menu visible' }}
+                    />
+                </TableCell>
+                <TableCell align="right">
+                    <Tooltip title="Save">
+                        <span>
+                            <IconButton
+                                color="primary"
+                                onClick={handleSaveNewCategory}
+                                disabled={createCategoryLoading}
+                            >
+                                <SaveIcon />
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                    <Tooltip title="Cancel">
+                        <span>
+                            <IconButton
+                                color="error"
+                                onClick={handleCancelNewCategory}
+                                disabled={createCategoryLoading}
+                            >
+                                <CancelIcon />
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                </TableCell>
+            </TableRow>
+        );
+    }
+
     return (
         <Grid item>
             <Paper>
@@ -102,52 +160,7 @@ export default function CategoriesTable() {
                                     disabled={createCategoryLoading}
                                 />
                             ))}
-                            {isNew && (
-                                <TableRow>
-                                    <TableCell colSpan={2}>
-                                        <TextField
-                                            variant="standard"
-                                            placeholder="Category name"
-                                            inputProps={{ 'aria-label': 'new category' }}
-                                            onChange={handleOnNewCategoryChange}
-                                            error={Boolean(newError)}
-                                            helperText={newError}
-                                            disabled={createCategoryLoading}
-                                        />
-                                    </TableCell>
-                                    <TableCell colSpan={3}>
-                                        <Checkbox
-                                            checked={menuVisible}
-                                            onChange={handleOnVisibilityChange}
-                                            inputProps={{ 'aria-label': 'is menu visible' }}
-                                        />
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <Tooltip title="Save">
-                                            <span>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={handleSaveNewCategory}
-                                                    disabled={createCategoryLoading}
-                                                >
-                                                    <SaveIcon />
-                                                </IconButton>
-                                            </span>
-                                        </Tooltip>
-                                        <Tooltip title="Cancel">
-                                            <span>
-                                                <IconButton
-                                                    color="error"
-                                                    onClick={handleCancelNewCategory}
-                                                    disabled={createCategoryLoading}
-                                                >
-                                                    <CancelIcon />
-                                                </IconButton>
-                                            </span>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                            )}
+                            <NewRow />
                         </TableBody>
                     </Table>
                 </TableContainer>

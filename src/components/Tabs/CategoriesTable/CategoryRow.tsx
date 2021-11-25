@@ -77,8 +77,8 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
             return;
         }
         setEditMode(false);
-        setCategories(
-            categories.map((x) => {
+        setCategories((prev) =>
+            prev.map((x) => {
                 if (x.categoryName === category.categoryName) {
                     return response.payload;
                 }
