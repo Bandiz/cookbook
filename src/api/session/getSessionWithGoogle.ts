@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { useGlobalContext } from '../../contexts/RecipesContext';
 import { UserSession } from '../../types';
 
@@ -10,7 +10,8 @@ type GetSessionResponse =
           error: string;
       };
 
-export function GetSession() {
+export function GetSessionWithGoogle() {
+    const { httpClient } = useAuth();
     const { setSession } = useGlobalContext();
     const [loading, setLoading] = useState(false);
     const request = async (token: string): Promise<GetSessionResponse> => {
@@ -23,7 +24,7 @@ export function GetSession() {
 
         setLoading(true);
         try {
-            const response = await axios.get<UserSession>(`${process.env.REACT_APP_API_URL}v1/token`, {
+            const response = await httpClient.get<UserSession>(`${process.env.REACT_APP_API_URL}v1/token`, {
                 params: {
                     t: token,
                 },
@@ -39,7 +40,7 @@ export function GetSession() {
         }
     };
     return {
-        getSessionRequest: request,
-        getSessionLoading: loading,
+        getSessionWithGoogleRequest: request,
+        getSessionWithGoogleLoading: loading,
     };
 }
