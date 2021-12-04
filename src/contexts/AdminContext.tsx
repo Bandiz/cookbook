@@ -1,7 +1,7 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
 
 import { Category } from '../types';
-import { useGlobalContext } from './RecipesContext';
+import { useAuth } from './AuthContext';
 
 interface AdminObject {
     categoriesLoaded: boolean;
@@ -16,11 +16,11 @@ interface AdminProviderProps {
 }
 
 export function AdminProvider({ children }: AdminProviderProps) {
-    const { userData } = useGlobalContext();
+    const { user } = useAuth();
     const [categories, setCategories] = useState<Category[]>([]);
     const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
-    if (!userData || !userData.user.isAdmin) {
+    if (!user || !user.isAdmin) {
         return <>{children}</>;
     }
 
