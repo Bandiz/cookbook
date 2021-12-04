@@ -12,6 +12,7 @@ const Category = lazy(() => import('./pages/Category'));
 const About = lazy(() => import('./pages/About'));
 const Admin = lazy(() => import('./pages/Admin'));
 const CreateRecipe = lazy(() => import('./pages/CreateRecipe'));
+const Login = lazy(() => import('./pages/Login'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                     <Route path={ROUTES.ADMIN} element={<Admin />} />
                     <Route path={ROUTES.RECIPE} element={<Recipe />} />
                     <Route path={ROUTES.CREATE_RECIPE} element={<CreateRecipe />} />
+                    <Route path={ROUTES.LOGIN} element={<Login />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </Suspense>
