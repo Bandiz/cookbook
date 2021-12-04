@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
 import { UserSession } from '../../types';
 
 type GetSessionResponse =
-    | undefined
+    | { type: 'response'; payload: UserSession }
     | {
           type: 'error';
           error: string;
@@ -12,7 +11,6 @@ type GetSessionResponse =
 
 export function GetSessionWithGoogle() {
     const { httpClient } = useAuth();
-    const { setSession } = useGlobalContext();
     const [loading, setLoading] = useState(false);
     const request = async (token: string): Promise<GetSessionResponse> => {
         if (!token) {
@@ -29,7 +27,10 @@ export function GetSessionWithGoogle() {
                     t: token,
                 },
             });
-            setSession(response.data);
+            return {
+                type: 'response',
+                payload: response.data,
+            };
         } catch (e) {
             return {
                 type: 'error',

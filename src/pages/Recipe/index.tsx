@@ -8,7 +8,7 @@ import Rate from '../../components/Rate';
 import Comment from '../../components/Comment';
 import Share from '../../components/Share';
 import { Search } from '../../components/Shared';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 import { RECIPES } from '../../constants/routes';
 
@@ -16,7 +16,7 @@ const RecipePage = () => {
     const { id } = useParams();
     const [recipe, setRecipe] = useState<Recipe>();
 
-    const { fetchRecipe } = useGlobalContext();
+    const { fetchRecipe } = useRecipes();
 
     useEffect(() => {
         if (!id) {

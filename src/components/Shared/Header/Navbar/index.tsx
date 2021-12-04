@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import { GiHamburger, GiSteak, GiFruitBowl, GiCookingPot } from 'react-icons/gi';
@@ -9,15 +9,17 @@ import logo from '../Logo/icon.png';
 import './HeaderNav.scss';
 import Hamburger from '../Hamburger';
 // import Submenu from '../Submenu';
-import { useGlobalContext } from '../../../../contexts/RecipesContext';
-import { ABOUT, ADMIN, HOME, RECIPES } from '../../../../constants/routes';
+import { useRecipes } from '../../../../contexts/RecipesContext';
+import { ABOUT, ADMIN, HOME, RECIPES, LOGIN } from '../../../../constants/routes';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 const Navbar = () => {
-    const { userData } = useGlobalContext();
+    // const { userData } = useGlobalContext();
     const [openSubmenu, setOpenSubmenu] = useState<null | HTMLElement>(null);
     const [openHamburger, setOpenHamburger] = useState(false);
 
-    const { categories } = useGlobalContext();
+    const { categories } = useRecipes();
+    const { isAuthenticated } = useAuth();
 
     const menuLinks = [
         { label: 'Home', url: HOME, sublinks: [] },
@@ -39,6 +41,10 @@ const Navbar = () => {
         setOpenSubmenu(event.currentTarget);
     };
 
+    const handleOnFocus = (event: React.FocusEvent<HTMLAnchorElement>) => {
+        setOpenSubmenu(event.currentTarget);
+    };
+
     const handleCloseSubmenu = () => {
         setOpenSubmenu(null);
     };
@@ -52,78 +58,80 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="nav">
-            <div className="nav-center">
-                <div className="nav-header">
-                    <Link to={HOME} className="nav-link-logo">
-                        <img src={logo} className="nav-logo" alt="logo" />
-                    </Link>
-                    <button className="nav-btn" onClick={handleOpenHamburger}>
-                        <FaBars />
-                    </button>
-                    <Hamburger menuLinks={menuLinks} handleClose={handleCloseHamburger} open={openHamburger} />
-                </div>
-                <div className="nav-links">
-                    {menuLinks.map((link, index) => {
-                        const { label, url, sublinks } = link;
-                        return label === 'Recipes' ? (
-                            <div key={index}>
-                                <Link to={url} className="link-btn" onMouseOver={handleOpenSubmenu}>
-                                    {label}
-                                </Link>
-                                <Menu
-                                    anchorEl={openSubmenu}
-                                    keepMounted
-                                    open={Boolean(openSubmenu)}
-                                    onClose={handleCloseSubmenu}
-                                    onMouseLeave={handleCloseSubmenu}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'center',
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'center',
-                                    }}
-                                    style={{ position: 'absolute' }}
-                                >
-                                    <div className="categories">
-                                        {categories.map((category, index) => {
-                                            const icon = sublinks
-                                                .filter((c) => c.label === category)
-                                                .map((c, index) => {
-                                                    return <div key={index}>{c.icon}</div>;
-                                                });
-                                            return (
-                                                <MenuItem
-                                                    key={index}
-                                                    className="item"
-                                                    onClick={handleCloseSubmenu}
-                                                    component={Link}
-                                                    to={`/category/${category.toLowerCase()}`}
-                                                >
-                                                    <ListItemIcon className="icon">{icon}</ListItemIcon>
-                                                    <ListItemText className="label" primary={category} />
-                                                </MenuItem>
-                                            );
-                                        })}
-                                    </div>
-                                </Menu>
-                            </div>
-                        ) : (
-                            <Link to={url} key={index} className="link-btn">
-                                {label}
-                            </Link>
-                        );
-                    })}
-                    {userData?.user.isAdmin && (
-                        <Link to={ADMIN} className="link-btn">
-                            Admin
+        <>
+            <nav className="nav">
+                <div className="nav-center">
+                    <div className="nav-header">
+                        <Link to={HOME} className="nav-link-logo">
+                            <img src={logo} className="nav-logo" alt="logo" />
                         </Link>
-                    )}
+                        <button className="nav-btn" onClick={handleOpenHamburger}>
+                            <FaBars />
+                        </button>
+                        <Hamburger menuLinks={menuLinks} handleClose={handleCloseHamburger} open={openHamburger} />
+                    </div>
+                    <div className="nav-links">
+                        <Link to={HOME} className="link-btn">
+                            Home
+                        </Link>
+                        <Link
+                            to={RECIPES}
+                            className="link-btn"
+                            onMouseEnter={handleOpenSubmenu}
+                            onFocus={handleOnFocus}
+                        >
+                            Recipes
+                        </Link>
+                        <Menu
+                            anchorEl={openSubmenu}
+                            keepMounted
+                            open={Boolean(openSubmenu)}
+                            onClose={handleCloseSubmenu}
+                            onMouseLeave={handleCloseSubmenu}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                            className="categories"
+                        >
+                            {categories.map((category, index) => {
+                                const icon = menuLinks
+                                    .find((x) => x.label === 'Recipes')
+                                    ?.sublinks.filter((c) => c.label === category)
+                                    .map((c, index) => {
+                                        return <div key={index}>{c.icon}</div>;
+                                    });
+                                return (
+                                    <MenuItem key={index} className="item" onClick={handleCloseSubmenu}>
+                                        <Link to={`/category/${category.toLowerCase()}`}>
+                                            <ListItemIcon className="icon">{icon}</ListItemIcon>
+                                            <ListItemText className="label" primary={category} />
+                                        </Link>
+                                    </MenuItem>
+                                );
+                            })}
+                        </Menu>
+                        <Link to={ABOUT} className="link-btn">
+                            About
+                        </Link>
+                        {!isAuthenticated && (
+                            <Link to={LOGIN} className="link-btn">
+                                Login
+                            </Link>
+                        )}
+                        {isAuthenticated && (
+                            <Link to={ADMIN} className="link-btn">
+                                Admin
+                            </Link>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </>
     );
 };
 export default Navbar;

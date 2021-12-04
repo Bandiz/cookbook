@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 
-import { useGlobalContext } from '../../../contexts/RecipesContext';
+import { useRecipes } from '../../../contexts/RecipesContext';
 import AddItem from '../ListLayout/AddItem';
 import ListItems from '../ListLayout';
 import { CREATE_RECIPE } from '../../../constants/routes';
 
 export default function RecipesTable() {
-    const { recipes, fetchRecipes } = useGlobalContext();
+    const { recipes, fetchRecipes } = useRecipes();
 
     useEffect(() => {
         fetchRecipes();

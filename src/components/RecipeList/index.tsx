@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 import { Recipe } from '../../types';
 
@@ -11,7 +11,7 @@ interface RecipeListProps {
 }
 
 export default function RecipeList({ recipes, category }: RecipeListProps) {
-    const { userData } = useGlobalContext();
+    const { user } = useAuth();
 
     if (recipes.length < 1) {
         return <h2 className="section-title">No recipes to display</h2>;
@@ -46,7 +46,7 @@ export default function RecipeList({ recipes, category }: RecipeListProps) {
                                 <Link to={`/recipe/${id}`} className="btn btn-primary">
                                     read more
                                 </Link>
-                                {userData && userData.user.isAdmin && (
+                                {user && user.isAdmin && (
                                     <Link to="#" className="btn btn-primary">
                                         edit
                                     </Link>

@@ -1,6 +1,5 @@
 import { useState, useContext, createContext, ReactNode, useEffect } from 'react';
-import { Recipe, UserSession } from '../../types';
-import { useAuth } from '../AuthContext';
+import { Recipe } from '../../types';
 import { GetCategories } from '../../api/categories/getCategories';
 
 export const RecipesContext = createContext({} as RecipesContextObject);
@@ -9,24 +8,18 @@ interface RecipesContextObject {
     recipes: Recipe[];
     setRecipes: (recipes: Recipe[]) => void;
     loading: boolean;
-    userData?: UserSession | null;
-    logout: () => void;
     fetchRecipe: (id: string) => Promise<Recipe>;
     categories: string[];
     setCategories: (categories: string[]) => void;
     fetchRecipes: () => Promise<void>;
     updateRecipe: (recipe: Recipe) => void;
-    setSession: (session: UserSession) => void;
-    clearSession: () => void;
 }
 
 export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
-    const { httpClient } = useAuth();
     const [loading, setLoading] = useState(false);
 
     const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-    const [userData, setUserData] = useState<UserSession | null>();
     const [categories, setCategories] = useState<string[]>([]);
 
     const { getCategoriesRequest, getCategoriesLoading } = GetCategories();
@@ -68,11 +61,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         }
     };
 
-    const logout = () => {
-        setUserData(null);
-        httpClient.defaults.headers.common.authorization = '';
-    };
-
     const updateRecipe = (recipe: Recipe) => {
         setRecipes((prev) =>
             prev.map((x) => {
@@ -84,10 +72,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
         );
     };
 
-    const clearSession = () => {
-        setUserData(null);
-    };
-
     return (
         <RecipesContext.Provider
             value={{
@@ -96,14 +80,10 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
                 setRecipes,
                 // fetchRecipes,
                 fetchRecipe: fetchRecipeId,
-                userData,
                 categories,
                 setCategories,
-                logout,
                 fetchRecipes,
                 updateRecipe,
-                setSession: setUserData,
-                clearSession,
             }}
         >
             {children}
@@ -111,6 +91,6 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     );
 };
 
-export const useGlobalContext = () => {
+export const useRecipes = () => {
     return useContext(RecipesContext);
 };

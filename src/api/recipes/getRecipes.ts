@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 
 export function GetRecipes() {
     const [loading, setLoading] = useState(false);
     const { httpClient } = useAuth();
-    const { setRecipes } = useGlobalContext();
+    const { setRecipes } = useRecipes();
 
     const getRecipesRequest = async () => {
         setLoading(true);

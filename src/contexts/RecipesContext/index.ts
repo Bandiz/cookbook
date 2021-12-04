@@ -1,1 +1,1 @@
-export { RecipesProvider, useGlobalContext } from './RecipesContext';
+export { RecipesProvider, useRecipes } from './RecipesContext';

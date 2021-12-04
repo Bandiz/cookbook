@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Category } from '../../types';
 import { mapCategory } from './mapCategory';
 
@@ -14,29 +13,16 @@ type UpdateCategoryVisibilityResponse =
 export function UpdateCategoryVisibility() {
     const [loading, setLoading] = useState(false);
     const { httpClient } = useAuth();
-    const { userData } = useGlobalContext();
 
     const updateCategoryVisibilityRequest = async (
         categoryName: string,
         visible: boolean
     ): Promise<UpdateCategoryVisibilityResponse> => {
-        if (!userData || !userData.token) {
-            return {
-                type: 'error',
-                error: 'Unauthorized',
-            };
-        }
-
         setLoading(true);
         try {
             const response = await httpClient.put<Category>(
                 `/v1/Category/${categoryName}/visible/${visible}`,
-                undefined,
-                {
-                    headers: {
-                        Authorization: `Bearer ${userData.token}`,
-                    },
-                }
+                undefined
             );
             return {
                 type: 'response',

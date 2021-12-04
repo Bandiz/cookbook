@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom';
 
 import RecipeList from '../../components/RecipeList';
 import { Search } from '../../components/Shared';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 
 import './Category.scss';
 
 export default function Category() {
     const { category } = useParams();
-    const { recipes, fetchRecipes } = useGlobalContext();
+    const { recipes, fetchRecipes } = useRecipes();
 
     useEffect(() => {
         if (recipes.length === 0) {

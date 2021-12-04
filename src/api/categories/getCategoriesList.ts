@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
 import { Category } from '../../types';
 import { mapCategory } from './mapCategory';
 
@@ -15,22 +14,11 @@ type GetCategoriesListResponse =
 export function GetCategoriesList() {
     const [loading, setLoading] = useState(false);
     const { httpClient } = useAuth();
-    const { userData } = useGlobalContext();
 
     const getCategoriesRequest = async (): Promise<GetCategoriesListResponse> => {
-        if (!userData || !userData.token) {
-            return {
-                type: 'error',
-                error: 'Unauthorized',
-            };
-        }
         setLoading(true);
         try {
-            const response = await httpClient.get<Category[]>(`/v1/Category/list`, {
-                headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                },
-            });
+            const response = await httpClient.get<Category[]>(`/v1/Category/list`);
             return {
                 type: 'response',
                 payload: response.data.map(mapCategory),

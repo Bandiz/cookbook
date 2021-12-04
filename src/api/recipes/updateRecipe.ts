@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 
 type UpdateRecipeResponse =
@@ -15,24 +15,13 @@ type UpdateRecipeResponse =
       };
 
 export function UpdateRecipe() {
-    const { userData, updateRecipe } = useGlobalContext();
+    const { updateRecipe } = useRecipes();
     const { httpClient } = useAuth();
     const [loading, setLoading] = useState(false);
     const request = async (recipe: Partial<Recipe>): Promise<UpdateRecipeResponse> => {
-        if (!userData || !userData.token) {
-            return {
-                type: 'error',
-                error: 'Unauthorized',
-            };
-        }
-
         setLoading(true);
         try {
-            const response = await httpClient.put<Recipe>(`v1/Recipe/${recipe.id}`, recipe, {
-                headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                },
-            });
+            const response = await httpClient.put<Recipe>(`v1/Recipe/${recipe.id}`, recipe);
             updateRecipe(response.data);
             return {
                 type: 'response',

@@ -2,7 +2,6 @@ import moment from 'moment';
 import { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
 import { CategoryDetails } from '../../types';
 
 type GetCategoryDetailsResponse =
@@ -15,22 +14,11 @@ type GetCategoryDetailsResponse =
 export function GetCategoryDetails() {
     const [loading, setLoading] = useState(false);
     const { httpClient } = useAuth();
-    const { userData } = useGlobalContext();
 
     const getCategoryDetailsRequest = async (categoryName: string): Promise<GetCategoryDetailsResponse> => {
-        if (!userData || !userData.token) {
-            return {
-                type: 'error',
-                error: 'Unauthorized',
-            };
-        }
         setLoading(true);
         try {
-            const response = await httpClient.get<CategoryDetails>(`/v1/Category/${categoryName}/details`, {
-                headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                },
-            });
+            const response = await httpClient.get<CategoryDetails>(`/v1/Category/${categoryName}/details`);
             return {
                 type: 'response',
                 payload: {

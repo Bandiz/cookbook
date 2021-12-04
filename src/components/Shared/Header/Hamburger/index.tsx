@@ -13,8 +13,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './Hamburger.scss';
 import { Logo } from '../Logo';
 // import Submenu from '../Submenu';
-import { useGlobalContext } from '../../../../contexts/RecipesContext';
+import { useRecipes } from '../../../../contexts/RecipesContext';
 import { ADMIN } from '../../../../constants/routes';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 type Sublinks = {
     label: string;
@@ -28,7 +29,8 @@ type HamburgerProps = {
 };
 
 export default function Hamburger({ menuLinks, handleClose, open }: HamburgerProps) {
-    const { userData, categories } = useGlobalContext();
+    const { categories } = useRecipes();
+    const { user } = useAuth();
 
     return (
         <Drawer
@@ -83,7 +85,7 @@ export default function Hamburger({ menuLinks, handleClose, open }: HamburgerPro
                     </Accordion>
                 );
             })}
-            {userData?.user.isAdmin && (
+            {user?.isAdmin && (
                 <Accordion className="accordion" expanded={false}>
                     <AccordionSummary>
                         <Link className="link-text" to={ADMIN} onClick={handleClose}>

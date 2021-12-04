@@ -3,7 +3,6 @@ import { Moment } from 'moment';
 import { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useGlobalContext } from '../../contexts/RecipesContext';
 
 type Response = {
     categories: string[];
@@ -24,25 +23,14 @@ type RemoveFromCategoryResponse =
 export function RemoveFromCategory() {
     const [loading, setLoading] = useState(false);
     const { httpClient } = useAuth();
-    const { userData } = useGlobalContext();
 
     const removeFromCategoryRequest = async (
         recipeId: string,
         categoryName: string
     ): Promise<RemoveFromCategoryResponse> => {
-        if (!userData || !userData.token) {
-            return {
-                type: 'error',
-                error: 'Unauthorized',
-            };
-        }
         setLoading(true);
         try {
-            const { data } = await httpClient.delete<Response>(`/v1/recipe/${recipeId}/category/${categoryName}`, {
-                headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                },
-            });
+            const { data } = await httpClient.delete<Response>(`/v1/recipe/${recipeId}/category/${categoryName}`);
             return {
                 type: 'response',
                 payload: { ...data, updatedAt: moment(data.updatedAt) },

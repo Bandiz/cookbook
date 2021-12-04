@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 
 import Search from '../../components/Shared/Search';
 import RecipeList from '../../components/RecipeList';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useRecipes } from '../../contexts/RecipesContext';
 
 import './Recipes.scss';
 import { GetRecipes } from '../../api/recipes/getRecipes';
 
 export default function Recipes() {
-    const { recipes } = useGlobalContext();
+    const { recipes } = useRecipes();
     const { getRecipesRequest } = GetRecipes();
 
     useEffect(() => {
