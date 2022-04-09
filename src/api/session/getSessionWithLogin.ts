@@ -25,15 +25,11 @@ export function GetSessionWithLogin() {
             const formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);
-            const response = await httpClient.post<UserSession>(
-                `${process.env.REACT_APP_API_URL}v1/token/login`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
+            const response = await httpClient.post<UserSession>('v1/token/login', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             return {
                 type: 'response',
                 payload: response.data,

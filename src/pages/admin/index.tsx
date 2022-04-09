@@ -1,18 +1,22 @@
-import GoogleButton from '../../components/GoogleButton';
+import { Typography } from '@mui/material';
+import { Navigate } from 'react-router-dom';
 import AdminTabs from '../../components/Tabs';
-import { useGlobalContext } from '../../contexts/RecipesContext';
+import { useAuth } from '../../contexts/AuthContext';
 import './Admin.scss';
 
 export default function Admin() {
-    const { userData } = useGlobalContext();
+    const { user } = useAuth();
+
+    if (!user || !user.isAdmin) {
+        return <Navigate to="/" />;
+    }
 
     return (
         <div className="admin-page">
             <section className="admin-section">
-                {!userData && <p className="text">Make yourself at home by pressing</p>}
-                <GoogleButton />
+                <Typography variant="h4">Admin page</Typography>
             </section>
-            {userData?.user.isAdmin && <AdminTabs />}
+            <AdminTabs />
         </div>
     );
 }

@@ -22,7 +22,7 @@ export function GetSessionWithGoogle() {
 
         setLoading(true);
         try {
-            const response = await httpClient.get<UserSession>(`${process.env.REACT_APP_API_URL}v1/token`, {
+            const response = await httpClient.get<UserSession>('v1/token', {
                 params: {
                     t: token,
                 },
