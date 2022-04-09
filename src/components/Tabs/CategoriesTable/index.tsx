@@ -26,8 +26,6 @@ import { TableLoader } from './TableLoader';
 export default function CategoriesTable() {
     const { categories, setCategories, categoriesLoaded } = useAdmin();
     const [isNew, setIsNew] = useState(false);
-    const [newError, setNewError] = useState<string>();
-    const [newCategory, setNewCategory] = useState<string>();
     const [menuVisible, setMenuVisible] = useState(false);
 
     const { getCategoriesRequest, getCategoriesLoading } = GetCategoriesList();
@@ -46,38 +44,41 @@ export default function CategoriesTable() {
         })();
     }, [categoriesLoaded]);
 
-    function handleOnNewCategoryChange(event: ChangeEvent<HTMLInputElement>) {
-        setNewCategory(event.target.value);
-        if (newError) {
-            setNewError('');
-        }
-    }
-
     function handleOnVisibilityChange(event: ChangeEvent<HTMLInputElement>) {
         setMenuVisible(event.target.checked);
     }
 
-    async function handleSaveNewCategory() {
-        if (!newCategory) {
-            return;
-        }
-
-        const response = await createCategoryRequest(newCategory, menuVisible);
-        if (response.type === 'error') {
-            setNewError(response.error);
-            return;
-        }
-        setIsNew(false);
-        setCategories([...categories, response.payload]);
-    }
-
-    function handleCancelNewCategory() {
-        setIsNew(false);
-        setNewCategory('');
-        setNewError('');
-    }
-
     function NewRow() {
+        const [newCategory, setNewCategory] = useState<string>();
+        const [newError, setNewError] = useState<string>();
+
+        function handleOnNewCategoryChange(event: ChangeEvent<HTMLInputElement>) {
+            setNewCategory(event.target.value);
+            if (newError) {
+                setNewError('');
+            }
+        }
+
+        async function handleSaveNewCategory() {
+            if (!newCategory) {
+                return;
+            }
+
+            const response = await createCategoryRequest(newCategory, menuVisible);
+            if (response.type === 'error') {
+                setNewError(response.error);
+                return;
+            }
+            setIsNew(false);
+            setCategories([...categories, response.payload]);
+        }
+
+        function handleCancelNewCategory() {
+            setIsNew(false);
+            setNewCategory('');
+            setNewError('');
+        }
+
         if (!isNew) {
             return null;
         }
@@ -89,6 +90,7 @@ export default function CategoriesTable() {
                         variant="standard"
                         placeholder="Category name"
                         inputProps={{ 'aria-label': 'new category' }}
+                        value={newCategory}
                         onChange={handleOnNewCategoryChange}
                         error={Boolean(newError)}
                         helperText={newError}
