@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GiKnifeFork } from 'react-icons/gi';
-import { BiTime } from 'react-icons/bi';
 
-import './Recipe.scss';
-import Rate from '../../components/Rate';
-import Comment from '../../components/Comment';
-import Share from '../../components/Share';
-import { Search } from '../../components/Shared';
 import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 import { RECIPES } from '../../constants/routes';
+import { Grid, Paper, Typography, Box, List, ListItem, Button } from '@mui/material';
 
 const RecipePage = () => {
     const { id } = useParams();
@@ -26,7 +20,7 @@ const RecipePage = () => {
     }, [id]);
 
     if (!recipe) {
-        return <h2 className="section-title">no recipe to display</h2>;
+        return <Typography variant="h2">no recipe to display</Typography>;
     }
     const {
         imageUrl,
@@ -41,78 +35,69 @@ const RecipePage = () => {
     } = recipe;
 
     return (
-        <div className="recipe-block">
-            <Search />
-            <Link to={RECIPES} className="btn btn-primary">
+        <>
+            <Button variant="contained" href={RECIPES}>
                 back to recipes
-            </Link>
-            <section className="recipe-section">
-                <h2 className="section-title">{title}</h2>
-                <div className="recipe">
-                    <img src={imageUrl} alt={title} className="photo" />
-                    <div className="details-time-container">
-                        <GiKnifeFork className="icon knife" />
-                        <div className="details-container">
-                            <div>
-                                <span className="recipe-data">Category </span>
-                                {categories.map((category, index) => {
-                                    return <p key={index}>{category}</p>;
-                                })}
-                            </div>
-                            <div>
-                                <span className="recipe-data">Amount </span>
-                                {description}
-                            </div>
-                        </div>
-                        <BiTime className="icon time" />
-                        <div className="time-container">
-                            <div>
-                                <span className="recipe-data">Prep Time </span>
-                                {prepTimeMinutes} min
-                            </div>
-                            <div>
-                                <span className="recipe-data">Cook Time </span>
-                                {cookTimeMinutes} min
-                            </div>
-                            <div>
-                                <span className="recipe-data">Total Time </span>
-                                {totalTimeMinutes} min
-                            </div>
-                        </div>
-                    </div>
-                    <div className="recipe-info">
-                        <h4 className="recipe-subtitle">
-                            <span className="recipe-data">Ingredients</span>
-                        </h4>
-                        <ul>
+            </Button>
+            <Paper variant="elevation" elevation={4} sx={{ m: 3, p: 3 }}>
+                <Typography variant="h2" align="center">
+                    {title}
+                </Typography>
+                <img src={imageUrl} alt={title} className="photo" />
+
+                <Grid container spacing={3}>
+                    <Grid container columns={15} direction="row">
+                        <Grid item xs={3}>
+                            <Typography paragraph>Category</Typography>
+                            {categories.map((category, index) => {
+                                return <p key={index}>{category}</p>;
+                            })}
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography paragraph>Amount</Typography>
+                            {description}
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography paragraph>Prep Time</Typography>
+                            {prepTimeMinutes} min
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography paragraph>Cook Time</Typography>
+                            {cookTimeMinutes} min
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Typography paragraph>Total Time</Typography>
+                            {totalTimeMinutes} min
+                        </Grid>
+                    </Grid>
+                    <Grid item xs>
+                        <Typography variant="h4">Ingredients</Typography>
+                        <List>
                             {ingredients.map((ingredient, index) => {
                                 const { measurementType, name, amount } = ingredient;
                                 return ingredient ? (
-                                    <li key={index} className="recipe-ingredient">
+                                    <ListItem key={index}>
                                         {amount} {measurementType} {name}
-                                    </li>
+                                    </ListItem>
                                 ) : null;
                             })}
-                        </ul>
-                        <h4 className="recipe-subtitle">
-                            <span className="recipe-data">instructions</span>
-                        </h4>
-                        <ol>
+                        </List>
+                    </Grid>
+                    <Grid item xs>
+                        <Typography variant="h4">Instructions</Typography>
+                        <List sx={{ listStyleType: 'decimal' }}>
                             {instructions.map((instruction, index) => {
                                 return instruction ? (
-                                    <li key={index} className="recipe-instruction">
+                                    <ListItem sx={{ display: 'list-item' }} key={index}>
                                         {instruction.description}
-                                    </li>
+                                    </ListItem>
                                 ) : null;
                             })}
-                        </ol>
-                    </div>
-                </div>
-                <Rate />
-                <Share />
-                <Comment />
-            </section>
-        </div>
+                        </List>
+                    </Grid>
+                </Grid>
+            </Paper>
+        </>
     );
 };
 export default RecipePage;
