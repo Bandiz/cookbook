@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 
 import RecipesTable from './RecipesTable';
-import CategoriesTable from './CategoriesTable';
+import CategoryTable from './CategoryTable';
 import './Tabs.scss';
 import { AdminProvider } from '../../contexts/AdminContext';
 
@@ -68,7 +68,7 @@ export default function AdminTabs() {
                 </TabPanel>
                 <TabPanel index={1} value={value}>
                     List of all categories, Add/Delete/Edit? category
-                    <CategoriesTable />
+                    <CategoryTable />
                 </TabPanel>
                 <TabPanel index={2} value={value}>
                     Add a new recipe, Link to Recipes
