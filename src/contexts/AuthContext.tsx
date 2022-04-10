@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import axios, { AxiosInstance } from 'axios';
 
 import { User, UserSession } from '../types';
@@ -12,6 +12,14 @@ interface AuthObject {
 }
 
 const httpClient = axios.create({ baseURL: `${process.env.REACT_APP_API_URL}` });
+let token: string;
+
+httpClient.interceptors.request.use((req) => {
+    if (token && req.headers) {
+        req.headers.Authorization = `Bearer ${token}`;
+    }
+    return req;
+});
 
 export const AuthContext = createContext<AuthObject>({ isAuthenticated: false, httpClient } as AuthObject);
 
@@ -23,16 +31,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>();
 
+    useEffect(() => {
+        const userStore = sessionStorage.getItem('user');
+        const tokenStore = sessionStorage.getItem('token');
+
+        if (!userStore || !tokenStore) {
+            clearSession();
+        } else {
+            setIsAuthenticated(true);
+            setUser(JSON.parse(userStore) as User);
+            token = tokenStore;
+        }
+    }, []);
+
+    function clearSession() {
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+    }
+
     function login(session: UserSession) {
         setUser(session.user);
-        httpClient.defaults.headers.common['Authorization'] = `Bearer ${session.token}`;
+        token = session.token;
+        sessionStorage.setItem('user', JSON.stringify(session.user));
+        sessionStorage.setItem('token', session.token);
         setIsAuthenticated(true);
     }
 
     function logout() {
         setUser(null);
-        delete httpClient.defaults.headers.common['Authorization'];
         setIsAuthenticated(false);
+        clearSession();
     }
 
     return (
