@@ -2,17 +2,28 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 
-import { useRecipes } from '../../../contexts/RecipesContext';
 import AddItem from '../ListLayout/AddItem';
 import ListItems from '../ListLayout';
 import { CREATE_RECIPE } from '../../../constants/routes';
+import { useAdmin } from '../../../contexts/AdminContext';
+import { GetRecipes } from '../../../api/recipes/getRecipes';
 
 export default function RecipesTable() {
-    const { recipes, fetchRecipes } = useRecipes();
+    const { recipes, setRecipes, recipesLoaded } = useAdmin();
+    const { getRecipesRequest, getRecipesLoading } = GetRecipes();
 
     useEffect(() => {
-        fetchRecipes();
-    }, []);
+        if (recipesLoaded) {
+            return;
+        }
+        (async () => {
+            const response = await getRecipesRequest();
+            if (response.type !== 'response') {
+                return;
+            }
+            setRecipes(response.payload);
+        })();
+    }, [recipesLoaded]);
 
     return (
         <Grid item xs={12}>

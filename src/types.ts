@@ -1,10 +1,18 @@
 import { Moment } from 'moment';
 
+type Auditable = {
+    updatedBy: string;
+    updatedAt?: Moment;
+    createdBy: string;
+    createdAt: Moment;
+};
+
 export type Instructions = {
     id: number;
     description: string;
     position: number;
 };
+
 export type Ingredients = {
     id: number;
     amount: number;
@@ -24,7 +32,7 @@ export type Recipe = {
     cookTimeMinutes: number;
     instructions: Instructions[];
     ingredients: Ingredients[];
-};
+} & Auditable;
 
 export type User = {
     email: string;
@@ -41,12 +49,8 @@ export type UserSession = {
 export type Category = {
     categoryName: string;
     visible: boolean;
-    updatedBy: string;
-    updatedAt?: Moment;
-    createdBy: string;
-    createdAt: Moment;
     recipes?: CategoryRecipe[];
-};
+} & Auditable;
 
 export type CategoryDetails = {
     recipes: CategoryRecipe[];
@@ -55,8 +59,4 @@ export type CategoryDetails = {
 export type CategoryRecipe = {
     id: string;
     title: string;
-    updatedBy: string;
-    updatedAt?: Moment;
-    createdBy: string;
-    createdAt: Moment;
-};
+} & Auditable;
