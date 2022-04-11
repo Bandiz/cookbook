@@ -1,10 +1,10 @@
-import { Moment } from 'moment';
+import { Dayjs } from 'dayjs';
 
 type Auditable = {
     updatedBy: string;
-    updatedAt?: Moment;
+    updatedAt?: Dayjs;
     createdBy: string;
-    createdAt: Moment;
+    createdAt: Dayjs;
 };
 
 export type Instructions = {

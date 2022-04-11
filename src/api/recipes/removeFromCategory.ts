@@ -1,13 +1,12 @@
-import moment from 'moment';
-import { Moment } from 'moment';
 import { useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { useAuth } from '../../contexts/AuthContext';
 
 type Response = {
     categories: string[];
     updatedBy: string;
-    updatedAt: Moment;
+    updatedAt: Dayjs;
 };
 
 type RemoveFromCategoryResponse =
@@ -33,7 +32,7 @@ export function RemoveFromCategory() {
             const { data } = await httpClient.delete<Response>(`/v1/recipe/${recipeId}/category/${categoryName}`);
             return {
                 type: 'response',
-                payload: { ...data, updatedAt: moment(data.updatedAt) },
+                payload: { ...data, updatedAt: dayjs(data.updatedAt) },
             };
         } catch (e) {
             if (e instanceof Error) {

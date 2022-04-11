@@ -1,5 +1,7 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import axios, { AxiosInstance } from 'axios';
+import jwt_decode, { JwtPayload } from 'jwt-decode';
+import dayjs from 'dayjs';
 
 import { User, UserSession } from '../types';
 
@@ -12,14 +14,6 @@ interface AuthObject {
 }
 
 const httpClient = axios.create({ baseURL: `${process.env.REACT_APP_API_URL}` });
-let token: string;
-
-httpClient.interceptors.request.use((req) => {
-    if (token && req.headers) {
-        req.headers.Authorization = `Bearer ${token}`;
-    }
-    return req;
-});
 
 export const AuthContext = createContext<AuthObject>({ isAuthenticated: false, httpClient } as AuthObject);
 
@@ -28,8 +22,38 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [token, setToken] = useState<string>();
     const [user, setUser] = useState<User | null>();
+    const interceptorRef = useRef<number>();
+
+    useEffect(() => {
+        if (!token) {
+            if (interceptorRef.current) {
+                httpClient.interceptors.request.eject(interceptorRef.current);
+                delete interceptorRef.current;
+            }
+            return;
+        }
+
+        const decodedToken = jwt_decode<JwtPayload>(token);
+        if (!decodedToken || !decodedToken.exp || dayjs.unix(decodedToken.exp).isBefore(dayjs())) {
+            clearSession();
+            return;
+        }
+
+        interceptorRef.current = httpClient.interceptors.request.use((req) => {
+            if (req.headers) {
+                req.headers.Authorization = `Bearer ${token}`;
+            }
+            return req;
+        });
+        const expirationTime = dayjs.unix(decodedToken.exp).diff();
+        const handler = setTimeout(() => {
+            logout();
+        }, expirationTime);
+
+        return () => clearTimeout(handler);
+    }, [token]);
 
     useEffect(() => {
         const userStore = sessionStorage.getItem('user');
@@ -38,9 +62,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (!userStore || !tokenStore) {
             clearSession();
         } else {
-            setIsAuthenticated(true);
             setUser(JSON.parse(userStore) as User);
-            token = tokenStore;
+            setToken(tokenStore);
         }
     }, []);
 
@@ -51,22 +74,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     function login(session: UserSession) {
         setUser(session.user);
-        token = session.token;
+        setToken(session.token);
         sessionStorage.setItem('user', JSON.stringify(session.user));
         sessionStorage.setItem('token', session.token);
-        setIsAuthenticated(true);
     }
 
     function logout() {
         setUser(null);
-        setIsAuthenticated(false);
+        setToken('');
         clearSession();
     }
 
     return (
         <AuthContext.Provider
             value={{
-                isAuthenticated,
+                isAuthenticated: Boolean(token) && Boolean(user),
                 httpClient,
                 user,
                 login,

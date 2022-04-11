@@ -1,5 +1,5 @@
-import moment from 'moment';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { CategoryDetails } from '../../types';
@@ -24,8 +24,8 @@ export function GetCategoryDetails() {
                 payload: {
                     recipes: response.data.recipes.map((x) => ({
                         ...x,
-                        createdAt: moment(x.createdAt),
-                        updatedAt: x.updatedAt ? moment(x.updatedAt) : x.updatedAt,
+                        createdAt: dayjs(x.createdAt),
+                        updatedAt: x.updatedAt ? dayjs(x.updatedAt) : x.updatedAt,
                     })),
                 },
             };
