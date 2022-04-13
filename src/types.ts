@@ -27,6 +27,7 @@ export type Recipe = {
     imageUrl: string;
     title: string;
     description: string;
+    isPublished: boolean;
     totalTimeMinutes: number;
     prepTimeMinutes: number;
     cookTimeMinutes: number;

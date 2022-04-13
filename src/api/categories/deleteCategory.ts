@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useRecipes } from '../../contexts/RecipesContext';
 
 type DeleteCategoryResponse =
     | {
