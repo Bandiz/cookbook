@@ -5,7 +5,7 @@ import { useAdmin } from '../../../contexts/AdminContext';
 import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
 import { CategoryRow } from './CategoryRow';
 import { CategoryToolbar } from './CategoryToolbar';
-import { TableLoader } from './TableLoader';
+import { TableLoader } from '../Shared/TableLoader';
 import { Category } from '../../../types';
 import { NewRow } from './NewRow';
 

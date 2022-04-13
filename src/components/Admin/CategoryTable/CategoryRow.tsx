@@ -1,13 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
-    Button,
     Box,
     Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Collapse,
     IconButton,
     Table,
@@ -31,8 +25,9 @@ import { UpdateCategoryVisibility } from '../../../api/categories/updateCategory
 import { useAdmin } from '../../../contexts/AdminContext';
 import { DeleteCategory } from '../../../api/categories/deleteCategory';
 import { GetCategoryDetails } from '../../../api/categories/getCategoryDetails';
-import { TableLoader } from './TableLoader';
+import { TableLoader } from '../Shared/TableLoader';
 import { RemoveFromCategory } from '../../../api/recipes/removeFromCategory';
+import { DeleteCategoryDialog } from './DeleteCategoryDialog';
 
 interface CategoryRowProps {
     category: Category;
@@ -186,29 +181,12 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                             </IconButton>
                         </span>
                     </Tooltip>
-                    <Dialog
+                    <DeleteCategoryDialog
+                        category={category}
                         open={deleteOpen}
                         onClose={handleOnDialogClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            Do you want to delete <strong>{category.categoryName}</strong>?
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                By deleting this category, you will remove if from all the recipes that use it.
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button color="primary" onClick={handleOnDialogClose} autoFocus>
-                                Cancel
-                            </Button>
-                            <Button variant="contained" color="error" onClick={handleOnConfirmDeletion}>
-                                Delete
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                        onConfirm={handleOnConfirmDeletion}
+                    />
                 </TableCell>
             </>
         );

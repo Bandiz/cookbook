@@ -3,7 +3,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material';
 
 import RecipesTable from './RecipesTable';
 import CategoryTable from './CategoryTable';
-import './Tabs.scss';
+import './Admin.scss';
 import { AdminProvider } from '../../contexts/AdminContext';
 
 interface TabPanelProps {
