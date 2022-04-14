@@ -1,16 +1,17 @@
 import { IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-interface CategoryToolbarProps {
-    onNewClick: () => void;
+interface TableToolbarProps {
+    title: string;
     disabled: boolean;
+    onNewClick: () => void;
 }
 
-export function CategoryToolbar({ onNewClick, disabled }: CategoryToolbarProps) {
+export function TableToolbar({ title, disabled, onNewClick }: TableToolbarProps) {
     return (
         <Toolbar>
             <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-                List of Categories
+                {title}
             </Typography>
             <Tooltip title="Add">
                 <span>

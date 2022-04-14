@@ -4,7 +4,7 @@ import { Grid, TableContainer, Paper, Table, TableHead, TableRow, TableCell, Tab
 import { useAdmin } from '../../../contexts/AdminContext';
 import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
 import { CategoryRow } from './CategoryRow';
-import { CategoryToolbar } from './CategoryToolbar';
+import { TableToolbar } from '../Shared/TableToolbar';
 import { TableLoader } from '../Shared/TableLoader';
 import { Category } from '../../../types';
 import { NewRow } from './NewRow';
@@ -40,7 +40,8 @@ export default function CategoriesTable() {
     return (
         <Grid item>
             <Paper>
-                <CategoryToolbar
+                <TableToolbar
+                    title="List of Categories"
                     disabled={isNew}
                     onNewClick={() => {
                         setIsNew(true);
