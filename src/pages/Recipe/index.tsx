@@ -1,14 +1,29 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
 import { RECIPES } from '../../constants/routes';
-import { Grid, Paper, Typography, Box, List, ListItem, Button } from '@mui/material';
+import {
+    Grid,
+    Typography,
+    List,
+    ListItem,
+    Button,
+    CardMedia,
+    Card,
+    CardHeader,
+    CardContent,
+    Stack,
+    Chip,
+    Divider,
+} from '@mui/material';
+import { useStyles } from './Recipe';
 
 const RecipePage = () => {
     const { id } = useParams();
     const [recipe, setRecipe] = useState<Recipe>();
+    const { classes } = useStyles();
 
     const { fetchRecipe } = useRecipes();
 
@@ -34,69 +49,86 @@ const RecipePage = () => {
         instructions,
     } = recipe;
 
+    console.log(recipe);
+
     return (
         <>
             <Button variant="contained" href={RECIPES}>
                 back to recipes
             </Button>
-            <Paper variant="elevation" elevation={4} sx={{ m: 3, p: 3 }}>
-                <Typography variant="h2" align="center">
-                    {title}
-                </Typography>
-                <img src={imageUrl} alt={title} className="photo" />
-
-                <Grid container spacing={3}>
-                    <Grid container columns={15} direction="row">
-                        <Grid item xs={3}>
-                            <Typography paragraph>Category</Typography>
-                            {categories.map((category, index) => {
-                                return <p key={index}>{category}</p>;
-                            })}
+            <Card raised sx={{ m: 3, p: 3 }}>
+                <CardHeader title={title} align="center" titleTypographyProps={{ variant: 'h3' }} />
+                <Stack direction="row" spacing={1} justifyContent="center">
+                    {categories.map((category) => {
+                        return <Chip label={category} size="small" component="a" href={''} clickable />;
+                    })}
+                </Stack>
+                <CardMedia component="img" src={imageUrl} alt={title} className={classes.image} />
+                <CardContent className={classes.content}>
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={{ xs: 1, sm: 2, md: 4 }}
+                        divider={<Divider orientation="vertical" flexItem />}
+                        justifyContent="center"
+                        mb={2}
+                    >
+                        <Stack alignItems="center">
+                            <Typography>Servings</Typography>
+                            <Typography>{description}</Typography>
+                        </Stack>
+                        <Stack alignItems="center">
+                            <Typography>Total Time</Typography>
+                            <Typography>{totalTimeMinutes} min</Typography>
+                        </Stack>
+                        <Stack alignItems="center">
+                            <Typography>Prep Time</Typography>
+                            <Typography>{prepTimeMinutes} min</Typography>
+                        </Stack>
+                        <Stack alignItems="center">
+                            <Typography>Cook Time</Typography>
+                            <Typography>{cookTimeMinutes} min</Typography>
+                        </Stack>
+                    </Stack>
+                    <Grid
+                        container
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={{ xs: 1, sm: 1 }}
+                        justifyContent="center"
+                        pt={3}
+                        pb={3}
+                    >
+                        <Grid item xs={5} md={4} lg={3}>
+                            <Typography variant="h4" textAlign={{ xs: 'center', sm: 'left' }}>
+                                Ingredients
+                            </Typography>
+                            <List>
+                                {ingredients.map((ingredient, index) => {
+                                    const { measurementType, name, amount } = ingredient;
+                                    return ingredient ? (
+                                        <ListItem key={index}>
+                                            {amount} {measurementType} {name}
+                                        </ListItem>
+                                    ) : null;
+                                })}
+                            </List>
                         </Grid>
-                        <Grid item xs={3}>
-                            <Typography paragraph>Amount</Typography>
-                            {description}
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Typography paragraph>Prep Time</Typography>
-                            {prepTimeMinutes} min
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Typography paragraph>Cook Time</Typography>
-                            {cookTimeMinutes} min
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Typography paragraph>Total Time</Typography>
-                            {totalTimeMinutes} min
+                        <Grid item xs={7} md={6}>
+                            <Typography variant="h4" textAlign={{ xs: 'center', sm: 'left' }}>
+                                Instructions
+                            </Typography>
+                            <List sx={{ listStyleType: 'decimal' }}>
+                                {instructions.map((instruction, index) => {
+                                    return instruction ? (
+                                        <ListItem sx={{ display: 'list-item' }} key={index}>
+                                            {instruction.description}
+                                        </ListItem>
+                                    ) : null;
+                                })}
+                            </List>
                         </Grid>
                     </Grid>
-                    <Grid item xs>
-                        <Typography variant="h4">Ingredients</Typography>
-                        <List>
-                            {ingredients.map((ingredient, index) => {
-                                const { measurementType, name, amount } = ingredient;
-                                return ingredient ? (
-                                    <ListItem key={index}>
-                                        {amount} {measurementType} {name}
-                                    </ListItem>
-                                ) : null;
-                            })}
-                        </List>
-                    </Grid>
-                    <Grid item xs>
-                        <Typography variant="h4">Instructions</Typography>
-                        <List sx={{ listStyleType: 'decimal' }}>
-                            {instructions.map((instruction, index) => {
-                                return instruction ? (
-                                    <ListItem sx={{ display: 'list-item' }} key={index}>
-                                        {instruction.description}
-                                    </ListItem>
-                                ) : null;
-                            })}
-                        </List>
-                    </Grid>
-                </Grid>
-            </Paper>
+                </CardContent>
+            </Card>
         </>
     );
 };
