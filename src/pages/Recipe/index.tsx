@@ -56,11 +56,22 @@ const RecipePage = () => {
             <Button variant="contained" href={RECIPES}>
                 back to recipes
             </Button>
-            <Card raised sx={{ m: 3, p: 3 }}>
-                <CardHeader title={title} align="center" titleTypographyProps={{ variant: 'h3' }} />
+            <Card
+                raised
+                sx={{ m: { xs: 0, sm: '16px auto' }, p: 3, width: { xs: '100%', sm: '90%' }, justifyContent: 'center' }}
+            >
+                <CardHeader title={title} align="center" titleTypographyProps={{ variant: 'h4' }} />
                 <Stack direction="row" spacing={1} justifyContent="center">
                     {categories.map((category) => {
-                        return <Chip label={category} size="small" component="a" href={''} clickable />;
+                        return (
+                            <Chip
+                                label={category}
+                                size="small"
+                                component="a"
+                                href={`/category/${category.toLowerCase()}`}
+                                clickable
+                            />
+                        );
                     })}
                 </Stack>
                 <CardMedia component="img" src={imageUrl} alt={title} className={classes.image} />
@@ -92,13 +103,11 @@ const RecipePage = () => {
                     <Grid
                         container
                         direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 1, sm: 1 }}
-                        justifyContent="center"
-                        pt={3}
-                        pb={3}
+                        justifyContent="space-around"
+                        p={{ xs: 0, sm: 2 }}
                     >
                         <Grid item xs={5} md={4} lg={3}>
-                            <Typography variant="h4" textAlign={{ xs: 'center', sm: 'left' }}>
+                            <Typography variant="h5" textAlign={{ xs: 'center', sm: 'left' }} pl={{ xs: 0, sm: 2 }}>
                                 Ingredients
                             </Typography>
                             <List>
@@ -113,7 +122,7 @@ const RecipePage = () => {
                             </List>
                         </Grid>
                         <Grid item xs={7} md={6}>
-                            <Typography variant="h4" textAlign={{ xs: 'center', sm: 'left' }}>
+                            <Typography variant="h5" textAlign={{ xs: 'center', sm: 'left' }} pl={{ xs: 0, sm: 2 }}>
                                 Instructions
                             </Typography>
                             <List sx={{ listStyleType: 'decimal' }}>
