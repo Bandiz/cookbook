@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 
-import Search from '../../components/Shared/Search';
 import RecipeList from '../../components/RecipeList';
 import { useRecipes } from '../../contexts/RecipesContext';
 
-import './Recipes.scss';
 import { GetRecipes } from '../../api/recipes/getRecipes';
 
 export default function Recipes() {
@@ -18,9 +16,8 @@ export default function Recipes() {
     }, []);
 
     return (
-        <div className="recipes-page">
-            <Search />
+        <>
             <RecipeList recipes={recipes} />
-        </div>
+        </>
     );
 }
