@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Recipe } from '../../types';
 import { useStyles } from './RecipeList';
 
-import { Card, CardContent, CardHeader, CardMedia, Chip, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, CardMedia, Chip, Fab, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface RecipeListProps {
@@ -49,7 +49,9 @@ export default function RecipeList({ recipes }: RecipeListProps) {
                             </Typography>
 
                             {user && user.isAdmin && (
-                                <Chip label={<EditIcon />} component="a" href="#" clickable className={classes.edit} />
+                                <Fab size="small" className={classes.edit}>
+                                    <EditIcon />
+                                </Fab>
                             )}
                         </CardContent>
                     </Card>

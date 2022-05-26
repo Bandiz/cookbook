@@ -27,14 +27,5 @@ export const useStyles = makeStyles()({
         position: 'absolute',
         top: '10px',
         right: '10px',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        color: 'white',
-        height: '42px',
-        borderRadius: '50px',
-
-        '&&:hover': {
-            backgroundColor: 'white',
-            color: 'black',
-        },
     },
 });
