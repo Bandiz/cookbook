@@ -2,7 +2,7 @@ import React from 'react';
 import { useRecipes } from '../../../../contexts/RecipesContext';
 import { ABOUT, HOME, LOGIN } from '../../../../constants/routes';
 import { useAuth } from '../../../../contexts/AuthContext';
-import Search from '../../Search';
+import Search from '../Search';
 import RecipesMenu from '../RecipesMenu';
 import Logo from '../Logo';
 import UserMenu from '../UserMenu';
