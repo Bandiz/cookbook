@@ -1,12 +1,10 @@
+import { Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import RecipeList from '../../components/RecipeList';
-import { Search } from '../../components/Shared';
 import { useRecipes } from '../../contexts/RecipesContext';
 import { Recipe } from '../../types';
-
-import './Category.scss';
 
 export default function Category() {
     const { category } = useParams();
@@ -28,9 +26,11 @@ export default function Category() {
     );
 
     return (
-        <div className="category-page">
-            <Search />
-            <RecipeList category={category} recipes={recipesByCategory} />
-        </div>
+        <>
+            <Typography variant="h4" m={3} className="section-title">
+                {category}
+            </Typography>
+            <RecipeList recipes={recipesByCategory} />
+        </>
     );
 }

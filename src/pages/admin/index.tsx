@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { Navigate } from 'react-router-dom';
-import AdminTabs from '../../components/Tabs';
+import AdminTabs from '../../components/Admin';
 import { useAuth } from '../../contexts/AuthContext';
 import './Admin.scss';
 

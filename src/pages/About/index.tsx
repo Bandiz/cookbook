@@ -1,10 +1,8 @@
-import { Search } from '../../components/Shared';
 import './About.scss';
 
 export default function About() {
     return (
         <>
-            <Search />
             <section className="section about-section">
                 <h1 className="section-title">about us</h1>
                 <p>

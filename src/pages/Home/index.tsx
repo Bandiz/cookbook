@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi';
 import recipesData from '../Recipes/RecipesData.json';
 import './Home.scss';
-import { Search } from '../../components/Shared';
 
 function Home() {
     const [index, setIndex] = useState(0);
@@ -44,7 +43,6 @@ function Home() {
 
     return (
         <div>
-            <Search />
             <section className="slider">
                 <div className="img-container">
                     <Link to={`/recipe/${_id}`}>
