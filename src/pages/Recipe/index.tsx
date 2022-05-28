@@ -49,8 +49,6 @@ const RecipePage = () => {
         instructions,
     } = recipe;
 
-    console.log(recipe);
-
     return (
         <>
             <Button variant="contained" href={RECIPES}>
@@ -65,6 +63,7 @@ const RecipePage = () => {
                     {categories.map((category) => {
                         return (
                             <Chip
+                                key={category}
                                 label={category}
                                 size="small"
                                 component="a"
