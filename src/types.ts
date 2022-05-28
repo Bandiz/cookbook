@@ -35,18 +35,6 @@ export type Recipe = {
     ingredients: Ingredients[];
 } & Auditable;
 
-export type User = {
-    email: string;
-    isAdmin: boolean;
-    lastName: string;
-    name: string;
-};
-
-export type UserSession = {
-    token: string;
-    user: User;
-};
-
 export type Category = {
     categoryName: string;
     visible: boolean;

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ADMIN } from '../../../../constants/routes';
-import { User } from '../../../../types';
 
 import Logout from '@mui/icons-material/Logout';
 import { Avatar, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { User } from '../../../../api/session/types';
 
 interface UserMenuProps {
     user: User;

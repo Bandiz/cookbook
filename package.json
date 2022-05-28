@@ -12,7 +12,6 @@
         "@mui/styles": "^5.2.2",
         "axios": "^0.26.0",
         "dayjs": "^1.11.0",
-        "jwt-decode": "^3.1.2",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-google-login": "^5.2.2",

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { UserSession } from '../../types';
+import { UserSession } from './types';
 
 type GetSessionResponse =
     | { type: 'response'; payload: UserSession }
@@ -9,11 +9,11 @@ type GetSessionResponse =
           error: string;
       };
 
-export function GetSessionWithLogin() {
+export function GetSessionWithGoogle() {
     const { httpClient } = useAuth();
     const [loading, setLoading] = useState(false);
-    const request = async (username: string, password: string): Promise<GetSessionResponse> => {
-        if (!username || !password) {
+    const request = async (token: string): Promise<GetSessionResponse> => {
+        if (!token) {
             return {
                 type: 'error',
                 error: 'Unauthorized',
@@ -22,12 +22,9 @@ export function GetSessionWithLogin() {
 
         setLoading(true);
         try {
-            const formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
-            const response = await httpClient.post<UserSession>('v1/token/login', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            const response = await httpClient.post<UserSession>('auth/v1/login/google', null, {
+                params: {
+                    t: token,
                 },
             });
             return {
@@ -44,7 +41,7 @@ export function GetSessionWithLogin() {
         }
     };
     return {
-        getSessionWithLoginRequest: request,
-        getSessionWithLoginLoading: loading,
+        getSessionWithGoogleRequest: request,
+        getSessionWithGoogleLoading: loading,
     };
 }

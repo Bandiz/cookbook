@@ -16,11 +16,11 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { GetSessionWithLogin } from '../../api/session/getSessionWithLogin';
+import { GetSessionWithLogin } from '../../api/session/loginWithUser';
 import { useAuth } from '../../contexts/AuthContext';
-import { GetSessionWithGoogle } from '../../api/session/getSessionWithGoogle';
-import { UserSession } from '../../types';
+import { GetSessionWithGoogle } from '../../api/session/loginWithGoogle';
 import { useNavigate } from 'react-router';
+import { UserSession } from '../../api/session/types';
 
 interface FormState {
     username?: string;
