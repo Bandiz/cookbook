@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useRecipes } from '../../../../contexts/RecipesContext';
 import { ABOUT, HOME, LOGIN } from '../../../../constants/routes';
 import { useAuth } from '../../../../contexts/AuthContext';
@@ -58,15 +59,15 @@ const Navbar = () => {
                                     justifyContent: 'center',
                                 }}
                             >
-                                <Button href={HOME} sx={{ color: 'white', display: 'block' }}>
+                                <Button component={Link} to={HOME} sx={{ color: 'white', display: 'block' }}>
                                     Home
                                 </Button>
                                 <RecipesMenu categories={categories} />
-                                <Button href={ABOUT} sx={{ color: 'white', display: 'block' }}>
+                                <Button component={Link} to={ABOUT} sx={{ color: 'white', display: 'block' }}>
                                     About
                                 </Button>
                                 {!isAuthenticated && (
-                                    <Button href={LOGIN} sx={{ color: 'white', display: 'flex' }}>
+                                    <Button component={Link} to={LOGIN} sx={{ color: 'white', display: 'flex' }}>
                                         <LoginIcon sx={{ mr: 1 }} />
                                         Login
                                     </Button>

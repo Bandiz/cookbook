@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import RecipesMenu from '../RecipesMenu';
 import { ABOUT, HOME, LOGIN } from '../../../../constants/routes';
 
@@ -45,7 +46,7 @@ const SmallScreenMenu = ({ categories, isAuthenticated }: SmallScreenMenuProps) 
                 }}
             >
                 <MenuItem onClick={handleCloseNavMenu}>
-                    <Typography component="a" href={HOME} textAlign="center">
+                    <Typography component={Link} to={HOME} textAlign="center">
                         Home
                     </Typography>
                 </MenuItem>
@@ -53,13 +54,13 @@ const SmallScreenMenu = ({ categories, isAuthenticated }: SmallScreenMenuProps) 
                     <RecipesMenu categories={categories} handleCloseNavMenu={handleCloseNavMenu} />
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
-                    <Typography component="a" href={ABOUT} textAlign="center">
+                    <Typography component={Link} to={ABOUT} textAlign="center">
                         About
                     </Typography>
                 </MenuItem>
                 {!isAuthenticated && (
                     <MenuItem onClick={handleCloseNavMenu}>
-                        <Typography component="a" href={LOGIN} sx={{ display: 'flex' }}>
+                        <Typography component={Link} to={LOGIN} sx={{ display: 'flex' }}>
                             <LoginIcon sx={{ mr: 1 }} />
                             Login
                         </Typography>
