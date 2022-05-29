@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import axios, { AxiosInstance } from 'axios';
 import { User, UserSession } from '../api/session/types';
 import { GetIsLoggedIn } from '../api/session/isLoggedIn';
+import { Logout } from '../api/session/logout';
 
 interface AuthObject {
     isAuthenticated: boolean;
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>();
     const { isLoggedInRequest } = GetIsLoggedIn();
+    const { logoutRequest } = Logout();
 
     useEffect(() => {
         (async () => {
@@ -37,10 +39,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     function login(session: UserSession) {
+        setIsAuthenticated(true);
         setUser(session.user);
     }
 
-    function logout() {
+    async function logout() {
+        const response = await logoutRequest();
+
+        if (response.type === 'error') {
+            return;
+        }
+        setIsAuthenticated(false);
         setUser(null);
     }
 
