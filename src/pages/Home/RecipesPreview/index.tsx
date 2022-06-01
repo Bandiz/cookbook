@@ -12,11 +12,11 @@ export default function RecipesPreview() {
     }
 
     return (
-        <ImageList>
+        <ImageList className={classes.list} variant="woven" gap={8}>
             {recipes.map((item) => (
                 <ImageListItem component={Link} to={`/recipe/${item.id}`} key={item.id}>
                     <img
-                        className={classes.hover}
+                        className={classes.image}
                         src={item.imageUrl}
                         srcSet={item.imageUrl}
                         alt={item.title}
