@@ -22,6 +22,7 @@ import { GetSessionWithGoogle } from '../../api/session/loginWithGoogle';
 import { useNavigate } from 'react-router';
 import { UserSession } from '../../api/session/types';
 
+import { useStyles } from './Login';
 interface FormState {
     username?: string;
     password?: string;
@@ -36,6 +37,7 @@ export default function Login() {
     const { getSessionWithLoginRequest } = GetSessionWithLogin();
     const { getSessionWithGoogleRequest } = GetSessionWithGoogle();
     const navigate = useNavigate();
+    const { classes } = useStyles();
 
     function handleOnSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
         if (response.hasOwnProperty('code')) {
@@ -87,49 +89,14 @@ export default function Login() {
 
     return (
         <Box>
-            <Grid
-                container
-                sx={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: '',
-                    justifyContent: 'center',
-                    mt: '40px',
-                    '& .MuiGrid-root': { display: 'flex', justifyContent: 'center', alignItems: 'center' },
-                }}
-                spacing={4}
-            >
+            <Grid container className={classes.container} rowSpacing={3}>
                 <Grid item>
-                    <GoogleLogin
-                        clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
-                        onSuccess={handleOnSuccess}
-                        onFailure={handleOnFailure}
-                        buttonText="Login with Google"
-                    />
-                </Grid>
-                <Grid item>
-                    <Divider orientation="vertical" />
-                </Grid>
-                <Grid item>
-                    <Paper
-                        sx={{
-                            width: '400px',
-                            p: 3,
-                        }}
-                        elevation={3}
-                    >
-                        <Box
-                            ref={formRef}
-                            component="form"
-                            onSubmit={handleOnSubmit}
-                            sx={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                            }}
-                        >
-                            <Typography variant="h5" sx={{ flex: '0 0 100%' }}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Box ref={formRef} component="form" onSubmit={handleOnSubmit} className={classes.form}>
+                            <Typography variant="h5" sx={{ flex: '0 0 100%', textAlign: 'center' }}>
                                 Login with an existing account
                             </Typography>
+
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -171,10 +138,6 @@ export default function Login() {
                                 </FormControl>
                             </Box>
 
-                            <Button id="signup" variant="text" sx={{ flex: '0 0 50%' }}>
-                                Sign up
-                            </Button>
-
                             <Button
                                 id="login"
                                 variant="contained"
@@ -183,6 +146,57 @@ export default function Login() {
                                 sx={{ flex: '0 0 50%' }}
                             >
                                 Login
+                            </Button>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                position: 'relative',
+                                m: (theme) => theme.spacing(4, 0),
+                            }}
+                        >
+                            <Divider orientation="horizontal" />
+
+                            <Typography
+                                className={classes.flex}
+                                sx={{
+                                    position: 'absolute',
+                                    alignSelf: 'center',
+                                    backgroundColor: 'white',
+                                    width: '50px',
+                                }}
+                                variant="caption"
+                            >
+                                OR
+                            </Typography>
+                        </Box>
+
+                        <Box
+                            className={classes.flex}
+                            sx={{
+                                m: (theme) => theme.spacing(2, 0),
+                            }}
+                        >
+                            <GoogleLogin
+                                clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
+                                onSuccess={handleOnSuccess}
+                                onFailure={handleOnFailure}
+                                buttonText="Login with Google"
+                            />
+                        </Box>
+                    </Paper>
+                </Grid>
+
+                <Grid item>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Box className={classes.flex}>
+                            <Typography variant="subtitle1">Don't have an account?</Typography>
+
+                            <Button id="signup" variant="text">
+                                Sign up
                             </Button>
                         </Box>
                     </Paper>
