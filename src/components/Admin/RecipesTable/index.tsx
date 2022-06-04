@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Avatar,
     Checkbox,
+    Fab,
     Grid,
     IconButton,
     Paper,
@@ -15,12 +16,15 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 import { useAdmin } from '../../../contexts/AdminContext';
 import { GetRecipes } from '../../../api/recipes/getRecipes';
 import { TableLoader } from '../Shared/TableLoader';
+import { NewRecipeDialog } from './NewRecipeDialog';
 
 export default function RecipesTable() {
+    const [newRecipeDialogOpen, setNewRecipeDialogOpen] = useState(false);
     const { recipes, setRecipes, recipesLoaded } = useAdmin();
     const { getRecipesRequest, getRecipesLoading } = GetRecipes();
 
@@ -105,7 +109,17 @@ export default function RecipesTable() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <NewRecipeDialog open={newRecipeDialogOpen} onClose={() => setNewRecipeDialogOpen(false)} />
             </Paper>
+            <Fab
+                size="medium"
+                color="primary"
+                aria-label="add"
+                sx={{ float: 'right', marginTop: (d) => d.spacing(2) }}
+                onClick={() => setNewRecipeDialogOpen(true)}
+            >
+                <AddIcon />
+            </Fab>
         </Grid>
     );
 }
