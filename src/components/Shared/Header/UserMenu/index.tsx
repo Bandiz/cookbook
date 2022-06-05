@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ADMIN } from '../../../../constants/routes';
 
@@ -6,23 +6,36 @@ import Logout from '@mui/icons-material/Logout';
 import { Avatar, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { User } from '../../../../api/session/types';
+import { useLogoutSessionMutation } from '../../../../api/session';
+import { useAuth } from '../../../../contexts/AuthContext';
 
-interface UserMenuProps {
-    user: User;
-    logout: () => void;
-}
-
-const UserMenu = ({ user, logout }: UserMenuProps) => {
+const UserMenu = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const logoutSessionMutation = useLogoutSessionMutation();
+
+    const avatarColor = useMemo(() => {
+        if (!user) {
+            return '#ffffff';
+        }
+        return stringToColor(user.name);
+    }, [user]);
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    if (!user) {
+        return null;
+    }
+
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+    function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
         setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
+    }
+
+    function handleClose() {
         setAnchorEl(null);
-    };
+    }
 
     function stringToColor(string: string) {
         let hash = 0;
@@ -46,7 +59,7 @@ const UserMenu = ({ user, logout }: UserMenuProps) => {
         const { name, lastName } = user;
         return {
             sx: {
-                bgcolor: stringToColor(name),
+                bgcolor: avatarColor,
             },
             children: `${name[0]}${lastName[0]}`,
         };
@@ -109,7 +122,7 @@ const UserMenu = ({ user, logout }: UserMenuProps) => {
                         Admin
                     </MenuItem>
                 )}
-                <MenuItem onClick={logout}>
+                <MenuItem onClick={() => logoutSessionMutation.mutate()}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
                     </ListItemIcon>

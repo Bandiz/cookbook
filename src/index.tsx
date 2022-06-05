@@ -6,14 +6,21 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { RecipesProvider } from './contexts/RecipesContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient();
 
 ReactDOM.render(
     <StylesProvider injectFirst>
-        <AuthProvider>
-            <RecipesProvider>
-                <App />
-            </RecipesProvider>
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <RecipesProvider>
+                    <App />
+                </RecipesProvider>
+            </AuthProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     </StylesProvider>,
     document.getElementById('root')
 );

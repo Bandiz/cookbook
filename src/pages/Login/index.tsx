@@ -16,13 +16,11 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { GetSessionWithLogin } from '../../api/session/loginWithUser';
-import { useAuth } from '../../contexts/AuthContext';
-import { GetSessionWithGoogle } from '../../api/session/loginWithGoogle';
 import { useNavigate } from 'react-router';
-import { UserSession } from '../../api/session/types';
 
 import { useStyles } from './Login';
+import { useGoogleSessionMutation, useLoginSessionMutation } from '../../api/session';
+
 interface FormState {
     username?: string;
     password?: string;
@@ -31,11 +29,9 @@ interface FormState {
 
 export default function Login() {
     const [{ username, password, showPassword }, setFormState] = useState<FormState>({ showPassword: false });
-    const [error, setError] = useState<string>();
     const formRef = useRef<HTMLFormElement>();
-    const { login } = useAuth();
-    const { getSessionWithLoginRequest } = GetSessionWithLogin();
-    const { getSessionWithGoogleRequest } = GetSessionWithGoogle();
+    const googleSessionMutation = useGoogleSessionMutation();
+    const loginSessionMutation = useLoginSessionMutation();
     const navigate = useNavigate();
     const { classes } = useStyles();
 
@@ -43,13 +39,8 @@ export default function Login() {
         if (response.hasOwnProperty('code')) {
             return;
         }
-        getSessionWithGoogleRequest((response as GoogleLoginResponse).tokenId).then((response) => {
-            if (response.type === 'error') {
-                setError(response.error);
-            } else {
-                handleLogin(response.payload);
-            }
-        });
+        googleSessionMutation.mutate((response as GoogleLoginResponse).tokenId);
+        handleLogin();
     }
 
     function handleOnFailure(error: unknown) {
@@ -58,13 +49,12 @@ export default function Login() {
 
     function handleOnSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (username && password) {
-            getSessionWithLoginRequest(username, password).then((response) => {
-                if (response.type === 'response') {
-                    handleLogin(response.payload);
-                }
-            });
+        if (!username || !password) {
+            return;
         }
+        const formData = new FormData(event.currentTarget);
+        loginSessionMutation.mutate(formData);
+        handleLogin();
     }
 
     function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -82,8 +72,7 @@ export default function Login() {
         event.preventDefault();
     }
 
-    function handleLogin(session: UserSession) {
-        login(session);
+    function handleLogin() {
         navigate('/');
     }
 
@@ -111,6 +100,7 @@ export default function Login() {
                                     name="username"
                                     label="User name"
                                     placeholder="User name"
+                                    required
                                     onChange={handleOnChange}
                                     sx={{ m: 1, width: '25ch' }}
                                 />
@@ -120,6 +110,7 @@ export default function Login() {
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
                                         name="password"
+                                        required
                                         onChange={handleOnChange}
                                         endAdornment={
                                             <InputAdornment position="end">

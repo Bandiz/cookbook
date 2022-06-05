@@ -31,7 +31,7 @@ function HideOnScroll(props: Props) {
 
 const Navbar = () => {
     const { categories } = useRecipes();
-    const { isAuthenticated, user, logout } = useAuth();
+    const { isAuthenticated } = useAuth();
 
     return (
         <>
@@ -72,17 +72,17 @@ const Navbar = () => {
                                         Login
                                     </Button>
                                 )}
-                                {isAuthenticated && user && <UserMenu user={user} logout={logout} />}
+                                {isAuthenticated && <UserMenu />}
                             </Box>
                             <Search />
 
-                            {isAuthenticated && user && (
+                            {isAuthenticated && (
                                 <Box
                                     sx={{
                                         display: { xs: 'flex', md: 'none' },
                                     }}
                                 >
-                                    <UserMenu user={user} logout={logout} />
+                                    <UserMenu />
                                 </Box>
                             )}
                         </Box>
