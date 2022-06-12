@@ -24,10 +24,10 @@ import { Category } from '../../../types';
 import { UpdateCategoryVisibility } from '../../../api/categories/updateCategoryVisibility';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { DeleteCategory } from '../../../api/categories/deleteCategory';
-import { GetCategoryDetails } from '../../../api/categories/getCategoryDetails';
 import { TableLoader } from '../Shared/TableLoader';
 import { RemoveFromCategory } from '../../../api/recipes/removeFromCategory';
 import { DeleteCategoryDialog } from './DeleteCategoryDialog';
+import { useCategoryDetails } from '../../../api/categories';
 
 interface CategoryRowProps {
     category: Category;
@@ -39,30 +39,29 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     const [editMode, setEditMode] = useState(false);
     const [visible, setVisible] = useState(category.visible);
 
-    const { categories, setCategories } = useAdmin();
+    const { categories } = useAdmin();
     const { updateCategoryVisibilityRequest, updateCategoryVisibilityLoading } = UpdateCategoryVisibility();
     const { deleteCategoryRequest, deleteCategoryLoading } = DeleteCategory();
-    const { getCategoryDetailsRequest, getCategoryDetailsLoading } = GetCategoryDetails();
 
-    useEffect(() => {
-        if (!open || typeof category.recipes !== 'undefined') {
-            return;
-        }
-        (async () => {
-            const response = await getCategoryDetailsRequest(category.categoryName);
-            if (response.type === 'error') {
-                return;
-            }
-            setCategories(
-                categories.map((x) => {
-                    if (x.categoryName === category.categoryName) {
-                        return { ...x, recipes: response.payload.recipes };
-                    }
-                    return x;
-                })
-            );
-        })();
-    }, [open, category]);
+    // useEffect(() => {
+    //     if (!open || typeof category.recipes !== 'undefined') {
+    //         return;
+    //     }
+    //     (async () => {
+    //         const response = await getCategoryDetailsRequest(category.categoryName);
+    //         if (response.type === 'error') {
+    //             return;
+    //         }
+    //         setCategories(
+    //             categories.map((x) => {
+    //                 if (x.categoryName === category.categoryName) {
+    //                     return { ...x, recipes: response.payload.recipes };
+    //                 }
+    //                 return x;
+    //             })
+    //         );
+    //     })();
+    // }, [open, category]);
 
     useEffect(() => {
         if (editMode && open) {
@@ -193,6 +192,8 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     }
 
     function CategoryRowDetail() {
+        const { data: details, isLoading } = useCategoryDetails(category.categoryName, open);
+
         const { removeFromCategoryRequest, removeFromCategoryLoading } = RemoveFromCategory();
 
         async function handleOnRemoveFromRecipeClick(recipeId: string) {
@@ -210,6 +211,10 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                     return x;
                 }),
             ]);
+        }
+
+        if (!details) {
+            return null;
         }
 
         return (
@@ -230,11 +235,8 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <TableLoader
-                                        loading={getCategoryDetailsLoading || removeFromCategoryLoading}
-                                        colSpan={4}
-                                    />
-                                    {category.recipes?.map((x) => (
+                                    <TableLoader loading={isLoading || removeFromCategoryLoading} colSpan={4} />
+                                    {details.recipes.map((x) => (
                                         <TableRow key={x.id}>
                                             <TableCell scope="row">{x.title}</TableCell>
                                             <TableCell scope="row">
