@@ -1,4 +1,6 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
+import { useCategoryList } from '../api/categories';
+import { mapCategory } from '../api/categories/mapCategory';
 
 import { Category, Recipe } from '../types';
 import { useAuth } from './AuthContext';
@@ -7,9 +9,7 @@ interface AdminObject {
     recipesLoaded: boolean;
     recipes: Recipe[];
     setRecipes: Dispatch<SetStateAction<Recipe[]>>;
-    categoriesLoaded: boolean;
     categories: Category[];
-    setCategories: Dispatch<SetStateAction<Category[]>>;
 }
 
 export const AdminContext = createContext<AdminObject>({} as AdminObject);
@@ -22,10 +22,19 @@ export function AdminProvider({ children }: AdminProviderProps) {
     const { user } = useAuth();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [loaded, setLoaded] = useState<{ categoriesLoaded: boolean; recipesLoaded: boolean }>({
-        categoriesLoaded: false,
+    const [loaded, setLoaded] = useState<{ recipesLoaded: boolean }>({
         recipesLoaded: false,
     });
+
+    const categoryList = useCategoryList();
+
+    useEffect(() => {
+        if (categoryList.status !== 'success') {
+            return;
+        }
+
+        setCategories(categoryList.data.map(mapCategory));
+    }, [categoryList.status]);
 
     if (!user || !user.isAdmin) {
         return <>{children}</>;
@@ -38,20 +47,12 @@ export function AdminProvider({ children }: AdminProviderProps) {
         setRecipes(recipes);
     }
 
-    function setCategoriesWrapper(categories: SetStateAction<Category[]>) {
-        if (!loaded.categoriesLoaded) {
-            setLoaded((prev) => ({ ...prev, categoriesLoaded: true }));
-        }
-        setCategories(categories);
-    }
-
     return (
         <AdminContext.Provider
             value={{
                 recipes,
                 setRecipes: setRecipesWrapper,
                 categories,
-                setCategories: setCategoriesWrapper,
                 ...loaded,
             }}
         >

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useRecipes } from '../../../../contexts/RecipesContext';
 import { ABOUT, HOME, LOGIN } from '../../../../constants/routes';
 import { useAuth } from '../../../../contexts/AuthContext';
 import Search from '../Search';
@@ -30,7 +29,6 @@ function HideOnScroll(props: Props) {
 }
 
 const Navbar = () => {
-    const { categories } = useRecipes();
     const { isAuthenticated } = useAuth();
 
     return (
@@ -39,7 +37,7 @@ const Navbar = () => {
             <HideOnScroll>
                 <AppBar>
                     <Toolbar style={{ display: 'flex', gap: '10px', padding: '10px', justifyContent: 'center' }}>
-                        <SmallScreenMenu categories={categories} isAuthenticated={isAuthenticated} />
+                        <SmallScreenMenu />
 
                         <Logo />
 
@@ -62,7 +60,7 @@ const Navbar = () => {
                                 <Button component={Link} to={HOME} sx={{ color: 'white', display: 'block' }}>
                                     Home
                                 </Button>
-                                <RecipesMenu categories={categories} />
+                                <RecipesMenu />
                                 <Button component={Link} to={ABOUT} sx={{ color: 'white', display: 'block' }}>
                                     About
                                 </Button>

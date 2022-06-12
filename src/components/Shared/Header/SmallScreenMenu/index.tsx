@@ -6,13 +6,11 @@ import { ABOUT, HOME, LOGIN } from '../../../../constants/routes';
 import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LoginIcon from '@mui/icons-material/Login';
+import { useAuth } from '../../../../contexts/AuthContext';
 
-interface SmallScreenMenuProps {
-    categories: string[];
-    isAuthenticated: boolean;
-}
+const SmallScreenMenu = () => {
+    const { isAuthenticated } = useAuth();
 
-const SmallScreenMenu = ({ categories, isAuthenticated }: SmallScreenMenuProps) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -51,7 +49,7 @@ const SmallScreenMenu = ({ categories, isAuthenticated }: SmallScreenMenuProps) 
                     </Typography>
                 </MenuItem>
                 <MenuItem>
-                    <RecipesMenu categories={categories} handleCloseNavMenu={handleCloseNavMenu} />
+                    <RecipesMenu handleCloseNavMenu={handleCloseNavMenu} />
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
                     <Typography component={Link} to={ABOUT} textAlign="center">

@@ -2,12 +2,14 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { useRecipes } from '../../../../contexts/RecipesContext';
 
 interface RecipesMenuProps {
-    categories: string[];
     handleCloseNavMenu?: () => void;
 }
-const RecipesMenu = ({ categories, handleCloseNavMenu }: RecipesMenuProps) => {
+const RecipesMenu = ({ handleCloseNavMenu }: RecipesMenuProps) => {
+    const { categories } = useRecipes();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 

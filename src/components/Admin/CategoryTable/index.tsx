@@ -1,36 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Grid, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
 import { useAdmin } from '../../../contexts/AdminContext';
-import { GetCategoriesList } from '../../../api/categories/getCategoriesList';
 import { CategoryRow } from './CategoryRow';
 import { TableToolbar } from '../Shared/TableToolbar';
 import { TableLoader } from '../Shared/TableLoader';
-import { Category } from '../../../types';
 import { NewRow } from './NewRow';
+import { useCategoryList } from '../../../api/categories';
 
 export default function CategoriesTable() {
-    const { categories, setCategories, categoriesLoaded } = useAdmin();
+    const { categories } = useAdmin();
     const [isNew, setIsNew] = useState(false);
-    const { getCategoriesRequest, getCategoriesLoading } = GetCategoriesList();
     const [isNewRowLoading, setIsNewRowLoading] = useState(false);
+    const { isLoading } = useCategoryList();
 
-    useEffect(() => {
-        if (categoriesLoaded) {
-            return;
-        }
-        (async () => {
-            const response = await getCategoriesRequest();
-            if (response.type !== 'response') {
-                return;
-            }
-            setCategories(response.payload);
-        })();
-    }, [categoriesLoaded]);
-
-    function handleOnSave(newCategory: Category) {
+    function handleOnSave() {
         setIsNew(false);
-        setCategories([...categories, newCategory]);
     }
 
     function handleOnCancel() {
@@ -60,7 +45,7 @@ export default function CategoriesTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableLoader loading={getCategoriesLoading || isNewRowLoading} colSpan={6} />
+                            <TableLoader loading={isLoading || isNewRowLoading} colSpan={6} />
                             {categories.map((category) => (
                                 <CategoryRow
                                     key={category.categoryName}

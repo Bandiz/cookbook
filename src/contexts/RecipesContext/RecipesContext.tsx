@@ -1,6 +1,6 @@
 import { useState, useContext, createContext, ReactNode, useEffect } from 'react';
+import { useCategoryNameList } from '../../api/categories';
 import { Recipe } from '../../types';
-import { GetCategories } from '../../api/categories/getCategories';
 
 export const RecipesContext = createContext({} as RecipesContextObject);
 
@@ -8,9 +8,8 @@ interface RecipesContextObject {
     recipes: Recipe[];
     setRecipes: (recipes: Recipe[]) => void;
     loading: boolean;
-    fetchRecipe: (id: string) => Promise<Recipe>;
     categories: string[];
-    setCategories: (categories: string[]) => void;
+    fetchRecipe: (id: string) => Promise<Recipe>;
     fetchRecipes: () => Promise<void>;
     updateRecipe: (recipe: Recipe) => void;
 }
@@ -19,14 +18,16 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     const [loading, setLoading] = useState(false);
 
     const [recipes, setRecipes] = useState<Recipe[]>([]);
-
     const [categories, setCategories] = useState<string[]>([]);
-
-    const { getCategoriesRequest, getCategoriesLoading } = GetCategories();
+    const categoryNames = useCategoryNameList();
 
     useEffect(() => {
-        getCategoriesRequest().then(setCategories);
-    }, []);
+        if (categoryNames.status !== 'success') {
+            return;
+        }
+
+        setCategories(categoryNames.data);
+    }, [categoryNames.status]);
 
     const fetchRecipes = async () => {
         setLoading(true);
@@ -75,13 +76,12 @@ export const RecipesProvider = ({ children }: { children?: ReactNode }) => {
     return (
         <RecipesContext.Provider
             value={{
-                loading: loading || getCategoriesLoading,
+                loading,
                 recipes,
+                categories,
                 setRecipes,
                 // fetchRecipes,
                 fetchRecipe: fetchRecipeId,
-                categories,
-                setCategories,
                 fetchRecipes,
                 updateRecipe,
             }}
