@@ -27,7 +27,7 @@ import { DeleteCategory } from '../../../api/categories/deleteCategory';
 import { TableLoader } from '../Shared/TableLoader';
 import { RemoveFromCategory } from '../../../api/recipes/removeFromCategory';
 import { DeleteCategoryDialog } from './DeleteCategoryDialog';
-import { useCategoryDetails } from '../../../api/categories';
+import { useCategoryDetails, useDeleteCategoryMutation } from '../../../api/categories';
 import { useRemoveFromCategoryMutation } from '../../../api/recipes';
 
 interface CategoryRowProps {
@@ -131,6 +131,7 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
 
     function DisplayMode() {
         const [deleteOpen, setDeleteOpen] = useState(false);
+        const { mutate, isLoading } = useDeleteCategoryMutation();
 
         function handleOnDialogClose() {
             setDeleteOpen(false);

@@ -36,6 +36,7 @@ export function useRemoveFromCategoryMutation() {
                     context.previousDetails
                 );
             },
+            // onSettled:  todo: invalidate recipes
         }
     );
 }
