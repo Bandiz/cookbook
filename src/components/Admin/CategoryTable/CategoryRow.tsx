@@ -28,6 +28,7 @@ import { TableLoader } from '../Shared/TableLoader';
 import { RemoveFromCategory } from '../../../api/recipes/removeFromCategory';
 import { DeleteCategoryDialog } from './DeleteCategoryDialog';
 import { useCategoryDetails } from '../../../api/categories';
+import { useRemoveFromCategoryMutation } from '../../../api/recipes';
 
 interface CategoryRowProps {
     category: Category;
@@ -193,25 +194,7 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
 
     function CategoryRowDetail() {
         const { data: details, isLoading } = useCategoryDetails(category.categoryName, open);
-
-        const { removeFromCategoryRequest, removeFromCategoryLoading } = RemoveFromCategory();
-
-        async function handleOnRemoveFromRecipeClick(recipeId: string) {
-            const response = await removeFromCategoryRequest(recipeId, category.categoryName);
-
-            if (response.type === 'error') {
-                console.error(response.error);
-                return;
-            }
-            setCategories((prev) => [
-                ...prev.map((x) => {
-                    if (x.categoryName === category.categoryName) {
-                        x.recipes = x.recipes?.filter((y) => y.id !== recipeId);
-                    }
-                    return x;
-                }),
-            ]);
-        }
+        const { mutate, isLoading: isRemoving } = useRemoveFromCategoryMutation();
 
         if (!details) {
             return null;
@@ -235,7 +218,7 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <TableLoader loading={isLoading || removeFromCategoryLoading} colSpan={4} />
+                                    <TableLoader loading={isLoading || isRemoving} colSpan={4} />
                                     {details.recipes.map((x) => (
                                         <TableRow key={x.id}>
                                             <TableCell scope="row">{x.title}</TableCell>
@@ -255,7 +238,10 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                                                         <IconButton
                                                             color="error"
                                                             onClick={() => {
-                                                                handleOnRemoveFromRecipeClick(x.id);
+                                                                mutate({
+                                                                    recipeId: x.id,
+                                                                    categoryName: category.categoryName,
+                                                                });
                                                             }}
                                                         >
                                                             <RemoveCircleIcon />
