@@ -11,7 +11,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 
 const UserMenu = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
     const logoutSessionMutation = useLogoutSessionMutation();
 
     const avatarColor = useMemo(() => {
@@ -110,7 +110,7 @@ const UserMenu = () => {
                     <Avatar /> Profile
                 </MenuItem>
                 <Divider />
-                {user.isAdmin && (
+                {isAdmin && (
                     <MenuItem
                         onClick={() => {
                             navigate(ADMIN);

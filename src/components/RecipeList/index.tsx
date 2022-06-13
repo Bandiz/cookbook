@@ -12,7 +12,7 @@ interface RecipeListProps {
 }
 
 export default function RecipeList({ recipes }: RecipeListProps) {
-    const { user } = useAuth();
+    const { isAdmin } = useAuth();
 
     const { classes } = useStyles();
 
@@ -48,7 +48,7 @@ export default function RecipeList({ recipes }: RecipeListProps) {
                                 Total time: {totalTimeMinutes} min
                             </Typography>
 
-                            {user && user.isAdmin && (
+                            {isAdmin && (
                                 <Fab size="small" className={classes.edit}>
                                     <EditIcon />
                                 </Fab>

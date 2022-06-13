@@ -19,7 +19,7 @@ interface AdminProviderProps {
 }
 
 export function AdminProvider({ children }: AdminProviderProps) {
-    const { user } = useAuth();
+    const { isAdmin } = useAuth();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loaded, setLoaded] = useState<{ recipesLoaded: boolean }>({
@@ -36,7 +36,7 @@ export function AdminProvider({ children }: AdminProviderProps) {
         setCategories(categoryList.data.map(mapCategory));
     }, [categoryList.status]);
 
-    if (!user || !user.isAdmin) {
+    if (!isAdmin) {
         return <>{children}</>;
     }
 

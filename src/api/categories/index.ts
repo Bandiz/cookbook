@@ -22,14 +22,15 @@ export function useCategoryNameList() {
 }
 
 export function useCategoryList() {
-    const { isAuthenticated } = useAuth();
+    const { isAdmin } = useAuth();
+
     return useQuery(categoryListKey, dataGet<CategoryListResponse>('category/list'), {
-        enabled: isAuthenticated,
+        enabled: isAdmin,
     });
 }
 
 export function useCategoryDetails(categoryName: string, opened?: boolean) {
-    const { isAuthenticated } = useAuth();
+    const { isAdmin } = useAuth();
 
     return useQuery(
         [categoryListKey, categoryName],
@@ -39,7 +40,7 @@ export function useCategoryDetails(categoryName: string, opened?: boolean) {
             }),
         {
             initialData: { recipes: [] },
-            enabled: isAuthenticated && opened,
+            enabled: isAdmin && opened,
         }
     );
 }

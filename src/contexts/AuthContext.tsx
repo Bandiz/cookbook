@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useMemo } from 'react';
 import { AxiosInstance } from 'axios';
 import { User } from '../api/session/types';
 import { useSession } from '../api/session';
@@ -8,9 +8,17 @@ interface AuthObject {
     isAuthenticated: boolean;
     httpClient: AxiosInstance;
     user: User | null;
+    isAdmin: boolean;
 }
 
-export const AuthContext = createContext<AuthObject>({ isAuthenticated: false, httpClient } as AuthObject);
+const defaultContextObject: AuthObject = {
+    isAuthenticated: false,
+    httpClient,
+    user: null,
+    isAdmin: false,
+};
+
+export const AuthContext = createContext(defaultContextObject);
 
 interface AuthProviderProps {
     children?: ReactNode;
@@ -19,17 +27,22 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
     const session = useSession();
 
-    return (
-        <AuthContext.Provider
-            value={{
-                isAuthenticated: session.data?.isLoggedIn ?? false,
-                httpClient,
-                user: session.data?.user ?? null,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
-    );
+    const contextObject = useMemo(() => {
+        if (!session.data) {
+            return defaultContextObject;
+        }
+
+        const { isLoggedIn, user } = session.data;
+
+        return {
+            isAuthenticated: isLoggedIn,
+            httpClient,
+            user: user ?? null,
+            isAdmin: user?.isAdmin ?? false,
+        };
+    }, [session.data]);
+
+    return <AuthContext.Provider value={contextObject}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
