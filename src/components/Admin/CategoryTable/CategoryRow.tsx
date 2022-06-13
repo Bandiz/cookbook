@@ -23,12 +23,12 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { Category } from '../../../types';
 import { TableLoader } from '../Shared/TableLoader';
 import { DeleteCategoryDialog } from './DeleteCategoryDialog';
+import { useRemoveFromCategoryMutation } from '../../../api/recipes';
 import {
     useCategoryDetails,
     useDeleteCategoryMutation,
     useUpdateCategoryVisibilityMutation,
 } from '../../../api/categories';
-import { useRemoveFromCategoryMutation } from '../../../api/recipes';
 
 interface CategoryRowProps {
     category: Category;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Category } from '../../types';
-import { mapCategory } from './mapCategory';
+import { mapCategory } from './utils';
 
 type CreateCategoryResponse =
     | {

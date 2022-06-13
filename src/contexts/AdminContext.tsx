@@ -1,6 +1,5 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useCategoryList } from '../api/categories';
-import { mapCategory } from '../api/categories/mapCategory';
 
 import { Category, Recipe } from '../types';
 import { useAuth } from './AuthContext';
@@ -33,7 +32,7 @@ export function AdminProvider({ children }: AdminProviderProps) {
             return;
         }
 
-        setCategories(categoryList.data.map(mapCategory));
+        setCategories(categoryList.data);
     }, [categoryList.status]);
 
     if (!isAdmin) {
