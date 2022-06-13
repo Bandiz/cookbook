@@ -6,8 +6,8 @@ import Logout from '@mui/icons-material/Logout';
 import { Avatar, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { User } from '../../../../api/session/types';
-import { useLogoutSessionMutation } from '../../../../api/session';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { useLogoutSessionMutation } from '../../../../api/session';
 
 const UserMenu = () => {
     const navigate = useNavigate();

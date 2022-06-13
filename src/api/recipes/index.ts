@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 import { CategoryDetails } from '../../types';
-import { categoryListKey } from '../categories';
+import { CategoryListKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
 import { RemoveFromCategoryContext, RemoveFromCategoryVariables } from './types';
 
@@ -14,12 +14,12 @@ export function useRemoveFromCategoryMutation() {
         },
         {
             onMutate: ({ recipeId, categoryName }) => {
-                queryClient.cancelQueries(categoryListKey);
+                queryClient.cancelQueries(CategoryListKey);
 
-                const previousDetails = queryClient.getQueryData<CategoryDetails>([categoryListKey, categoryName]);
+                const previousDetails = queryClient.getQueryData<CategoryDetails>([CategoryListKey, categoryName]);
 
                 if (previousDetails) {
-                    queryClient.setQueryData<CategoryDetails>([categoryListKey, categoryName], {
+                    queryClient.setQueryData<CategoryDetails>([CategoryListKey, categoryName], {
                         ...previousDetails,
                         recipes: previousDetails.recipes.filter((x) => x.id === recipeId),
                     });
@@ -32,7 +32,7 @@ export function useRemoveFromCategoryMutation() {
                     return;
                 }
                 queryClient.setQueryData<CategoryDetails>(
-                    [categoryListKey, variables.categoryName],
+                    [CategoryListKey, variables.categoryName],
                     context.previousDetails
                 );
             },
