@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { CategoryDetails } from '../../types';
+import { mapCategoryDetail } from './mapCategory';
 
 type GetCategoryDetailsResponse =
     | {
@@ -22,11 +23,7 @@ export function GetCategoryDetails() {
             return {
                 type: 'response',
                 payload: {
-                    recipes: response.data.recipes.map((x) => ({
-                        ...x,
-                        createdAt: dayjs(x.createdAt),
-                        updatedAt: x.updatedAt ? dayjs(x.updatedAt) : x.updatedAt,
-                    })),
+                    recipes: response.data.recipes.map(mapCategoryDetail),
                 },
             };
         } catch (e) {

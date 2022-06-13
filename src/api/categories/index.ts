@@ -1,24 +1,24 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useAuth } from '../../contexts/AuthContext';
-import { CategoryDetails } from '../../types';
+import { Category, CategoryDetails } from '../../types';
 import httpClient, { dataGet } from '../httpClient';
+import { mapCategoryDetail } from './mapCategory';
 import {
     CategoryDetailsResponse,
     CategoryListResponse,
     CategoryNameListResponse,
     DeleteCategoryContext,
     DeleteCategoryVariables,
+    UpdateCategoryVisibilityContext,
+    UpdateCategoryVisibilityVariables,
 } from './types';
 
 export const categoryKey = 'category';
 export const categoryListKey = 'categoryList';
 
 export function useCategoryNameList() {
-    return useQuery(categoryKey, dataGet<CategoryNameListResponse>('category'), {
-        cacheTime: 30 * 60 * 1000,
-        refetchOnWindowFocus: false,
-    });
+    return useQuery(categoryKey, dataGet<CategoryNameListResponse>('category'));
 }
 
 export function useCategoryList() {
@@ -33,7 +33,10 @@ export function useCategoryDetails(categoryName: string, opened?: boolean) {
 
     return useQuery(
         [categoryListKey, categoryName],
-        dataGet<CategoryDetailsResponse>(`category/${categoryName}/details`),
+        () =>
+            dataGet<CategoryDetailsResponse>(`category/${categoryName}/details`)().then((x) => {
+                return { recipes: x.recipes.map(mapCategoryDetail) };
+            }),
         {
             initialData: { recipes: [] },
             enabled: isAuthenticated && opened,
@@ -69,19 +72,65 @@ export function useDeleteCategoryMutation() {
 
                 return { previousCategories, previousDetails };
             },
-            onError: (_err, variables, context) => {
-                if (context?.previousCategories) {
-                    queryClient.setQueryData<CategoryListResponse>(categoryListKey, context.previousCategories);
+            onError: (_err, { categoryName }, context) => {
+                if (!context) {
+                    return;
+                }
+                const { previousCategories, previousDetails } = context;
+                if (previousCategories) {
+                    queryClient.setQueryData<CategoryListResponse>(categoryListKey, previousCategories);
                 }
 
-                if (context?.previousDetails) {
-                    queryClient.setQueryData<CategoryDetails>(
-                        [categoryListKey, variables.categoryName],
-                        context.previousDetails
-                    );
+                if (previousDetails) {
+                    queryClient.setQueryData<CategoryDetails>([categoryListKey, categoryName], previousDetails);
                 }
             },
-            // TODO: invaliadte recipes
+            onSettled: (_data, _err, { categoryName }) => {
+                queryClient.invalidateQueries(categoryListKey);
+                queryClient.removeQueries([categoryListKey, categoryName]);
+            },
+        }
+    );
+}
+
+export function useUpdateCategoryVisibilityMutation() {
+    const queryClient = useQueryClient();
+
+    return useMutation<Category, AxiosError, UpdateCategoryVisibilityVariables, UpdateCategoryVisibilityContext>(
+        async ({ categoryName, isVisible }) => {
+            const response = await httpClient.put(`category/${categoryName}/visible/${isVisible}`);
+            return response.data;
+        },
+        {
+            onMutate: ({ categoryName, isVisible }) => {
+                const previousCategories = queryClient.getQueryData<CategoryListResponse>(categoryListKey);
+
+                if (previousCategories) {
+                    queryClient.setQueryData<CategoryListResponse>(
+                        categoryListKey,
+                        previousCategories.map((x) => {
+                            if (x.categoryName === categoryName) {
+                                x.visible = isVisible;
+                            }
+                            return x;
+                        })
+                    );
+                }
+
+                return { previousCategories };
+            },
+            onError: (_err, _variables, context) => {
+                if (!context) {
+                    return;
+                }
+                const { previousCategories } = context;
+                if (previousCategories) {
+                    queryClient.setQueryData<CategoryListResponse>(categoryListKey, previousCategories);
+                }
+            },
+            onSettled: () => {
+                queryClient.invalidateQueries(categoryListKey);
+            },
         }
     );
 }

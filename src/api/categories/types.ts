@@ -14,3 +14,12 @@ export interface DeleteCategoryContext {
     previousCategories?: CategoryListResponse;
     previousDetails?: CategoryDetails;
 }
+
+export interface UpdateCategoryVisibilityVariables {
+    categoryName: string;
+    isVisible: boolean;
+}
+
+export interface UpdateCategoryVisibilityContext {
+    previousCategories?: CategoryListResponse;
+}

@@ -21,13 +21,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { Category } from '../../../types';
-import { UpdateCategoryVisibility } from '../../../api/categories/updateCategoryVisibility';
-import { useAdmin } from '../../../contexts/AdminContext';
-import { DeleteCategory } from '../../../api/categories/deleteCategory';
 import { TableLoader } from '../Shared/TableLoader';
-import { RemoveFromCategory } from '../../../api/recipes/removeFromCategory';
 import { DeleteCategoryDialog } from './DeleteCategoryDialog';
-import { useCategoryDetails, useDeleteCategoryMutation } from '../../../api/categories';
+import {
+    useCategoryDetails,
+    useDeleteCategoryMutation,
+    useUpdateCategoryVisibilityMutation,
+} from '../../../api/categories';
 import { useRemoveFromCategoryMutation } from '../../../api/recipes';
 
 interface CategoryRowProps {
@@ -40,29 +40,7 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     const [editMode, setEditMode] = useState(false);
     const [visible, setVisible] = useState(category.visible);
 
-    const { categories } = useAdmin();
-    const { updateCategoryVisibilityRequest, updateCategoryVisibilityLoading } = UpdateCategoryVisibility();
-    const { deleteCategoryRequest, deleteCategoryLoading } = DeleteCategory();
-
-    // useEffect(() => {
-    //     if (!open || typeof category.recipes !== 'undefined') {
-    //         return;
-    //     }
-    //     (async () => {
-    //         const response = await getCategoryDetailsRequest(category.categoryName);
-    //         if (response.type === 'error') {
-    //             return;
-    //         }
-    //         setCategories(
-    //             categories.map((x) => {
-    //                 if (x.categoryName === category.categoryName) {
-    //                     return { ...x, recipes: response.payload.recipes };
-    //                 }
-    //                 return x;
-    //             })
-    //         );
-    //     })();
-    // }, [open, category]);
+    const { mutateAsync, isLoading } = useUpdateCategoryVisibilityMutation();
 
     useEffect(() => {
         if (editMode && open) {
@@ -75,19 +53,8 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     }
 
     async function handleOnSaveClick() {
-        const response = await updateCategoryVisibilityRequest(category.categoryName, visible);
-        if (response.type === 'error') {
-            return;
-        }
+        await mutateAsync({ categoryName: category.categoryName, isVisible: visible });
         setEditMode(false);
-        setCategories((prev) =>
-            prev.map((x) => {
-                if (x.categoryName === category.categoryName) {
-                    return response.payload;
-                }
-                return x;
-            })
-        );
     }
 
     function EditMode() {
@@ -106,20 +73,14 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                 <TableCell align="right">
                     <Tooltip title="Save">
                         <span>
-                            <IconButton
-                                disabled={disabled || updateCategoryVisibilityLoading}
-                                onClick={handleOnSaveClick}
-                            >
+                            <IconButton disabled={disabled || isLoading} onClick={handleOnSaveClick}>
                                 <SaveIcon />
                             </IconButton>
                         </span>
                     </Tooltip>
                     <Tooltip title="Cancel">
                         <span>
-                            <IconButton
-                                disabled={disabled || updateCategoryVisibilityLoading}
-                                onClick={() => setEditMode(false)}
-                            >
+                            <IconButton disabled={disabled || isLoading} onClick={() => setEditMode(false)}>
                                 <CancelIcon />
                             </IconButton>
                         </span>
@@ -139,8 +100,7 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
 
         async function handleOnConfirmDeletion() {
             handleOnDialogClose();
-            await deleteCategoryRequest(category.categoryName);
-            setCategories(categories.filter((x) => x.categoryName !== category.categoryName));
+            mutate({ categoryName: category.categoryName });
         }
 
         return (
@@ -167,17 +127,14 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
                 <TableCell align="right">
                     <Tooltip title="Edit">
                         <span>
-                            <IconButton disabled={disabled || deleteCategoryLoading} onClick={() => setEditMode(true)}>
+                            <IconButton disabled={disabled || isLoading} onClick={() => setEditMode(true)}>
                                 <EditIcon />
                             </IconButton>
                         </span>
                     </Tooltip>
                     <Tooltip title="Delete">
                         <span>
-                            <IconButton
-                                disabled={disabled || deleteCategoryLoading}
-                                onClick={() => setDeleteOpen(true)}
-                            >
+                            <IconButton disabled={disabled || isLoading} onClick={() => setDeleteOpen(true)}>
                                 <DeleteIcon />
                             </IconButton>
                         </span>

@@ -6,7 +6,6 @@ const sessionKey = 'session';
 
 export function useSession() {
     return useQuery(sessionKey, dataGet<SessionCheck>('auth/isLoggedIn'), {
-        refetchOnWindowFocus: false,
         refetchIntervalInBackground: true,
         refetchInterval: 5 * 60 * 1000,
     });
