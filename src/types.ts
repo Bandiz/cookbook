@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs';
 
 type Auditable = {
-    updatedBy: string;
+    updatedBy?: string;
     updatedAt?: Dayjs;
     createdBy: string;
     createdAt: Dayjs;

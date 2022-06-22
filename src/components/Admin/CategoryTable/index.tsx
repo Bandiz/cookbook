@@ -1,18 +1,16 @@
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useState } from 'react';
-import { Grid, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-
-import { useAdmin } from '../../../contexts/AdminContext';
-import { CategoryRow } from './CategoryRow';
-import { TableToolbar } from '../Shared/TableToolbar';
-import { TableLoader } from '../Shared/TableLoader';
-import { NewRow } from './NewRow';
 import { useCategoryList } from '../../../api/categories';
+import useCreateCategoryMutation from '../../../api/categories/useCreateCategoryMutation';
+import { TableLoader } from '../Shared/TableLoader';
+import { TableToolbar } from '../Shared/TableToolbar';
+import { CategoryRow } from './CategoryRow';
+import { NewRow } from './NewRow';
 
 export default function CategoriesTable() {
-    const { categories } = useAdmin();
     const [isNew, setIsNew] = useState(false);
-    const [isNewRowLoading, setIsNewRowLoading] = useState(false);
-    const { isLoading } = useCategoryList();
+    const { isLoading: createCategoryLoading } = useCreateCategoryMutation();
+    const { data: categories, isLoading } = useCategoryList();
 
     function handleOnSave() {
         setIsNew(false);
@@ -45,21 +43,16 @@ export default function CategoriesTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableLoader loading={isLoading || isNewRowLoading} colSpan={6} />
-                            {categories.map((category) => (
-                                <CategoryRow
-                                    key={category.categoryName}
-                                    category={category}
-                                    disabled={isNewRowLoading}
-                                />
-                            ))}
-                            {isNew && (
-                                <NewRow
-                                    onLoading={setIsNewRowLoading}
-                                    onSave={handleOnSave}
-                                    onCancel={handleOnCancel}
-                                />
-                            )}
+                            <TableLoader loading={isLoading || createCategoryLoading} colSpan={6} />
+                            {categories &&
+                                categories.map((category, index) => (
+                                    <CategoryRow
+                                        key={`${category.categoryName}_${index}`}
+                                        category={category}
+                                        disabled={createCategoryLoading}
+                                    />
+                                ))}
+                            {isNew && <NewRow onSave={handleOnSave} onCancel={handleOnCancel} />}
                         </TableBody>
                     </Table>
                 </TableContainer>

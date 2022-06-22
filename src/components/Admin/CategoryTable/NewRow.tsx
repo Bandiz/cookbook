@@ -1,31 +1,21 @@
-import { useState, ChangeEvent, useEffect } from 'react';
-import { TextField, TableRow, TableCell, IconButton, Tooltip, Checkbox } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
-import { CreateCategory } from '../../../api/categories/createCategory';
-import { Category } from '../../../types';
+import { Checkbox, IconButton, TableCell, TableRow, TextField, Tooltip } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
+import useCreateCategoryMutation from '../../../api/categories/useCreateCategoryMutation';
 
 interface NewRowProps {
-    onLoading: (isLoading: boolean) => void;
-    onSave: (newRow: Category) => void;
+    onSave: () => void;
     onCancel: () => void;
 }
 
-export function NewRow({ onLoading, onSave, onCancel }: NewRowProps) {
+export function NewRow({ onSave, onCancel }: NewRowProps) {
     const [newCategory, setNewCategory] = useState<string>();
     const [menuVisible, setMenuVisible] = useState(false);
-    const [newError, setNewError] = useState<string>();
-    const { createCategoryRequest, createCategoryLoading } = CreateCategory();
-
-    useEffect(() => {
-        onLoading(createCategoryLoading);
-    }, [createCategoryLoading]);
+    const { mutateAsync, isLoading, isError, error } = useCreateCategoryMutation();
 
     function handleOnNewCategoryChange(event: ChangeEvent<HTMLInputElement>) {
         setNewCategory(event.target.value);
-        if (newError) {
-            setNewError('');
-        }
     }
 
     async function handleSaveNewCategory() {
@@ -33,18 +23,13 @@ export function NewRow({ onLoading, onSave, onCancel }: NewRowProps) {
             return;
         }
 
-        const response = await createCategoryRequest(newCategory, menuVisible);
-        if (response.type === 'error') {
-            setNewError(response.error);
-            return;
-        }
+        await mutateAsync({ categoryName: newCategory, visible: menuVisible });
 
-        onSave(response.payload);
+        onSave();
     }
 
     function handleCancelNewCategory() {
         setNewCategory('');
-        setNewError('');
         onCancel();
     }
 
@@ -61,9 +46,9 @@ export function NewRow({ onLoading, onSave, onCancel }: NewRowProps) {
                     inputProps={{ 'aria-label': 'new category' }}
                     defaultValue={newCategory}
                     onChange={handleOnNewCategoryChange}
-                    error={Boolean(newError)}
-                    helperText={newError}
-                    disabled={createCategoryLoading}
+                    error={isError}
+                    helperText={error?.response?.data}
+                    disabled={isLoading}
                 />
             </TableCell>
             <TableCell colSpan={3}>
@@ -76,14 +61,14 @@ export function NewRow({ onLoading, onSave, onCancel }: NewRowProps) {
             <TableCell align="right">
                 <Tooltip title="Save">
                     <span>
-                        <IconButton color="primary" onClick={handleSaveNewCategory} disabled={createCategoryLoading}>
+                        <IconButton color="primary" onClick={handleSaveNewCategory} disabled={isLoading}>
                             <SaveIcon />
                         </IconButton>
                     </span>
                 </Tooltip>
                 <Tooltip title="Cancel">
                     <span>
-                        <IconButton color="error" onClick={handleCancelNewCategory} disabled={createCategoryLoading}>
+                        <IconButton color="error" onClick={handleCancelNewCategory} disabled={isLoading}>
                             <CancelIcon />
                         </IconButton>
                     </span>

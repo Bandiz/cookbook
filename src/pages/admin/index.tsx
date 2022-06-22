@@ -5,9 +5,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import './Admin.scss';
 
 export default function Admin() {
-    const { user } = useAuth();
+    const { isAdmin } = useAuth();
 
-    if (!user || !user.isAdmin) {
+    if (!isAdmin) {
         return <Navigate to="/" />;
     }
 

@@ -10,8 +10,7 @@ export interface DeleteCategoryVariables {
     categoryName: string;
 }
 
-export interface DeleteCategoryContext {
-    previousCategories?: CategoryListResponse;
+export interface DeleteCategoryContext extends CategoryListContext {
     previousDetails?: CategoryDetails;
 }
 
@@ -20,6 +19,15 @@ export interface UpdateCategoryVisibilityVariables {
     isVisible: boolean;
 }
 
-export interface UpdateCategoryVisibilityContext {
+export type UpdateCategoryVisibilityContext = CategoryListContext;
+
+export interface CreateCategoryVariables {
+    categoryName: string;
+    visible: boolean;
+}
+
+export type CreateCategoryContext = CategoryListContext;
+
+interface CategoryListContext {
     previousCategories?: CategoryListResponse;
 }
