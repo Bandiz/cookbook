@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { useRecipes } from '../../../contexts/RecipesContext';
 import { useStyles } from './RecipesPreview';
 import { ImageList, ImageListItem, ImageListItemBar } from '@mui/material';
+import { useRecipes } from '../../../api/recipes';
 
 export default function RecipesPreview() {
-    const { recipes } = useRecipes();
+    const { data: recipes } = useRecipes();
     const { classes } = useStyles();
 
     if (!recipes || recipes.length === 0) {

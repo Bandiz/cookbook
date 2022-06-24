@@ -1,7 +1,6 @@
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useState } from 'react';
-import { useCategoryList } from '../../../api/categories';
-import useCreateCategoryMutation from '../../../api/categories/useCreateCategoryMutation';
+import { useCategoryList, useCreateCategoryMutation } from '../../../api/categories';
 import { TableLoader } from '../Shared/TableLoader';
 import { TableToolbar } from '../Shared/TableToolbar';
 import { CategoryRow } from './CategoryRow';

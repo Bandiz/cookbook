@@ -1,38 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-
-import { useRecipes } from '../../contexts/RecipesContext';
-import { Recipe } from '../../types';
-import { RECIPES } from '../../constants/routes';
 import {
-    Grid,
-    Typography,
-    List,
-    ListItem,
     Button,
-    CardMedia,
     Card,
-    CardHeader,
     CardContent,
-    Stack,
+    CardHeader,
+    CardMedia,
     Chip,
     Divider,
+    Grid,
+    List,
+    ListItem,
+    Stack,
+    Typography,
 } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { useRecipe } from '../../api/recipes';
+import { RECIPES } from '../../constants/routes';
 import { useStyles } from './Recipe';
 
 const RecipePage = () => {
     const { id } = useParams();
-    const [recipe, setRecipe] = useState<Recipe>();
     const { classes } = useStyles();
 
-    const { fetchRecipe } = useRecipes();
-
-    useEffect(() => {
-        if (!id) {
-            return;
-        }
-        fetchRecipe(id).then(setRecipe);
-    }, [id]);
+    const { data: recipe } = useRecipe(id!);
 
     if (!recipe) {
         return <Typography variant="h2">no recipe to display</Typography>;

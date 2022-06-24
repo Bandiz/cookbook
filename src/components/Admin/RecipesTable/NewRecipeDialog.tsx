@@ -1,4 +1,3 @@
-import { FormEventHandler, useRef, useState } from 'react';
 import {
     Autocomplete,
     Box,
@@ -12,9 +11,10 @@ import {
     Stack,
     TextField,
 } from '@mui/material';
-import { useRecipes } from '../../../contexts/RecipesContext';
-import { Instructions } from './Instructions';
+import { FormEventHandler, useRef, useState } from 'react';
+import { useCategoryNameList } from '../../../api/categories';
 import { Ingredients } from './Ingredients';
+import { Instructions } from './Instructions';
 
 interface NewRecipeDialogProps {
     open: boolean;
@@ -23,7 +23,7 @@ interface NewRecipeDialogProps {
 }
 
 export function NewRecipeDialog({ open, onClose, onConfirm }: NewRecipeDialogProps) {
-    const { categories } = useRecipes();
+    const { data: categories } = useCategoryNameList();
     const [category, setCategory] = useState<string[]>([]);
 
     const formRef = useRef<HTMLFormElement>(null);
@@ -38,6 +38,10 @@ export function NewRecipeDialog({ open, onClose, onConfirm }: NewRecipeDialogPro
             formData.append('categories', a);
         }
     };
+
+    if (!categories) {
+        return null;
+    }
 
     return (
         <Dialog

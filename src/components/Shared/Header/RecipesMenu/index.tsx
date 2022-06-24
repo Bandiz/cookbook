@@ -1,26 +1,29 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
-import { useRecipes } from '../../../../contexts/RecipesContext';
+import { MouseEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCategoryNameList } from '../../../../api/categories';
 
 interface RecipesMenuProps {
     handleCloseNavMenu?: () => void;
 }
-const RecipesMenu = ({ handleCloseNavMenu }: RecipesMenuProps) => {
-    const { categories } = useRecipes();
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+const RecipesMenu = ({ handleCloseNavMenu }: RecipesMenuProps) => {
+    const { data: categories } = useCategoryNameList();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
     const navigate = useNavigate();
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    if (!categories) {
+        return null;
+    }
 
     return (
         <div>

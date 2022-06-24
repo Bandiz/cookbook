@@ -4,7 +4,6 @@ import { StylesProvider } from '@mui/styles';
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { RecipesProvider } from './contexts/RecipesContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -22,9 +21,7 @@ ReactDOM.render(
     <StylesProvider injectFirst>
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <RecipesProvider>
-                    <App />
-                </RecipesProvider>
+                <App />
             </AuthProvider>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

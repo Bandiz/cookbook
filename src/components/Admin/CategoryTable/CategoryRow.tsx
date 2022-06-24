@@ -1,4 +1,10 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import SaveIcon from '@mui/icons-material/Save';
 import {
     Box,
     Checkbox,
@@ -12,23 +18,16 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import CancelIcon from '@mui/icons-material/Cancel';
-import SaveIcon from '@mui/icons-material/Save';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-
-import { Category } from '../../../types';
-import { TableLoader } from '../Shared/TableLoader';
-import { DeleteCategoryDialog } from './DeleteCategoryDialog';
-import { useRemoveFromCategoryMutation } from '../../../api/recipes';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
     useCategoryDetails,
     useDeleteCategoryMutation,
     useUpdateCategoryVisibilityMutation,
 } from '../../../api/categories';
+import { useRemoveFromCategoryMutation } from '../../../api/recipes';
+import { Category } from '../../../types';
+import { TableLoader } from '../Shared/TableLoader';
+import { DeleteCategoryDialog } from './DeleteCategoryDialog';
 
 interface CategoryRowProps {
     category: Category;

@@ -1,34 +1,14 @@
-import { useEffect, useState } from 'react';
-import { useRecipes } from '../../../contexts/RecipesContext';
-import CarouselSlide from './CarouselSlide';
-import { Arrow } from './Arrow';
 import { Slide } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useRecipes } from '../../../api/recipes';
+import { Arrow } from './Arrow';
+import CarouselSlide from './CarouselSlide';
 
 export default function Carousel() {
     const [index, setIndex] = useState(0);
-    const { recipes } = useRecipes();
-
-    const content = recipes[index];
-    const numSlides = recipes.length;
-
     const [slideIn, setSlideIn] = useState(true);
     const [slideDirection, setSlideDirection] = useState<'left' | 'right' | 'up' | 'down'>('left');
-
-    const onArrowClick = (direction: any) => {
-        const increment = direction === 'left' ? -1 : 1;
-        const newIndex = (index + increment + numSlides) % numSlides;
-        setIndex(newIndex);
-
-        const oppDirection = direction === 'left' ? 'right' : 'left';
-        setSlideDirection(direction);
-        setSlideIn(false);
-
-        setTimeout(() => {
-            setIndex(newIndex);
-            setSlideDirection(oppDirection);
-            setSlideIn(true);
-        }, 500);
-    };
+    const { data: recipes } = useRecipes();
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -50,6 +30,25 @@ export default function Carousel() {
     if (!recipes || recipes.length === 0) {
         return null;
     }
+
+    const content = recipes[index];
+    const numSlides = recipes.length;
+
+    const onArrowClick = (direction: any) => {
+        const increment = direction === 'left' ? -1 : 1;
+        const newIndex = (index + increment + numSlides) % numSlides;
+        setIndex(newIndex);
+
+        const oppDirection = direction === 'left' ? 'right' : 'left';
+        setSlideDirection(direction);
+        setSlideIn(false);
+
+        setTimeout(() => {
+            setIndex(newIndex);
+            setSlideDirection(oppDirection);
+            setSlideIn(true);
+        }, 500);
+    };
 
     return (
         <div className="carousel" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

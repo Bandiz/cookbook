@@ -2,7 +2,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
 import { Checkbox, IconButton, TableCell, TableRow, TextField, Tooltip } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
-import useCreateCategoryMutation from '../../../api/categories/useCreateCategoryMutation';
+import { useCreateCategoryMutation } from '../../../api/categories';
 
 interface NewRowProps {
     onSave: () => void;

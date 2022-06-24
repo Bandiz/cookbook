@@ -1,11 +1,9 @@
+import EditIcon from '@mui/icons-material/Edit';
+import { Card, CardContent, CardHeader, CardMedia, Chip, Fab, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-
 import { Recipe } from '../../types';
 import { useStyles } from './RecipeList';
-
-import { Card, CardContent, CardHeader, CardMedia, Chip, Fab, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 
 interface RecipeListProps {
     recipes: Recipe[];
@@ -13,10 +11,9 @@ interface RecipeListProps {
 
 export default function RecipeList({ recipes }: RecipeListProps) {
     const { isAdmin } = useAuth();
-
     const { classes } = useStyles();
 
-    if (recipes.length < 1) {
+    if (!recipes || recipes.length < 1) {
         return <h2 className="section-title">No recipes to display</h2>;
     }
     return (
