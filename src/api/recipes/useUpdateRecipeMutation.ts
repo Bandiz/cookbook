@@ -3,12 +3,13 @@ import { useMutation, useQueryClient } from 'react-query';
 import { Recipe } from '../../types';
 import { RecipeKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
+import { UpdateRecipeVariables, UpdateRecipeContext } from './types';
 import { mapRecipe } from './utils';
 
 export function useUpdateRecipeMutation() {
     const queryClient = useQueryClient();
 
-    return useMutation<Recipe, AxiosError, Partial<Recipe>, { previousRecipe?: Recipe }>(
+    return useMutation<Recipe, AxiosError, UpdateRecipeVariables, UpdateRecipeContext>(
         async (recipe) => {
             const { data } = await httpClient.patch<Recipe>(`recipe/${recipe.id}`, recipe);
             return mapRecipe(data);
