@@ -1,10 +1,14 @@
 ﻿using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cookbook.API.Services
 {
@@ -14,7 +18,7 @@ namespace Cookbook.API.Services
         private readonly IMongoCollection<Recipe> _recipes;
         private readonly ICategoryService categoryService;
 
-        public RecipeService(CookbookDatabaseSettings settings, IMongoClient mongoClient, ICategoryService categoryService)
+		public RecipeService(CookbookDatabaseSettings settings, IMongoClient mongoClient, ICategoryService categoryService)
         {
             this.categoryService = categoryService;
             var cookbookDb = mongoClient.GetDatabase(settings.DatabaseName);
@@ -25,7 +29,7 @@ namespace Cookbook.API.Services
 
         public Recipe GetRecipe(int id)
         {
-            return _recipes.Find(x => x.Id == id).SingleOrDefault();
+			return _recipes.Find(x => x.Id == id).SingleOrDefault();
         }
 
         public List<Recipe> GetRecipes(string text, int count, List<string> categories)
@@ -121,5 +125,5 @@ namespace Cookbook.API.Services
                 }).ToList());
             }
         }
-    }
+	}
 }

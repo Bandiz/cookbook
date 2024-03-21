@@ -86,6 +86,7 @@ namespace Cookbook.API
 
 
 			services.AddSingleton<IRecipeService, RecipeService>();
+			services.AddSingleton<IImageService, ImageService>();
 			services.AddSingleton<ICategoryService, CategoryService>();
 
 			var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
