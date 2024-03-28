@@ -1,14 +1,10 @@
-﻿using Cookbook.API.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cookbook.API.Services
 {

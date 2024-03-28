@@ -36,6 +36,17 @@ namespace Cookbook.API.Controllers
 			return File(imageStream.ToArray(), GetContentType(filename));
 		}
 
+
+		[Authorize(Roles = "Admin")]
+		[HttpGet("all")]
+		public async Task<IActionResult> GetImageIds()
+		{
+			var imageIds = await imageService.GetImageIds();
+
+			return Ok(imageIds);
+		}
+
+
 		private static string GetContentType(string filename)
 		{
 			if (filename.EndsWith(".jpg") || filename.EndsWith(".jpeg"))

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Cookbook.API.Models.Category
 {
@@ -16,5 +17,7 @@ namespace Cookbook.API.Models.Category
 
         public DateTime CreatedAt { get; set; }
 
-    }
+		public List<string> Images { get; set; }
+
+	}
 }

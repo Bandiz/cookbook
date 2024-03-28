@@ -16,5 +16,7 @@ namespace Cookbook.API.Services.Interfaces
         List<Category> CreateCategories(List<Category> categories);
 
         void UpdateCategory(Category category);
+
+		void AddImagesToCategory(string categoryName, List<string> images);
     }
 }

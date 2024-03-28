@@ -6,28 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cookbook.API.Controllers
 {
 	[Authorize]
-	[Route("api/category")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class CategoryController : ControllerBase
 	{
-		private readonly ICategoryService categoryService;
-		private readonly IRecipeService recipeService;
+		private readonly ICategoryService _categoryService;
+		private readonly IRecipeService _recipeService;
+		private readonly IImageService _imageService;
 
-		public CategoryController(ICategoryService categoryService, IRecipeService recipeService)
+		public CategoryController(ICategoryService categoryService, IRecipeService recipeService, IImageService imageService)
 		{
-			this.categoryService = categoryService;
-			this.recipeService = recipeService;
+			this._categoryService = categoryService;
+			this._recipeService = recipeService;
+			this._imageService = imageService;
 		}
 
 		[AllowAnonymous]
 		[HttpGet]
 		public IActionResult GetCategories()
 		{
-			var categories = categoryService.GetCategories().Select(x => x.CategoryName);
+			var categories = _categoryService.GetCategories().Select(x => x.CategoryName);
 			return Ok(categories);
 		}
 
@@ -36,7 +39,7 @@ namespace Cookbook.API.Controllers
 		[HttpGet("{categoryName}")]
 		public IActionResult GetCategory(string categoryName)
 		{
-			var category = categoryService.GetCategory(categoryName);
+			var category = _categoryService.GetCategory(categoryName);
 
 			if (category == null)
 			{
@@ -51,7 +54,7 @@ namespace Cookbook.API.Controllers
 		[HttpGet("list")]
 		public IActionResult GetCategoriesList()
 		{
-			var categories = categoryService.GetCategories(false).Select(MapCategoryResponse);
+			var categories = _categoryService.GetCategories(false).Select(MapCategoryResponse);
 			return Ok(categories);
 		}
 
@@ -59,13 +62,13 @@ namespace Cookbook.API.Controllers
 		[HttpGet("{categoryName}/details")]
 		public IActionResult GetCategoryDetails(string categoryName)
 		{
-			var category = categoryService.GetCategory(categoryName);
+			var category = _categoryService.GetCategory(categoryName);
 
 			if (category == null)
 			{
 				return NotFound(categoryName);
 			}
-			var recipes = recipeService.GetRecipes(null, 0, new List<string>() { categoryName });
+			var recipes = _recipeService.GetRecipes(null, 0, new List<string>() { categoryName });
 			return Ok(new CategoryDetailsResponseModel()
 			{
 				Recipes = recipes.Select(x => new CategoryRecipeResponseModel()
@@ -88,7 +91,7 @@ namespace Cookbook.API.Controllers
 			{
 				return NotFound(ModelState);
 			}
-			var existingCategory = categoryService.GetCategory(model.CategoryName);
+			var existingCategory = _categoryService.GetCategory(model.CategoryName);
 
 			if (existingCategory != null)
 			{
@@ -104,11 +107,11 @@ namespace Cookbook.API.Controllers
 			};
 
 
-			categoryService.CreateCategory(category);
+			_categoryService.CreateCategory(category);
 
 			return CreatedAtAction(
 				nameof(GetCategory),
-				new { CategoryName = category.CategoryName },
+				new { category.CategoryName },
 				MapCategoryResponse(category)
 			);
 		}
@@ -122,14 +125,14 @@ namespace Cookbook.API.Controllers
 			{
 				return BadRequest("Category name required");
 			}
-			var existingCategory = categoryService.GetCategory(categoryName);
+			var existingCategory = _categoryService.GetCategory(categoryName);
 
 			if (existingCategory == null)
 			{
 				return NotFound(categoryName);
 			}
-			recipeService.RemoveCategoryAll(categoryName);
-			categoryService.DeleteCategory(categoryName);
+			_recipeService.RemoveCategoryAll(categoryName);
+			_categoryService.DeleteCategory(categoryName);
 
 			return Ok();
 		}
@@ -142,7 +145,7 @@ namespace Cookbook.API.Controllers
 			{
 				return BadRequest("Category name required");
 			}
-			var existingCategory = categoryService.GetCategory(categoryName);
+			var existingCategory = _categoryService.GetCategory(categoryName);
 
 			if (existingCategory == null)
 			{
@@ -154,7 +157,46 @@ namespace Cookbook.API.Controllers
 				existingCategory.Visible = visible;
 				existingCategory.UpdatedAt = DateTime.UtcNow;
 				existingCategory.UpdatedBy = User.Identity.Name;
-				categoryService.UpdateCategory(existingCategory);
+				_categoryService.UpdateCategory(existingCategory);
+			}
+
+			return Ok(MapCategoryResponse(existingCategory));
+		}
+
+		[Authorize(Roles = "Admin")]
+		[HttpPut("{categoryName}/images")]
+		public async Task<IActionResult> AddImages(string categoryName, [FromBody] List<string> imagesIds)
+		{
+			if (string.IsNullOrEmpty(categoryName))
+			{
+				return BadRequest("Category name required");
+			}
+			if (imagesIds.Count == 0)
+			{
+				return BadRequest("No image id's were provided");
+			}
+			var existingCategory = _categoryService.GetCategory(categoryName);
+
+			if (existingCategory == null)
+			{
+				return NotFound(categoryName);
+			}
+
+			var missingIds = await _imageService.CheckExistingImages(imagesIds);
+
+			if (missingIds.Count != 0) {
+				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
+			}
+
+			var imagesBefore = existingCategory.Images.Count;
+
+			existingCategory.Images.AddRange(imagesIds);
+
+			if(imagesBefore != existingCategory.Images.Count)
+			{
+				existingCategory.UpdatedAt = DateTime.UtcNow;
+				existingCategory.UpdatedBy = User.Identity.Name;
+				_categoryService.UpdateCategory(existingCategory);
 			}
 
 			return Ok(MapCategoryResponse(existingCategory));
@@ -169,7 +211,8 @@ namespace Cookbook.API.Controllers
 				CreatedBy = category.CreatedBy,
 				CreatedAt = category.CteatedAt,
 				UpdatedBy = category.UpdatedBy,
-				UpdatedAt = category.UpdatedAt
+				UpdatedAt = category.UpdatedAt,
+				Images = category.Images
 			};
 		}
 	}

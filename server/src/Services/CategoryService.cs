@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Cookbook.API.Services
 {
-    public class CategoryService: ICategoryService
+	public class CategoryService : ICategoryService
     {
         private readonly IMongoCollection<Category> _categories;
 
@@ -52,5 +52,15 @@ namespace Cookbook.API.Services
             _categories.ReplaceOne(x => x.CategoryName == category.CategoryName, category);
         }
 
-    }
+		public void AddImagesToCategory(string categoryName, List<string> images)
+		{
+			var category = GetCategory(categoryName);
+			if (category == null) {
+				return;
+			}
+
+			category.Images.AddRange(images);
+			UpdateCategory(category);
+		}
+	}
 }
