@@ -10,22 +10,22 @@ using System.Linq;
 namespace Cookbook.API.Controllers
 {
     [Authorize]
-    [Route("api/recipe")]
+    [Route("api/[controller]")]
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeService recipeService;
+        private readonly IRecipeService _recipeService;
 
         public RecipeController(IRecipeService recipeService)
         {
-            this.recipeService = recipeService;
+            _recipeService = recipeService;
         }
 
         [AllowAnonymous]
         [HttpGet("{id:int}")]
         public IActionResult GetRecipe(int id)
         {
-            var recipe = recipeService.GetRecipe(id);
+            var recipe = _recipeService.GetRecipe(id);
 
             if (recipe == null)
             {
@@ -60,7 +60,7 @@ namespace Cookbook.API.Controllers
         [HttpGet]
         public IActionResult GetRecipes(string searchText, [FromQuery] List<string> categories, int count)
         {
-            var recipes = recipeService.GetRecipes(searchText, count, categories);
+            var recipes = _recipeService.GetRecipes(searchText, count, categories);
             return Ok(recipes.Select(recipe => new GetRecipesResponseModel
             {
                 Id = recipe.Id,
@@ -105,7 +105,7 @@ namespace Cookbook.API.Controllers
                 CreatedBy = User.Identity.Name,
                 CreatedAt = DateTime.UtcNow
             };
-            recipeService.CreateRecipe(recipe);
+            _recipeService.CreateRecipe(recipe);
 
             return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, CreateRecipeResponse(recipe));
         }
@@ -114,13 +114,13 @@ namespace Cookbook.API.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult DeleteRecipe(int id)
         {
-            var recipe = recipeService.GetRecipe(id);
+            var recipe = _recipeService.GetRecipe(id);
             if (recipe == null)
             {
                 return NotFound(id);
             }
 
-            recipeService.DeleteRecipe(id);
+            _recipeService.DeleteRecipe(id);
 
             return Ok();
         }
@@ -134,7 +134,7 @@ namespace Cookbook.API.Controllers
                 return NotFound(ModelState);
             }
 
-            var recipe = recipeService.GetRecipe(id);
+            var recipe = _recipeService.GetRecipe(id);
             if (recipe == null)
             {
                 return NotFound(id);
@@ -182,7 +182,7 @@ namespace Cookbook.API.Controllers
             {
                 recipe.UpdatedBy = User.Identity.Name;
                 recipe.UpdatedAt = DateTime.UtcNow;
-                recipeService.UpdateRecipe(recipe);
+                _recipeService.UpdateRecipe(recipe);
             }
 
 
@@ -193,7 +193,7 @@ namespace Cookbook.API.Controllers
         [HttpPut("{id:int}/category/{category}")]
         public IActionResult AddToCategory(int id, string category)
         {
-            var recipe = recipeService.GetRecipe(id);
+            var recipe = _recipeService.GetRecipe(id);
             if (recipe == null)
             {
                 return NotFound(id);
@@ -211,7 +211,7 @@ namespace Cookbook.API.Controllers
             {
                 recipe.UpdatedBy = User.Identity.Name;
                 recipe.UpdatedAt = DateTime.UtcNow;
-                recipeService.UpdateRecipe(recipe);
+                _recipeService.UpdateRecipe(recipe);
             }
 
             return Ok(new UpdateCategoriesResponse()
@@ -225,7 +225,7 @@ namespace Cookbook.API.Controllers
         [HttpDelete("{id:int}/category/{category}")]
         public IActionResult RemoveFromCategory(int id, string category)
         {
-            var recipe = recipeService.GetRecipe(id);
+            var recipe = _recipeService.GetRecipe(id);
             if (recipe == null)
             {
                 return NotFound(id);
@@ -241,7 +241,7 @@ namespace Cookbook.API.Controllers
             
             recipe.UpdatedBy = User.Identity.Name;
             recipe.UpdatedAt = DateTime.UtcNow;
-            recipeService.UpdateRecipe(recipe);
+            _recipeService.UpdateRecipe(recipe);
 
             return Ok(new UpdateCategoriesResponse()
             {
@@ -260,7 +260,7 @@ namespace Cookbook.API.Controllers
                 return NotFound(ModelState);
             }
 
-            var recipe = recipeService.GetRecipe(recipeId);
+            var recipe = _recipeService.GetRecipe(recipeId);
             if (recipe == null)
             {
                 return NotFound(recipeId);
@@ -294,7 +294,7 @@ namespace Cookbook.API.Controllers
             recipe.UpdatedBy = User.Identity.Name;
             recipe.UpdatedAt = DateTime.UtcNow;
 
-            recipeService.UpdateRecipe(recipe);
+            _recipeService.UpdateRecipe(recipe);
 
             return Ok(recipe.Ingredients.OrderBy(x => x.Position).Select(x => new IngredientResponseModel(x)));
         }
@@ -304,7 +304,7 @@ namespace Cookbook.API.Controllers
         [HttpDelete("{recipeId:int}/ingredient/{ingredientId:int}")]
         public IActionResult DeleteIngredient(int recipeId, int ingredientId)
         {
-            var recipe = recipeService.GetRecipe(recipeId);
+            var recipe = _recipeService.GetRecipe(recipeId);
             if (recipe == null)
             {
                 return NotFound(recipeId);
@@ -328,7 +328,7 @@ namespace Cookbook.API.Controllers
             recipe.UpdatedBy = User.Identity.Name;
             recipe.UpdatedAt = DateTime.UtcNow;
 
-            recipeService.UpdateRecipe(recipe);
+            _recipeService.UpdateRecipe(recipe);
 
             return Ok(recipe.Ingredients.OrderBy(x => x.Position).Select(x => new IngredientResponseModel(x)));
         }

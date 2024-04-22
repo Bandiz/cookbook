@@ -21,9 +21,9 @@ namespace Cookbook.API.Controllers
 
 		public CategoryController(ICategoryService categoryService, IRecipeService recipeService, IImageService imageService)
 		{
-			this._categoryService = categoryService;
-			this._recipeService = recipeService;
-			this._imageService = imageService;
+			_categoryService = categoryService;
+			_recipeService = recipeService;
+			_imageService = imageService;
 		}
 
 		[AllowAnonymous]
@@ -68,7 +68,7 @@ namespace Cookbook.API.Controllers
 			{
 				return NotFound(categoryName);
 			}
-			var recipes = _recipeService.GetRecipes(null, 0, new List<string>() { categoryName });
+			var recipes = _recipeService.GetRecipes(null, 0, [categoryName]);
 			return Ok(new CategoryDetailsResponseModel()
 			{
 				Recipes = recipes.Select(x => new CategoryRecipeResponseModel()

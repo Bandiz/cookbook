@@ -11,18 +11,18 @@ namespace Cookbook.API.Controllers
     [ApiController]
     public class ImageController : ControllerBase
     {
-        private readonly IImageService imageService;
+        private readonly IImageService _imageService;
 
         public ImageController(IImageService imageService)
         {
-            this.imageService = imageService;
+			_imageService = imageService;
         }
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> UploadImage(IFormFile file)
 		{
-			var recipe = await imageService.UploadImage(file.OpenReadStream(), file.FileName);
+			var recipe = await _imageService.UploadImage(file.OpenReadStream(), file.FileName);
 
 			return Ok(recipe);
 		}
@@ -31,7 +31,7 @@ namespace Cookbook.API.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetImage(string id)
 		{
-			var (imageStream, filename) = await imageService.GetImage(id);
+			var (imageStream, filename) = await _imageService.GetImage(id);
 
 			return File(imageStream.ToArray(), GetContentType(filename));
 		}
@@ -41,7 +41,7 @@ namespace Cookbook.API.Controllers
 		[HttpGet("all")]
 		public async Task<IActionResult> GetImageIds()
 		{
-			var imageIds = await imageService.GetImageIds();
+			var imageIds = await _imageService.GetImageIds();
 
 			return Ok(imageIds);
 		}
