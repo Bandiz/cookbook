@@ -1,4 +1,4 @@
-import { Typography } from '@mui/joy';
+import { Typography } from 'antd';
 import { Navigate } from 'react-router-dom';
 import AdminTabs from '../../components/Admin';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,7 +13,7 @@ export default function Admin() {
     return (
         <div className="admin-page">
             <section className="admin-section">
-                <Typography level="h4">Admin page</Typography>
+                <Typography.Title level={4}>Admin page</Typography.Title>
             </section>
             <AdminTabs />
         </div>
