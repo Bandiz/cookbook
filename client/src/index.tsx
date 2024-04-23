@@ -2,6 +2,8 @@ import ReactDOM from 'react-dom';
 import { StylesProvider } from '@mui/styles';
 
 import './index.scss';
+import '@fontsource/inter';
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './contexts/AuthContext';
