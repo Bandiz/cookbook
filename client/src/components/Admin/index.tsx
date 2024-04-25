@@ -1,8 +1,8 @@
-import { Row, Space, Tabs } from 'antd';
+import type { TabsProps } from 'antd';
+import { Tabs } from 'antd';
 import { AdminProvider } from '../../contexts/AdminContext';
 import CategoryTable from './CategoryTable';
 import RecipesTable from './RecipesTable';
-import type { TabsProps } from 'antd';
 
 const items: TabsProps['items'] = [
     {

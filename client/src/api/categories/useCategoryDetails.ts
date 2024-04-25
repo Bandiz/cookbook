@@ -5,7 +5,7 @@ import { dataGet } from '../httpClient';
 import { mapCategoryDetail } from './utils';
 import { CategoryDetailsResponse } from './types';
 
-export default function useCategoryDetails(categoryName: string, opened?: boolean) {
+export default function useCategoryDetails(categoryName: string, opened: boolean = true) {
     const { isAdmin } = useAuth();
 
     return useQuery(
@@ -15,7 +15,6 @@ export default function useCategoryDetails(categoryName: string, opened?: boolea
                 return { recipes: x.recipes.map(mapCategoryDetail) };
             }),
         {
-            initialData: { recipes: [] },
             enabled: isAdmin && opened,
         }
     );

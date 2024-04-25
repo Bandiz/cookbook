@@ -1,61 +1,52 @@
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { useState } from 'react';
-import { useCategoryList, useCreateCategoryMutation } from '../../../api/categories';
-import { TableLoader } from '../Shared/TableLoader';
-import { TableToolbar } from '../Shared/TableToolbar';
-import { CategoryRow } from './CategoryRow';
-import { NewRow } from './NewRow';
+import { Alert, Checkbox, Skeleton, Space, Spin, Table, TableColumnsType } from 'antd';
+import { useCategoryList } from '../../../api/categories';
+import { Category } from '../../../types';
+import RecipeTable from './RecipeTable';
+
+const columns: TableColumnsType<Category> = [
+    { title: 'Category name', dataIndex: 'categoryName' },
+    {
+        title: 'Is visible',
+        dataIndex: 'visible',
+        render: (value: boolean) => {
+            return <Checkbox checked={value} disabled />;
+        },
+    },
+    { title: 'Created by', dataIndex: 'createdBy' },
+    { title: 'Created at', dataIndex: 'createdAt' },
+    { title: 'Updated by', dataIndex: 'updatedBy' },
+    { title: 'Updated at', dataIndex: 'UpdatedAt' },
+    {
+        title: 'Action',
+        dataIndex: '',
+        key: 'x',
+        render: () => <a>Delete</a>,
+    },
+];
 
 export default function CategoriesTable() {
-    const [isNew, setIsNew] = useState(false);
-    const { isLoading: createCategoryLoading } = useCreateCategoryMutation();
-    const { data: categories, isLoading } = useCategoryList();
+    const { data: categories, isLoading, isError } = useCategoryList();
 
-    function handleOnSave() {
-        setIsNew(false);
+    if (isLoading) {
+        return <Spin spinning size="large" />;
     }
 
-    function handleOnCancel() {
-        setIsNew(false);
+    if (isError || !categories) {
+        return <Alert message="Failed to load recipes" type="error" />;
     }
 
     return (
-        <Grid item>
-            <Paper>
-                <TableToolbar
-                    title="List of Categories"
-                    disabled={isNew}
-                    onNewClick={() => {
-                        setIsNew(true);
-                    }}
-                />
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell />
-                                <TableCell>Category name</TableCell>
-                                <TableCell>Visible</TableCell>
-                                <TableCell>Created by</TableCell>
-                                <TableCell>Updated by</TableCell>
-                                <TableCell align="right">Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableLoader loading={isLoading || createCategoryLoading} colSpan={6} />
-                            {categories &&
-                                categories.map((category, index) => (
-                                    <CategoryRow
-                                        key={`${category.categoryName}_${index}`}
-                                        category={category}
-                                        disabled={createCategoryLoading}
-                                    />
-                                ))}
-                            {isNew && <NewRow onSave={handleOnSave} onCancel={handleOnCancel} />}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Paper>
-        </Grid>
+        <Table
+            columns={columns}
+            rowKey="categoryName"
+            expandable={{
+                expandedRowRender: (record) => (
+                    <Space size="middle">
+                        <RecipeTable category={record} />
+                    </Space>
+                ),
+            }}
+            dataSource={categories}
+        />
     );
 }
