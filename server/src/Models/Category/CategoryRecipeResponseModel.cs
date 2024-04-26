@@ -8,6 +8,8 @@ namespace Cookbook.API.Models.Category
         
         public string Title { get; set; }
 
+		public string CategoryName { get; set; }
+
         public string CreatedBy { get; set; }
 
         public DateTime CreatedAt{ get; set; }

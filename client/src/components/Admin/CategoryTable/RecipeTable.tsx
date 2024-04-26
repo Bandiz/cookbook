@@ -1,7 +1,9 @@
 import type { TableProps } from 'antd';
-import { Alert, Col, Row, Space, Spin, Table } from 'antd';
+import { Alert, Space, Spin, Table, Typography } from 'antd';
 import { useCategoryDetails } from '../../../api/categories';
 import { Category, CategoryRecipe } from '../../../types';
+import { displayDate } from './utils';
+import { RemoveRecipeAction } from './RemoveRecipeAction';
 
 const columns: TableProps<CategoryRecipe>['columns'] = [
     {
@@ -19,6 +21,7 @@ const columns: TableProps<CategoryRecipe>['columns'] = [
     {
         title: 'Created at',
         dataIndex: 'createdAt',
+        render: displayDate,
     },
     {
         title: 'Updated by',
@@ -27,15 +30,12 @@ const columns: TableProps<CategoryRecipe>['columns'] = [
     {
         title: 'Updated at',
         dataIndex: 'updatedAt',
+        render: displayDate,
     },
     {
         title: 'Action',
         key: 'x',
-        render: (_, record) => (
-            <Space size="middle">
-                <a>Delete</a>
-            </Space>
-        ),
+        render: (_, record) => <RemoveRecipeAction recipeId={record.id} categoryName={record.categoryName} />,
     },
 ];
 
@@ -54,5 +54,10 @@ export default function RecipeTable({ category }: RecipeTableProps) {
         return <Alert message="Failed to load recipes" type="error" />;
     }
 
-    return <Table columns={columns} rowKey="id" dataSource={details.recipes} />;
+    return (
+        <Space size="middle" direction="vertical">
+            <Typography.Title level={5}> Recipes for the category</Typography.Title>
+            <Table size="small" columns={columns} rowKey="id" dataSource={details.recipes} />
+        </Space>
+    );
 }

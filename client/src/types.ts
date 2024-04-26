@@ -48,4 +48,5 @@ export type CategoryDetails = {
 export type CategoryRecipe = {
     id: string;
     title: string;
+    categoryName: string;
 } & Auditable;

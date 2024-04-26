@@ -1,7 +1,9 @@
-import { Alert, Checkbox, Skeleton, Space, Spin, Table, TableColumnsType } from 'antd';
+import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
 import { useCategoryList } from '../../../api/categories';
 import { Category } from '../../../types';
 import RecipeTable from './RecipeTable';
+import { displayDate } from './utils';
+import { DeleteCategoryAction } from './DeleteCategoryAction';
 
 const columns: TableColumnsType<Category> = [
     { title: 'Category name', dataIndex: 'categoryName' },
@@ -13,14 +15,14 @@ const columns: TableColumnsType<Category> = [
         },
     },
     { title: 'Created by', dataIndex: 'createdBy' },
-    { title: 'Created at', dataIndex: 'createdAt' },
+    { title: 'Created at', dataIndex: 'createdAt', render: displayDate },
     { title: 'Updated by', dataIndex: 'updatedBy' },
-    { title: 'Updated at', dataIndex: 'UpdatedAt' },
+    { title: 'Updated at', dataIndex: 'UpdatedAt', render: displayDate },
     {
         title: 'Action',
         dataIndex: '',
         key: 'x',
-        render: () => <a>Delete</a>,
+        render: (_, record) => <DeleteCategoryAction categoryName={record.categoryName} />,
     },
 ];
 

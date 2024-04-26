@@ -75,6 +75,7 @@ namespace Cookbook.API.Controllers
 				{
 					Id = x.Id,
 					Title = x.Title,
+					CategoryName = categoryName,
 					CreatedBy = x.CreatedBy,
 					CreatedAt = x.CreatedAt,
 					UpdatedBy = x.UpdatedBy,
