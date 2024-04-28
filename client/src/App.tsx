@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Layout } from 'antd';
 
 import { Header, Loading } from './components/Shared';
 import * as ROUTES from './constants/routes';
@@ -18,20 +19,26 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 function App() {
     return (
         <Router>
-            <Header />
-            <Suspense fallback={<Loading />}>
-                <Routes>
-                    <Route path={ROUTES.HOME} element={<Home />} />
-                    <Route path={ROUTES.RECIPES} element={<Recipes />} />
-                    <Route path={ROUTES.CATEGORY} element={<Category />} />
-                    <Route path={ROUTES.ABOUT} element={<About />} />
-                    <Route path={ROUTES.ADMIN} element={<Admin />} />
-                    <Route path={ROUTES.RECIPE} element={<Recipe />} />
-                    <Route path={ROUTES.CREATE_RECIPE} element={<CreateRecipe />} />
-                    <Route path={ROUTES.LOGIN} element={<Login />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Suspense>
+            <Layout>
+                <Layout.Header style={{ display: 'flex', alignItems: 'center' }}>
+                    <Header />
+                </Layout.Header>
+                <Layout>
+                    <Suspense fallback={<Loading />}>
+                        <Routes>
+                            <Route path={ROUTES.HOME} element={<Home />} />
+                            <Route path={ROUTES.RECIPES} element={<Recipes />} />
+                            <Route path={ROUTES.CATEGORY} element={<Category />} />
+                            <Route path={ROUTES.ABOUT} element={<About />} />
+                            <Route path={ROUTES.ADMIN} element={<Admin />} />
+                            <Route path={ROUTES.RECIPE} element={<Recipe />} />
+                            <Route path={ROUTES.CREATE_RECIPE} element={<CreateRecipe />} />
+                            <Route path={ROUTES.LOGIN} element={<Login />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </Suspense>
+                </Layout>
+            </Layout>
         </Router>
     );
 }
