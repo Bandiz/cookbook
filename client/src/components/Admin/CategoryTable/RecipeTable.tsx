@@ -1,9 +1,9 @@
 import type { TableProps } from 'antd';
-import { Alert, Space, Spin, Table, Typography } from 'antd';
+import { Alert, Space, Spin, Table } from 'antd';
 import { useCategoryDetails } from '../../../api/categories';
 import { Category, CategoryRecipe } from '../../../types';
-import { displayDate } from './utils';
 import { RemoveRecipeAction } from './RemoveRecipeAction';
+import { displayDate } from './utils';
 
 const columns: TableProps<CategoryRecipe>['columns'] = [
     {
@@ -55,8 +55,7 @@ export default function RecipeTable({ category }: RecipeTableProps) {
     }
 
     return (
-        <Space size="middle" direction="vertical">
-            <Typography.Title level={5}> Recipes for the category</Typography.Title>
+        <Space size="large">
             <Table size="small" columns={columns} rowKey="id" dataSource={details.recipes} />
         </Space>
     );
