@@ -39,11 +39,11 @@ const columns: TableProps<CategoryRecipe>['columns'] = [
     },
 ];
 
-interface RecipeTableProps {
+interface ExpandedRecipeTableProps {
     category: Category;
 }
 
-export default function RecipeTable({ category }: RecipeTableProps) {
+export default function ExpandedRecipeTable({ category }: ExpandedRecipeTableProps) {
     const { data: details, isLoading, isError } = useCategoryDetails(category.categoryName);
 
     if (isLoading) {

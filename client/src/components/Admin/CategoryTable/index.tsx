@@ -1,9 +1,10 @@
 import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
 import { useCategoryList } from '../../../api/categories';
 import { Category } from '../../../types';
-import RecipeTable from './RecipeTable';
-import { displayDate } from './utils';
 import { DeleteCategoryAction } from './DeleteCategoryAction';
+import ExpandedRecipeTable from './ExpandedRecipeTable';
+import { displayDate } from './utils';
+import { EditCategoryAction } from './EditCategoryAction';
 
 const columns: TableColumnsType<Category> = [
     { title: 'Category name', dataIndex: 'categoryName' },
@@ -22,7 +23,12 @@ const columns: TableColumnsType<Category> = [
         title: 'Action',
         dataIndex: '',
         key: 'x',
-        render: (_, record) => <DeleteCategoryAction categoryName={record.categoryName} />,
+        render: (_, record) => (
+            <Space size="small" direction="horizontal">
+                <EditCategoryAction categoryName={record.categoryName} />
+                <DeleteCategoryAction categoryName={record.categoryName} />
+            </Space>
+        ),
     },
 ];
 
@@ -44,7 +50,7 @@ export default function CategoriesTable() {
             expandable={{
                 expandedRowRender: (record) => (
                     <Space size="middle">
-                        <RecipeTable category={record} />
+                        <ExpandedRecipeTable category={record} />
                     </Space>
                 ),
             }}
