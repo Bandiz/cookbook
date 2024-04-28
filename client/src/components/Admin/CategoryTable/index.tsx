@@ -1,10 +1,10 @@
 import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
 import { useCategoryList } from '../../../api/categories';
 import { Category } from '../../../types';
+import { displayDate } from '../utils';
 import { DeleteCategoryAction } from './DeleteCategoryAction';
-import ExpandedRecipeTable from './ExpandedRecipeTable';
-import { displayDate } from './utils';
 import { EditCategoryAction } from './EditCategoryAction';
+import ExpandedRecipeTable from './ExpandedRecipeTable';
 
 const columns: TableColumnsType<Category> = [
     { title: 'Category name', dataIndex: 'categoryName' },
