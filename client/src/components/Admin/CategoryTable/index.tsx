@@ -2,7 +2,7 @@ import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
 import { useCategoryList } from '../../../api/categories';
 import { Category } from '../../../types';
 import RecipeTable from './RecipeTable';
-import { displayDate } from './utils';
+import { displayDate } from '../utils';
 import { DeleteCategoryAction } from './DeleteCategoryAction';
 
 const columns: TableColumnsType<Category> = [

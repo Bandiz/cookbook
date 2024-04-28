@@ -3,7 +3,7 @@ import { Alert, Space, Spin, Table } from 'antd';
 import { useCategoryDetails } from '../../../api/categories';
 import { Category, CategoryRecipe } from '../../../types';
 import { RemoveRecipeAction } from './RemoveRecipeAction';
-import { displayDate } from './utils';
+import { displayDate } from '../utils';
 
 const columns: TableProps<CategoryRecipe>['columns'] = [
     {
