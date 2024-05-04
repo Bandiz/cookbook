@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { EDIT_CATEGORY, replaceRouteParams } from '../../../constants/routes';
 
 interface EditCategoryActionProps {
     categoryName: string;
@@ -12,7 +13,7 @@ export function EditCategoryAction({ categoryName }: EditCategoryActionProps) {
             type="primary"
             ghost
             onClick={() => {
-                navigate('/edit/category/' + categoryName);
+                navigate(replaceRouteParams(EDIT_CATEGORY, { category: categoryName }));
             }}
         >
             Edit

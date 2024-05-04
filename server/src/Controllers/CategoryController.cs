@@ -71,6 +71,13 @@ namespace Cookbook.API.Controllers
 			var recipes = _recipeService.GetRecipes(null, 0, [categoryName]);
 			return Ok(new CategoryDetailsResponseModel()
 			{
+				CategoryName = category.CategoryName,
+				Visible = category.Visible,
+				CreatedBy = category.CreatedBy,
+				CreatedAt = category.CteatedAt,
+				UpdatedBy = category.UpdatedBy,
+				UpdatedAt = category.UpdatedAt,
+				Images = category.Images,
 				Recipes = recipes.Select(x => new CategoryRecipeResponseModel()
 				{
 					Id = x.Id,

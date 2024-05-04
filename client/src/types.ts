@@ -38,12 +38,13 @@ export type Recipe = {
 export type Category = {
     categoryName: string;
     visible: boolean;
-    recipes?: CategoryRecipe[];
+    images: string[];
+    // recipes?: CategoryRecipe[];
 } & Auditable;
 
 export type CategoryDetails = {
     recipes: CategoryRecipe[];
-};
+} & Category;
 
 export type CategoryRecipe = {
     id: string;

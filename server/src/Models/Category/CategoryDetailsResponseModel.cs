@@ -2,8 +2,8 @@
 
 namespace Cookbook.API.Models.Category
 {
-    public class CategoryDetailsResponseModel
-    {
-        public List<CategoryRecipeResponseModel> Recipes { get; set; }
-    }
+	public class CategoryDetailsResponseModel : CategoryResponseModel
+	{
+		public List<CategoryRecipeResponseModel> Recipes { get; set; }
+	}
 }
