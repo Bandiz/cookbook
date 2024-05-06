@@ -117,7 +117,7 @@ namespace Cookbook.API.Services
                 {
                     CategoryName = x,
                     CreatedBy = recipe.UpdatedBy == null ? recipe.CreatedBy : recipe.UpdatedBy,
-                    CteatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow
                 }).ToList());
             }
         }

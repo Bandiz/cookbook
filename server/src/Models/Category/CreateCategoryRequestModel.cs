@@ -1,9 +1,3 @@
-﻿namespace Cookbook.API.Models.Category
-{
-    public class CreateCategoryRequestModel
-    {
-        public string CategoryName { get; set; }
+﻿namespace Cookbook.API.Models.Category;
 
-        public bool Visible { get; set; }
-    }
-}
+public record CreateCategoryRequestModel(string CategoryName, bool Visible);

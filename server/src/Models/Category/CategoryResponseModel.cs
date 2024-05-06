@@ -1,23 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cookbook.API.Models.Category
-{
-    public class CategoryResponseModel
-    {
-        public string CategoryName { get; set; }
+namespace Cookbook.API.Models.Category;
 
-        public bool Visible { get; set; }
-
-        public string UpdatedBy { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
-        public string CreatedBy { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-		public List<string> Images { get; set; }
-
-	}
-}
+public record CategoryResponseModel(
+	string CategoryName,
+	bool Visible,
+	string UpdatedBy,
+	DateTime? UpdatedAt,
+	string CreatedBy,
+	DateTime CreatedAt,
+	List<string> Images,
+	string MainImage);
