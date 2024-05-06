@@ -9,7 +9,7 @@ export function mapCategory(category: Category): Category {
     };
 }
 
-export function mapCategoryDetail(value: CategoryRecipe): CategoryRecipe {
+export function mapCategoryRecipe(value: CategoryRecipe): CategoryRecipe {
     return {
         ...value,
         createdAt: dayjs(value.createdAt),

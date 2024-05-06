@@ -3,26 +3,32 @@ import { useMutation, useQueryClient } from 'react-query';
 import { Category } from '../../types';
 import { CategoryListKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
-import { CategoryListResponse, UpdateCategoryVisibilityContext, UpdateCategoryVisibilityVariables } from './types';
+import { CategoryListResponse, UpdateCategoryContext, UpdateCategoryVariables } from './types';
 
-export default function useUpdateCategoryVisibilityMutation() {
+export default function useUpdateCategoryMutation() {
     const queryClient = useQueryClient();
 
-    return useMutation<Category, AxiosError, UpdateCategoryVisibilityVariables, UpdateCategoryVisibilityContext>(
-        async ({ categoryName, isVisible }) => {
-            const response = await httpClient.put(`category/${categoryName}/visible/${isVisible}`);
+    return useMutation<Category, AxiosError, UpdateCategoryVariables, UpdateCategoryContext>(
+        async ({ categoryName, visible, mainImage }) => {
+            const response = await httpClient.put(`category/${categoryName}`, { visible, mainImage });
             return response.data;
         },
         {
-            onMutate: ({ categoryName, isVisible }) => {
+            onMutate: ({ categoryName, visible, mainImage }) => {
                 const previousCategories = queryClient.getQueryData<CategoryListResponse>(CategoryListKey);
 
                 if (previousCategories) {
                     queryClient.setQueryData<CategoryListResponse>(
                         CategoryListKey,
                         previousCategories.map((x) => {
-                            if (x.categoryName === categoryName) {
-                                x.visible = isVisible;
+                            if (x.categoryName !== categoryName) {
+                                return x;
+                            }
+                            if (typeof visible !== 'undefined') {
+                                x.visible = visible;
+                            }
+                            if (typeof mainImage !== 'undefined') {
+                                x.mainImage = mainImage;
                             }
                             return x;
                         })

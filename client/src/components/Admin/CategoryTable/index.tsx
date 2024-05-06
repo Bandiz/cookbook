@@ -15,6 +15,11 @@ const columns: TableColumnsType<Category> = [
             return <Checkbox checked={value} disabled />;
         },
     },
+    {
+        title: 'Images',
+        dataIndex: 'images',
+        render: (value: string[]) => value?.length ?? '-',
+    },
     { title: 'Created by', dataIndex: 'createdBy' },
     { title: 'Created at', dataIndex: 'createdAt', render: displayDate },
     { title: 'Updated by', dataIndex: 'updatedBy' },

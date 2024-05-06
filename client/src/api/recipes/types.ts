@@ -1,4 +1,4 @@
-import { CategoryDetails, Recipe } from '../../types';
+import { CategoryRecipes, Recipe } from '../../types';
 
 export interface RemoveFromCategoryVariables {
     recipeId: string;
@@ -6,7 +6,7 @@ export interface RemoveFromCategoryVariables {
 }
 
 export interface RemoveFromCategoryContext {
-    previousDetails?: CategoryDetails;
+    previousDetails?: CategoryRecipes;
 }
 
 export type UpdateRecipeVariables = Partial<Recipe>;

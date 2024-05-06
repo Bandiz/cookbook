@@ -1,6 +1,6 @@
 import type { TableProps } from 'antd';
 import { Alert, Space, Spin, Table } from 'antd';
-import { useCategoryDetails } from '../../../api/categories';
+import { useCategoryRecipes } from '../../../api/categories';
 import { Category, CategoryRecipe } from '../../../types';
 import { RemoveRecipeAction } from './RemoveRecipeAction';
 import { displayDate } from '../utils';
@@ -44,7 +44,7 @@ interface ExpandedRecipeTableProps {
 }
 
 export default function ExpandedRecipeTable({ category }: ExpandedRecipeTableProps) {
-    const { data: details, isLoading, isError } = useCategoryDetails(category.categoryName);
+    const { data: details, isLoading, isError } = useCategoryRecipes(category.categoryName);
 
     if (isLoading) {
         return <Spin spinning size="large" />;

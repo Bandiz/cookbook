@@ -1,15 +1,15 @@
-import useCategoryDetails from './useCategoryDetails';
+import useCategoryRecipes from './useCategoryRecipes';
 import useCategoryList from './useCategoryList';
 import useCategoryNameList from './useCategoryNameList';
 import useCreateCategoryMutation from './useCreateCategoryMutation';
 import useDeleteCategoryMutation from './useDeleteCategoryMutation';
-import useUpdateCategoryVisibilityMutation from './useUpdateCategoryVisibilityMutation';
+import useUpdateCategoryMutation from './useUpdateCategoryMutation';
 
 export {
-    useCategoryDetails,
+    useCategoryRecipes,
     useCategoryList,
     useCategoryNameList,
     useDeleteCategoryMutation,
-    useUpdateCategoryVisibilityMutation,
+    useUpdateCategoryMutation,
     useCreateCategoryMutation,
 };

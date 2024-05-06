@@ -1,47 +1,46 @@
-import { Image, Layout, Space, Spin, Typography } from 'antd';
+import { Divider, Image, Layout, Space, Spin, Typography } from 'antd';
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useCategoryDetails } from '../../api/categories';
 import { ADMIN } from '../../constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function EditCategory() {
     const { category: categoryName } = useParams<{ category: string }>();
-    const { isAdmin } = useAuth();
+    const { isAdmin, isLoading: authLoading } = useAuth();
     const navigate = useNavigate();
-    const { data: category, isLoading } = useCategoryDetails(categoryName!, Boolean(categoryName));
+    const { data: category, isLoading } = useCategory(categoryName ?? '');
 
     useEffect(() => {
-        if (!isAdmin) {
+        if (!isAdmin && !authLoading) {
             navigate('/');
         }
-    }, [isAdmin]);
+    }, [isAdmin, authLoading]);
 
-    if (!category || isLoading) {
+    if (!category || isLoading || authLoading) {
         return <Spin size="large" />;
     }
 
     return (
         <>
             <Layout.Header>
-                <Typography.Title level={1}>{categoryName}</Typography.Title>
+                <Typography.Title level={1} style={{ color: 'white' }}>
+                    {categoryName}
+                </Typography.Title>
             </Layout.Header>
             <Layout.Content>
                 <Space direction="vertical">
                     <Typography.Title level={2}>Images</Typography.Title>
-                    <Image.PreviewGroup
-                        preview={{
-                            onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-                        }}
-                    >
+                    <Image.PreviewGroup>
                         {category.images.map((image) => (
                             <Image key={image} width={200} src={`/image/${image}`} />
                         ))}
                     </Image.PreviewGroup>
+                    <Divider />
                 </Space>
             </Layout.Content>
-            <Link to={ADMIN}>Go back</Link>
-            <Layout.Footer></Layout.Footer>
+            <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                Go back
+            </Link>
         </>
     );
 }

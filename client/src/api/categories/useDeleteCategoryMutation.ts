@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { CategoryDetails } from '../../types';
+import { CategoryRecipes } from '../../types';
 import { CategoryListKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
 import { CategoryListResponse, DeleteCategoryContext, DeleteCategoryVariables } from './types';
@@ -25,7 +25,7 @@ export default function useDeleteCategoryMutation() {
                     );
                 }
 
-                const previousDetails = queryClient.getQueryData<CategoryDetails>([CategoryListKey, categoryName]);
+                const previousDetails = queryClient.getQueryData<CategoryRecipes>([CategoryListKey, categoryName]);
 
                 if (previousDetails) {
                     queryClient.removeQueries([CategoryListKey, categoryName]);
@@ -43,7 +43,7 @@ export default function useDeleteCategoryMutation() {
                 }
 
                 if (previousDetails) {
-                    queryClient.setQueryData<CategoryDetails>([CategoryListKey, categoryName], previousDetails);
+                    queryClient.setQueryData<CategoryRecipes>([CategoryListKey, categoryName], previousDetails);
                 }
             },
             onSettled: (_data, _err, { categoryName }) => {

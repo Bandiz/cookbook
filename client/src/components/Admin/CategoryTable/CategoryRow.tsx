@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
-    useCategoryDetails,
+    useCategoryRecipes,
     useDeleteCategoryMutation,
     useUpdateCategoryVisibilityMutation,
 } from '../../../api/categories';
@@ -150,7 +150,7 @@ export function CategoryRow({ category, disabled }: CategoryRowProps) {
     }
 
     function CategoryRowDetail() {
-        const { data: details, isLoading } = useCategoryDetails(category.categoryName, open);
+        const { data: details, isLoading } = useCategoryRecipes(category.categoryName);
         const { mutate, isLoading: isRemoving } = useRemoveFromCategoryMutation();
 
         if (!details) {

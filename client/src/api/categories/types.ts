@@ -1,25 +1,33 @@
-import { Category, CategoryDetails } from '../../types';
+import { Category, CategoryRecipes } from '../../types';
 
 export type CategoryNameListResponse = Array<string>;
 
 export type CategoryListResponse = Array<Category>;
 
-export type CategoryDetailsResponse = CategoryDetails;
+export type CategoryRecipesResponse = CategoryRecipes;
 
 export interface DeleteCategoryVariables {
     categoryName: string;
 }
 
 export interface DeleteCategoryContext extends CategoryListContext {
-    previousDetails?: CategoryDetails;
+    previousDetails?: CategoryRecipes;
 }
 
-export interface UpdateCategoryVisibilityVariables {
+export interface UpdateCategoryVariables {
     categoryName: string;
-    isVisible: boolean;
+    visible?: boolean;
+    mainImage?: string;
 }
 
-export type UpdateCategoryVisibilityContext = CategoryListContext;
+export type UpdateCategoryContext = CategoryListContext;
+
+export interface AddCategoryImagesVariables {
+    categoryName: string;
+    imageIds: Array<string>;
+}
+
+export type AddCategoryImagesContext = CategoryListContext;
 
 export interface CreateCategoryVariables {
     categoryName: string;

@@ -39,12 +39,12 @@ export type Category = {
     categoryName: string;
     visible: boolean;
     images: string[];
-    // recipes?: CategoryRecipe[];
+    mainImage: string | null;
 } & Auditable;
 
-export type CategoryDetails = {
+export type CategoryRecipes = {
     recipes: CategoryRecipe[];
-} & Category;
+};
 
 export type CategoryRecipe = {
     id: string;

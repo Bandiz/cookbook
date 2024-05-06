@@ -9,6 +9,7 @@ interface AuthObject {
     httpClient: AxiosInstance;
     user: User | null;
     isAdmin: boolean;
+    isLoading: boolean;
 }
 
 const defaultContextObject: AuthObject = {
@@ -16,6 +17,7 @@ const defaultContextObject: AuthObject = {
     httpClient,
     user: null,
     isAdmin: false,
+    isLoading: true,
 };
 
 export const AuthContext = createContext(defaultContextObject);
@@ -39,6 +41,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             httpClient,
             user: user ?? null,
             isAdmin: user?.isAdmin ?? false,
+            isLoading: session.isLoading,
         };
     }, [session.data]);
 

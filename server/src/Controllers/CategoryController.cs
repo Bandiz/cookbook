@@ -1,12 +1,11 @@
-﻿using Cookbook.API.Entities;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Cookbook.API.Entities;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cookbook.API.Controllers
 {
@@ -30,7 +29,9 @@ namespace Cookbook.API.Controllers
 		[HttpGet]
 		public IActionResult GetCategories()
 		{
-			var categories = _categoryService.GetCategories().Select(x => x.CategoryName);
+			var categories = _categoryService
+				.GetCategories()
+				.Select(x => x.CategoryName);
 			return Ok(categories);
 		}
 
@@ -59,7 +60,7 @@ namespace Cookbook.API.Controllers
 		}
 
 		[Authorize(Roles = "Admin")]
-		[HttpGet("{categoryName}/details")]
+		[HttpGet("{categoryName}/recipes")]
 		public IActionResult GetCategoryDetails(string categoryName)
 		{
 			var category = _categoryService.GetCategory(categoryName);
@@ -69,14 +70,23 @@ namespace Cookbook.API.Controllers
 				return NotFound(categoryName);
 			}
 			var recipes = _recipeService.GetRecipes(null, 0, [categoryName]);
+
 			return Ok(
-				new CategoryDetailsResponseModel(category, recipes.Select(x =>
-					new CategoryRecipeResponseModel(x.Id, x.Title, categoryName, x.CreatedBy, x.CreatedAt, x.UpdatedBy, x.UpdatedAt)).ToList()));
+				new CategoryRecipesResponseModel(recipes.Select(x =>
+					new CategoryRecipeResponseModel(
+						x.Id,
+						x.Title,
+						categoryName,
+						x.CreatedBy,
+						x.CreatedAt,
+						x.UpdatedBy,
+						x.UpdatedAt)).ToList()));
 		}
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public IActionResult CreateCategory(CreateCategoryRequestModel model)
+		public IActionResult CreateCategory(
+			[FromBody] CreateCategoryRequestModel model)
 		{
 			if (model == null)
 			{
@@ -96,7 +106,6 @@ namespace Cookbook.API.Controllers
 				CreatedBy = User.Identity.Name,
 				CreatedAt = DateTime.UtcNow
 			};
-
 
 			_categoryService.CreateCategory(category);
 
@@ -129,8 +138,10 @@ namespace Cookbook.API.Controllers
 		}
 
 		[Authorize(Roles = "Admin")]
-		[HttpPut("{categoryName}/visible/{visible:bool}")]
-		public IActionResult Visible(string categoryName, bool visible)
+		[HttpPut("{categoryName}")]
+		public async Task<IActionResult> UpdateCategory(
+			string categoryName,
+			[FromBody] UpdateCategoryRequestModel model)
 		{
 			if (string.IsNullOrEmpty(categoryName))
 			{
@@ -143,9 +154,29 @@ namespace Cookbook.API.Controllers
 				return NotFound(categoryName);
 			}
 
-			if (existingCategory.Visible != visible)
+			var updated = false;
+
+			if (model.Visible.HasValue && existingCategory.Visible != model.Visible)
 			{
-				existingCategory.Visible = visible;
+				existingCategory.Visible = model.Visible.Value;
+				updated = true;
+			}
+
+			if (!string.IsNullOrEmpty(model.MainImage))
+			{
+				var missingIds = await _imageService.CheckExistingImages([model.MainImage]);
+
+				if (missingIds.Count != 0)
+				{
+					return BadRequest($"Image does not exist");
+				}
+
+				existingCategory.MainImage = model.MainImage;
+				updated = true;
+			}
+
+			if (updated)
+			{
 				existingCategory.UpdatedAt = DateTime.UtcNow;
 				existingCategory.UpdatedBy = User.Identity.Name;
 				_categoryService.UpdateCategory(existingCategory);
@@ -156,13 +187,15 @@ namespace Cookbook.API.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPut("{categoryName}/images")]
-		public async Task<IActionResult> AddImages(string categoryName, [FromBody] List<string> imageIds)
+		public async Task<IActionResult> AddImages(
+			string categoryName,
+			[FromBody] CategoryImagesRequestModel model)
 		{
 			if (string.IsNullOrEmpty(categoryName))
 			{
 				return BadRequest("Category name required");
 			}
-			if (imageIds.Count == 0)
+			if (model.ImageIds.Count == 0)
 			{
 				return BadRequest("No image id's were provided");
 			}
@@ -173,7 +206,7 @@ namespace Cookbook.API.Controllers
 				return NotFound(categoryName);
 			}
 
-			var missingIds = await _imageService.CheckExistingImages(imageIds);
+			var missingIds = await _imageService.CheckExistingImages(model.ImageIds);
 
 			if (missingIds.Count != 0)
 			{
@@ -182,7 +215,7 @@ namespace Cookbook.API.Controllers
 
 			var imagesBefore = existingCategory.Images.Count;
 
-			var uniqueIds = imageIds.Except(existingCategory.Images).ToList();
+			var uniqueIds = model.ImageIds.Except(existingCategory.Images).ToList();
 
 			if (uniqueIds.Count > 0)
 			{
@@ -202,7 +235,9 @@ namespace Cookbook.API.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpDelete("{categoryName}/images")]
-		public IActionResult RemoveImages(string categoryName, [FromBody] List<string> imageIds)
+		public IActionResult RemoveImages(
+			string categoryName,
+			[FromBody] CategoryImagesRequestModel model)
 		{
 			if (string.IsNullOrEmpty(categoryName))
 			{
@@ -216,14 +251,14 @@ namespace Cookbook.API.Controllers
 				return NotFound(categoryName);
 			}
 
-			if (imageIds.Count == 0)
+			if (model.ImageIds.Count == 0)
 			{
 				return Ok(MapCategoryResponse(existingCategory));
 			}
 
 			var imagesBefore = existingCategory.Images.Count;
 
-			existingCategory.Images.RemoveAll(imageIds.Contains);
+			existingCategory.Images.RemoveAll(model.ImageIds.Contains);
 
 			if (imagesBefore != existingCategory.Images.Count)
 			{
@@ -235,39 +270,14 @@ namespace Cookbook.API.Controllers
 			return Ok(MapCategoryResponse(existingCategory));
 		}
 
-		[Authorize(Roles = "Admin")]
-		[HttpPut("{categoryName}/mainImage")]
-		public async Task<IActionResult> SetMainImage(string categoryName, [FromBody] string mainImageId)
-		{
-			if (string.IsNullOrEmpty(categoryName))
-			{
-				return BadRequest("Category name required");
-			}
-			var existingCategory = _categoryService.GetCategory(categoryName);
-
-			if (existingCategory == null)
-			{
-				return NotFound(categoryName);
-			}
-
-			var missingIds = await _imageService.CheckExistingImages([mainImageId]);
-
-			if (missingIds.Count != 0)
-			{
-				return BadRequest($"Image does not exist");
-			}
-
-			existingCategory.MainImage = mainImageId;
-			existingCategory.UpdatedAt = DateTime.UtcNow;
-			existingCategory.UpdatedBy = User.Identity.Name;
-			_categoryService.UpdateCategory(existingCategory);
-
-			return Ok(MapCategoryResponse(existingCategory));
-		}
-
-		private static CategoryResponseModel MapCategoryResponse(Category category)
-		{
-			return new CategoryResponseModel(category.CategoryName, category.Visible, category.UpdatedBy, category.UpdatedAt, category.CreatedBy, category.CreatedAt, category.Images, category.MainImage);
-		}
+		private static CategoryResponseModel MapCategoryResponse(Category category) => new CategoryResponseModel(
+				category.CategoryName,
+				category.Visible,
+				category.UpdatedBy,
+				category.UpdatedAt,
+				category.CreatedBy,
+				category.CreatedAt,
+				category.Images,
+				category.MainImage);
 	}
 }
