@@ -1,20 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cookbook.API.Models.Recipe
-{
-    public class UpdateRecipeRequestModel
-    {
-        [MinLength(2)]
-        public string Title { get; set; }
+namespace Cookbook.API.Models.Recipe;
 
-        public string Description { get; set; }
-
-        public int? PrepTimeMinutes { get; set; }
-
-        public int? CookTimeMinutes { get; set; }
-
-        public int? TotalTimeMinutes { get; set; }
-
-        public string ImageUrl { get; set; }
-    }
-}
+public record UpdateRecipeRequestModel(
+	[property: MinLength(2)] string Title,
+	string Description,
+	int? PrepTimeMinutes,
+	int? CookTimeMinutes,
+	int? TotalTimeMinutes,
+	string ImageUrl);

@@ -1,14 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cookbook.API.Models.Recipe
-{
-    public class UpdateCategoriesResponse
-    {
-        public List<string> Categories { get; set; }
+namespace Cookbook.API.Models.Recipe;
 
-        public string UpdatedBy { get; set; }
-
-        public DateTime UpdatedAt { get; set; }
-    }
-}
+public record UpdateCategoriesResponse(List<string> Categories, string UpdatedBy, DateTime UpdatedAt);

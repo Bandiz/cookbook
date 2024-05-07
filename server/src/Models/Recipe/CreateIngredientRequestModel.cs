@@ -1,16 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cookbook.API.Models.Recipe
-{
-    public class CreateIngredientRequestModel
-    {
-        public int Amount { get; set; }
+namespace Cookbook.API.Models.Recipe;
 
-        public string MeasurementType { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        public int Position { get; set; }
-    }
-}
+public record CreateIngredientRequestModel(int Amount, string MeasurementType, [property: Required] string Name, int Position);

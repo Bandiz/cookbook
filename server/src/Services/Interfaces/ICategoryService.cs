@@ -1,22 +1,20 @@
 ﻿using Cookbook.API.Entities;
 using System.Collections.Generic;
 
-namespace Cookbook.API.Services.Interfaces
+namespace Cookbook.API.Services.Interfaces;
+
+public interface ICategoryService
 {
-    public interface ICategoryService
-    {
-        Category GetCategory(string categoryName);
+	Category GetCategory(string categoryName);
 
-        List<Category> GetCategories(bool visible = true);
+	List<Category> GetCategories(bool visible = true);
 
-        Category CreateCategory(Category category);
+	Category CreateCategory(Category category);
 
-        void DeleteCategory(string categoryName);
+	void DeleteCategory(string categoryName);
 
-        List<Category> CreateCategories(List<Category> categories);
+	List<Category> CreateCategories(List<Category> categories);
 
-        void UpdateCategory(Category category);
+	void UpdateCategory(Category category);
 
-		void AddImagesToCategory(string categoryName, List<string> images);
-    }
 }

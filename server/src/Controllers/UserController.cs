@@ -1,49 +1,42 @@
-﻿using Cookbook.API.Extensions;
-using Cookbook.API.Models;
+﻿using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
 using Cookbook.API.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Cookbook.API.Controllers
+namespace Cookbook.API.Controllers;
+
+[Authorize(Roles = "Admin")]
+[Route("api/[controller]")]
+[ApiController]
+public class UserController(UserManager<CookbookUser> userManager) : ControllerBase
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
-    {
-        private readonly UserManager<CookbookUser> userManager;
+	[AllowAnonymous]
+	[HttpPost]
+	public async Task<IActionResult> CreateUser(
+		[FromForm] CreateUserRequestModel model)
+	{
+		if (!ModelState.IsValid)
+		{
+			return BadRequest(ModelState);
+		}
 
-        public UserController(UserManager<CookbookUser> userManager)
-        {
-            this.userManager = userManager;
-        }
+		var user = await userManager.FindByEmailAsync(model.Email);
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromForm] CreateUserRequestModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+		if (user != null)
+		{
+			return BadRequest("User already exists");
+		}
 
-            var user = await userManager.FindByEmailAsync(model.Email);
+		user = await userManager.CreateUserAsync(model.Email, model.UserName, model.Password, model.Name, model.LastName, $"{model.Name} {model.LastName}", false, string.Empty);
 
-            if (user != null)
-            {
-                return BadRequest("User already exists");
-            }
+		if (user == null)
+		{
+			return BadRequest("User could not be created");
+		}
 
-            user = await userManager.CreateUserAsync(model.Email, model.UserName, model.Password, model.Name, model.LastName, $"{model.Name} {model.LastName}", false, string.Empty);
-
-            if (user == null)
-            {
-                return BadRequest("User could not be created");
-            }
-
-            return Ok("User created successfully!");
-        }
-    }
+		return Ok("User created successfully!");
+	}
 }

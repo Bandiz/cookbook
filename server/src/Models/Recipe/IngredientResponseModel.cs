@@ -1,30 +1,20 @@
 ﻿using Cookbook.API.Entities;
 
-namespace Cookbook.API.Models.Recipe
+namespace Cookbook.API.Models.Recipe;
+
+public record IngredientResponseModel(
+	int Id,
+	int Amount,
+	string MeasurementType,
+	string Name,
+	int Position)
 {
-    public class IngredientResponseModel
-    {
-        public IngredientResponseModel()
-        {
-        }
-
-        public IngredientResponseModel(Ingredient ingredient)
-        {
-            Id = ingredient.Id;
-            Amount = ingredient.Amount;
-            MeasurementType = ingredient.MeasurementType;
-            Name = ingredient.Name;
-            Position = ingredient.Position;
-        }
-
-        public int Id { get; set; }
-
-        public int Amount { get; set; }
-
-        public string MeasurementType { get; set; }
-
-        public string Name { get; set; }
-
-        public int Position { get; set; }
-    }
+	public IngredientResponseModel(Ingredient ingredient) : this(
+		ingredient.Id,
+		ingredient.Amount,
+		ingredient.MeasurementType,
+		ingredient.Name,
+		ingredient.Position)
+	{
+	}
 }

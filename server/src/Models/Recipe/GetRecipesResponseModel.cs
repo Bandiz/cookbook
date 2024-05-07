@@ -1,17 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Cookbook.API.Models.Recipe
-{
-    public class GetRecipesResponseModel
-    {
-        public int Id { get; set; }
+namespace Cookbook.API.Models.Recipe;
 
-        public string Title { get; set; }
-
-        public int TotalTimeMinutes { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        public List<string> Categories { get; set; }
-    }
-}
+public record GetRecipesResponseModel(
+	int Id,
+	string Title,
+	int TotalTimeMinutes,
+	string ImageUrl,
+	IEnumerable<string> Categories);

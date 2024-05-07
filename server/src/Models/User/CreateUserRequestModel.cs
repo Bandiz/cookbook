@@ -1,16 +1,8 @@
-﻿namespace Cookbook.API.Models.User
-{
-    public class CreateUserRequestModel
-    {
-        public string UserName { get; set; }
+﻿namespace Cookbook.API.Models.User;
 
-        public string Password { get; set; }
-
-        public string Email { get; set; }
-
-        public string Name { get; set; }
-
-        public string LastName { get; set; }
-
-    }
-}
+public record CreateUserRequestModel(
+	string UserName,
+	string Password,
+	string Email,
+	string Name,
+	string LastName);

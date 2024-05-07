@@ -1,9 +1,3 @@
-﻿namespace Cookbook.API.Models.Recipe
-{
-    public class CreateInstructionRequestModel
-    {
-        public string Description { get; set; }
+﻿namespace Cookbook.API.Models.Recipe;
 
-        public int Position { get; set; }
-    }
-}
+public record CreateInstructionRequestModel(string Description, int Position);

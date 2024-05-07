@@ -1,28 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cookbook.API.Models.Recipe
-{
-    public class CreateRecipeRequestModel
-    {
-        [Required]
-        [MinLength(2)]
-        public string Title { get; set; }
+namespace Cookbook.API.Models.Recipe;
 
-        public string Description { get; set; }
-
-        public int PrepTimeMinutes { get; set; }
-
-        public int CookTimeMinutes { get; set; }
-
-        public int TotalTimeMinutes { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        public List<string> Categories { get; set; }
-
-        public List<CreateInstructionRequestModel> Instructions { get; set; }
-
-        public List<CreateIngredientRequestModel> Ingredients { get; set; }
-    }
-}
+public record CreateRecipeRequestModel(
+	[property: Required][property: MinLength(2)] string Title,
+	string Description,
+	int PrepTimeMinutes,
+	int CookTimeMinutes,
+	int TotalTimeMinutes,
+	string ImageUrl,
+	List<string> Categories,
+	List<CreateInstructionRequestModel> Instructions,
+	List<CreateIngredientRequestModel> Ingredients);

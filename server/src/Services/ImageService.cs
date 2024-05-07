@@ -8,76 +8,75 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
-namespace Cookbook.API.Services
+namespace Cookbook.API.Services;
+
+public class ImageService : IImageService
 {
-	public class ImageService: IImageService
+	private readonly GridFSBucket _imageBucket;
+	private readonly IMongoCollection<GridFSFileInfo> _fileCollection;
+
+	public ImageService(CookbookDatabaseSettings settings, IMongoClient mongoClient)
 	{
-		private readonly GridFSBucket _imageBucket;
-		private readonly IMongoCollection<GridFSFileInfo> _fileCollection;
+		var cookbookDb = mongoClient.GetDatabase(settings.DatabaseName);
+		_fileCollection = cookbookDb.GetCollection<GridFSFileInfo>("images.files");
+		_imageBucket = new GridFSBucket(cookbookDb, new GridFSBucketOptions() { BucketName = "images" });
+	}
 
-		public ImageService(CookbookDatabaseSettings settings, IMongoClient mongoClient, ICategoryService categoryService)
-        {
-            var cookbookDb = mongoClient.GetDatabase(settings.DatabaseName);
-			_fileCollection = cookbookDb.GetCollection<GridFSFileInfo>("images.files");
-			_imageBucket = new GridFSBucket(cookbookDb, new GridFSBucketOptions() { BucketName = "images" });
-        }
+	public async Task<string> UploadImage(Stream fs, string filename)
+	{
+		var result = await _imageBucket.UploadFromStreamAsync(filename, fs);
 
-		public async Task<string> UploadImage(Stream fs, string filename)
-		{
-			var result = await _imageBucket.UploadFromStreamAsync(filename, fs);
+		return result.ToString();
+	}
 
-			return result.ToString();
-		}
+	public async Task<(MemoryStream, string)> GetImage(string id)
+	{
+		var imageId = ObjectId.Parse(id);
+		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
+		var fileInfo = (await _imageBucket.FindAsync(filter)).FirstOrDefault();
 
-		public async Task<(MemoryStream, string)> GetImage(string id)
-		{
-			var imageId = ObjectId.Parse(id); 
-			var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
-			var fileInfo = (await _imageBucket.FindAsync(filter)).FirstOrDefault();
+		var stream = new MemoryStream();
+		await _imageBucket.DownloadToStreamAsync(imageId, stream);
 
-			var stream = new MemoryStream();
-			await _imageBucket.DownloadToStreamAsync(imageId, stream);
+		return (stream, fileInfo.Filename);
+	}
 
-			return (stream, fileInfo.Filename);
-		}
+	public async Task<string[]> GetImageIds()
+	{
+		var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
+		var cursor = await _fileCollection
+			.Find(Builders<GridFSFileInfo>.Filter.Empty)
+			.Project(projection)
+			.ToCursorAsync();
+		var imageIds = cursor
+			.ToEnumerable()
+			.Select(doc => doc["_id"].ToString())
+			.ToArray();
 
-		public async Task<string[]> GetImageIds()
-		{
-			var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
-			var cursor = await _fileCollection
-				.Find(Builders<GridFSFileInfo>.Filter.Empty)
-				.Project(projection)
-				.ToCursorAsync();
-			var imageIds = cursor
-				.ToEnumerable()
-				.Select(doc => doc["_id"].ToString())
-				.ToArray();
+		return imageIds;
+	}
 
-			return imageIds;
-		}
+	public async Task<List<string>> CheckExistingImages(List<string> imageIds)
+	{
+		var objectIdList = imageIds
+			.Select(id => new ObjectId(id))
+			.ToList();
 
-		public async Task<List<string>> CheckExistingImages(List<string> imageIds)
-		{
-			var objectIdList = imageIds
-				.Select(id => new ObjectId(id))
-				.ToList();
+		var filter = Builders<GridFSFileInfo>.Filter.In("_id", objectIdList);
+		var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
 
-			var filter = Builders<GridFSFileInfo>.Filter.In("_id", objectIdList);
-			var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
+		var cursor = await _fileCollection
+			.Find(filter)
+			.Project(projection)
+			.ToCursorAsync();
 
-			var cursor = await _fileCollection
-				.Find(filter)
-				.Project(projection)
-				.ToCursorAsync();
+		var existingIdStrings = cursor
+			.ToEnumerable()
+			.Select(doc => doc["_id"].ToString())
+			.ToList();
 
-			var existingIdStrings = cursor
-				.ToEnumerable()
-				.Select(doc => doc["_id"].ToString())
-				.ToList();
+		var missingIds = imageIds.Except(existingIdStrings).ToList();
 
-			var missingIds = imageIds.Except(existingIdStrings).ToList();
-
-			return missingIds;
-		}
+		return missingIds;
 	}
 }
