@@ -4,6 +4,8 @@ export type CategoryNameListResponse = Array<string>;
 
 export type CategoryListResponse = Array<Category>;
 
+export type CategoryResponse = Category;
+
 export type CategoryRecipesResponse = CategoryRecipes;
 
 export interface DeleteCategoryVariables {
@@ -11,7 +13,8 @@ export interface DeleteCategoryVariables {
 }
 
 export interface DeleteCategoryContext extends CategoryListContext {
-    previousDetails?: CategoryRecipes;
+    previousCategoryRecipes?: CategoryRecipes;
+    previousCategory?: Category;
 }
 
 export interface UpdateCategoryVariables {
@@ -20,7 +23,9 @@ export interface UpdateCategoryVariables {
     mainImage?: string;
 }
 
-export type UpdateCategoryContext = CategoryListContext;
+export interface UpdateCategoryContext {
+    previousCategory: Category;
+}
 
 export interface AddCategoryImagesVariables {
     categoryName: string;

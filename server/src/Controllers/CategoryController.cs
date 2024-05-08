@@ -38,7 +38,7 @@ public class CategoryController(
 			return NotFound(categoryName);
 		}
 
-		return Ok(MapCategoryResponse(category));
+		return Ok(new CategoryResponseModel(category));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -47,7 +47,7 @@ public class CategoryController(
 	{
 		var categories = categoryService
 			.GetCategories(false)
-			.Select(MapCategoryResponse);
+			.Select(x => new CategoryResponseModel(x));
 		return Ok(categories);
 	}
 
@@ -104,7 +104,7 @@ public class CategoryController(
 		return CreatedAtAction(
 			nameof(GetCategory),
 			new { category.CategoryName },
-			MapCategoryResponse(category)
+			new CategoryResponseModel(category)
 		);
 	}
 
@@ -174,7 +174,7 @@ public class CategoryController(
 			categoryService.UpdateCategory(existingCategory);
 		}
 
-		return Ok(MapCategoryResponse(existingCategory));
+		return Ok(new CategoryResponseModel(existingCategory));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -221,7 +221,7 @@ public class CategoryController(
 			categoryService.UpdateCategory(existingCategory);
 		}
 
-		return Ok(MapCategoryResponse(existingCategory));
+		return Ok(new CategoryResponseModel(existingCategory));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -244,7 +244,7 @@ public class CategoryController(
 
 		if (model.ImageIds.Count == 0)
 		{
-			return Ok(MapCategoryResponse(existingCategory));
+			return Ok(new CategoryResponseModel(existingCategory));
 		}
 
 		var imagesBefore = existingCategory.Images.Count;
@@ -258,16 +258,6 @@ public class CategoryController(
 			categoryService.UpdateCategory(existingCategory);
 		}
 
-		return Ok(MapCategoryResponse(existingCategory));
+		return Ok(new CategoryResponseModel(existingCategory));
 	}
-
-	private static CategoryResponseModel MapCategoryResponse(Category category) => new(
-			category.CategoryName,
-			category.Visible,
-			category.UpdatedBy,
-			category.UpdatedAt,
-			category.CreatedBy,
-			category.CreatedAt,
-			category.Images,
-			category.MainImage);
 }

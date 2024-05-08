@@ -1,9 +1,14 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { CategoryRecipes } from '../../types';
-import { CategoryListKey } from '../apiQueryKeys';
+import { CategoryKey, CategoryListKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
-import { CategoryListResponse, DeleteCategoryContext, DeleteCategoryVariables } from './types';
+import {
+    CategoryListResponse,
+    CategoryRecipesResponse,
+    CategoryResponse,
+    DeleteCategoryContext,
+    DeleteCategoryVariables,
+} from './types';
 
 export default function useDeleteCategoryMutation() {
     const queryClient = useQueryClient();
@@ -14,8 +19,6 @@ export default function useDeleteCategoryMutation() {
         },
         {
             onMutate: ({ categoryName }) => {
-                queryClient.cancelQueries(CategoryListKey);
-
                 const previousCategories = queryClient.getQueryData<CategoryListResponse>(CategoryListKey);
 
                 if (previousCategories) {
@@ -25,30 +28,48 @@ export default function useDeleteCategoryMutation() {
                     );
                 }
 
-                const previousDetails = queryClient.getQueryData<CategoryRecipes>([CategoryListKey, categoryName]);
+                const previousCategoryRecipes = queryClient.getQueryData<CategoryRecipesResponse>([
+                    CategoryKey,
+                    categoryName,
+                    'recipes',
+                ]);
 
-                if (previousDetails) {
-                    queryClient.removeQueries([CategoryListKey, categoryName]);
+                if (previousCategoryRecipes) {
+                    queryClient.removeQueries([CategoryKey, categoryName, 'recipes']);
                 }
 
-                return { previousCategories, previousDetails };
+                const previousCategory = queryClient.getQueryData<CategoryResponse>([CategoryKey, categoryName]);
+
+                if (previousCategory) {
+                    queryClient.removeQueries([CategoryKey, categoryName]);
+                }
+
+                return { previousCategories, previousCategoryRecipes, previousCategory };
             },
             onError: (_err, { categoryName }, context) => {
                 if (!context) {
                     return;
                 }
-                const { previousCategories, previousDetails } = context;
+                const { previousCategories, previousCategoryRecipes, previousCategory } = context;
                 if (previousCategories) {
                     queryClient.setQueryData<CategoryListResponse>(CategoryListKey, previousCategories);
                 }
 
-                if (previousDetails) {
-                    queryClient.setQueryData<CategoryRecipes>([CategoryListKey, categoryName], previousDetails);
+                if (previousCategoryRecipes) {
+                    queryClient.setQueryData<CategoryRecipesResponse>(
+                        [CategoryKey, categoryName, 'recipes'],
+                        previousCategoryRecipes
+                    );
+                }
+
+                if (previousCategory) {
+                    queryClient.setQueryData<CategoryResponse>([CategoryKey, categoryName], previousCategory);
                 }
             },
             onSettled: (_data, _err, { categoryName }) => {
                 queryClient.invalidateQueries(CategoryListKey);
-                queryClient.removeQueries([CategoryListKey, categoryName]);
+                queryClient.removeQueries([CategoryKey, categoryName, 'recipes']);
+                queryClient.removeQueries([CategoryKey, categoryName]);
             },
         }
     );

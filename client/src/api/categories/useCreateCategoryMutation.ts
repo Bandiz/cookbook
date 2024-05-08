@@ -27,6 +27,7 @@ export default function useCreateCategoryMutation() {
                     const newCategory: Category = {
                         categoryName,
                         visible,
+                        mainImage: null,
                         images: [],
                         createdAt: dayjs(),
                         createdBy: user?.email ?? '',

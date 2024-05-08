@@ -1,53 +1,53 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 import { Category } from '../../types';
-import { CategoryListKey } from '../apiQueryKeys';
+import { CategoryKey, CategoryListKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
-import { CategoryListResponse, UpdateCategoryContext, UpdateCategoryVariables } from './types';
+import { CategoryResponse, UpdateCategoryContext, UpdateCategoryVariables } from './types';
 
 export default function useUpdateCategoryMutation() {
     const queryClient = useQueryClient();
 
     return useMutation<Category, AxiosError, UpdateCategoryVariables, UpdateCategoryContext>(
         async ({ categoryName, visible, mainImage }) => {
-            const response = await httpClient.put(`category/${categoryName}`, { visible, mainImage });
+            const response = await httpClient.put<CategoryResponse>(`category/${categoryName}`, { visible, mainImage });
             return response.data;
         },
         {
             onMutate: ({ categoryName, visible, mainImage }) => {
-                const previousCategories = queryClient.getQueryData<CategoryListResponse>(CategoryListKey);
+                const previousCategory = queryClient.getQueryData<CategoryResponse>([CategoryKey, categoryName]);
 
-                if (previousCategories) {
-                    queryClient.setQueryData<CategoryListResponse>(
-                        CategoryListKey,
-                        previousCategories.map((x) => {
-                            if (x.categoryName !== categoryName) {
-                                return x;
-                            }
-                            if (typeof visible !== 'undefined') {
-                                x.visible = visible;
-                            }
-                            if (typeof mainImage !== 'undefined') {
-                                x.mainImage = mainImage;
-                            }
-                            return x;
-                        })
-                    );
+                if (!previousCategory) {
+                    return;
                 }
 
-                return { previousCategories };
+                const categoryCopy = { ...previousCategory };
+
+                if (typeof visible !== 'undefined') {
+                    categoryCopy.visible = visible;
+                }
+                if (typeof mainImage !== 'undefined') {
+                    categoryCopy.mainImage = mainImage;
+                }
+
+                queryClient.setQueryData<CategoryResponse>([CategoryKey, categoryName], categoryCopy);
+
+                return { previousCategory };
             },
-            onError: (_err, _variables, context) => {
+            onError: (_err, variables, context) => {
                 if (!context) {
                     return;
                 }
-                const { previousCategories } = context;
-                if (previousCategories) {
-                    queryClient.setQueryData<CategoryListResponse>(CategoryListKey, previousCategories);
+                const { previousCategory } = context;
+                const { categoryName } = variables;
+
+                if (previousCategory) {
+                    queryClient.setQueryData<CategoryResponse>([CategoryKey, categoryName], previousCategory);
                 }
             },
-            onSettled: () => {
+            onSettled: (_data, _err, { categoryName }) => {
                 queryClient.invalidateQueries(CategoryListKey);
+                queryClient.invalidateQueries([CategoryKey, categoryName]);
             },
         }
     );
