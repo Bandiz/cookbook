@@ -45,7 +45,7 @@ export default function CategoriesTable() {
     }
 
     if (isError || !categories) {
-        return <Alert message="Failed to load recipes" type="error" />;
+        return <Alert message="Failed to load categories" type="error" />;
     }
 
     return (

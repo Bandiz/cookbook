@@ -14,6 +14,7 @@ export default function useUpdateCategoryMutation() {
             return response.data;
         },
         {
+            // TODO: Redo this
             onMutate: ({ categoryName, visible, mainImage }) => {
                 const previousCategory = queryClient.getQueryData<CategoryResponse>([CategoryKey, categoryName]);
 
