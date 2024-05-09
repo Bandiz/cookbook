@@ -1,6 +1,7 @@
 export const HOME = '/';
 export const RECIPE = '/recipe/:id';
 export const RECIPES = '/recipes';
+export const EDIT_RECIPE = '/recipe/:recipe/edit';
 export const CATEGORY = '/category/:category';
 export const EDIT_CATEGORY = '/category/:category/edit';
 export const CATEGORIES = '/categories';

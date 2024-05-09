@@ -6,6 +6,7 @@ import './App.scss';
 import { Header, Loading } from './components/Shared';
 import * as ROUTES from './constants/routes';
 import EditCategory from './pages/EditCategory';
+import EditRecipe from './pages/EditRecipe';
 
 const Home = lazy(() => import('./pages/Home'));
 const Recipes = lazy(() => import('./pages/Recipes'));
@@ -35,6 +36,7 @@ function App() {
                             <Route path={ROUTES.ADMIN} element={<Admin />} />
                             <Route path={ROUTES.RECIPE} element={<Recipe />} />
                             <Route path={ROUTES.CREATE_RECIPE} element={<CreateRecipe />} />
+                            <Route path={ROUTES.EDIT_RECIPE} element={<EditRecipe />} />
                             <Route path={ROUTES.LOGIN} element={<Login />} />
                             <Route path="*" element={<NotFound />} />
                         </Routes>

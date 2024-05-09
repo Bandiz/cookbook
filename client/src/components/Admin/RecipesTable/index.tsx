@@ -1,9 +1,10 @@
-import { Alert, Checkbox, Spin, Table, TableProps } from 'antd';
+import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
 import { Recipe } from '../../../types';
 import { displayDate } from '../utils';
 import { useRecipes } from '../../../api/recipes';
+import { DeleteRecipeAction, EditRecipeAction } from './ActionButtons';
 
-const columns: TableProps<Recipe>['columns'] = [
+const columns: TableColumnsType<Recipe> = [
     {
         title: 'Id',
         dataIndex: 'id',
@@ -13,7 +14,7 @@ const columns: TableProps<Recipe>['columns'] = [
         dataIndex: 'title',
     },
     {
-        title: 'Is Published',
+        title: 'Is published',
         dataIndex: 'isPublished',
         render: (value: boolean) => {
             return <Checkbox checked={value} disabled />;
@@ -39,8 +40,14 @@ const columns: TableProps<Recipe>['columns'] = [
     },
     {
         title: 'Action',
+        dataIndex: '',
         key: 'x',
-        // render: (_, record) => <RemoveRecipeAction recipeId={record.id} categoryName={record.categoryName} />,
+        render: (_, record) => (
+            <Space size="small" direction="horizontal">
+                <EditRecipeAction recipe={record.id} />
+                <DeleteRecipeAction recipe={record.id} />
+            </Space>
+        ),
     },
 ];
 
