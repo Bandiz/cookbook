@@ -1,21 +1,14 @@
 import { Link } from 'react-router-dom';
+import { Image } from 'antd';
 import { HOME } from '../../../../constants/routes';
-import { Box } from '@mui/material';
-
 import logo from './icon.png';
 
-const Logo = () => {
+function Logo() {
     return (
-        <Link to={HOME}>
-            <Box
-                component="img"
-                alt="Logo"
-                src={logo}
-                sx={{
-                    width: { xs: 60, md: 80 },
-                }}
-            />
+        <Link to={HOME} style={{ display: 'flex' }}>
+            <Image alt="Logo" src={logo} width={60} preview={false} />
         </Link>
     );
-};
+}
+
 export default Logo;

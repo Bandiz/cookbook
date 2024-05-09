@@ -22,9 +22,7 @@ function App() {
     return (
         <Router>
             <Layout>
-                <Layout.Header style={{ display: 'flex', alignItems: 'center' }}>
-                    <Header />
-                </Layout.Header>
+                <Header />
                 <Layout>
                     <Suspense fallback={<Loading />}>
                         <Routes>
