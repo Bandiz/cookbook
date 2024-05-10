@@ -22,15 +22,18 @@ const columns: TableProps<CategoryRecipe>['columns'] = [
         title: 'Created at',
         dataIndex: 'createdAt',
         render: displayDate,
+        responsive: ['md'],
     },
     {
         title: 'Updated by',
         dataIndex: 'updatedBy',
+        responsive: ['md'],
     },
     {
         title: 'Updated at',
         dataIndex: 'updatedAt',
         render: displayDate,
+        responsive: ['md'],
     },
     {
         title: 'Action',

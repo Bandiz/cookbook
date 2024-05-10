@@ -1,5 +1,5 @@
-import { Button, Checkbox, Divider, Image, Layout, Space, Spin, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { Button, Checkbox, Col, Divider, Empty, Image, Layout, Row, Space, Spin, Typography } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useCategory, useUpdateCategoryMutation } from '../../api/categories';
 import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
@@ -20,93 +20,122 @@ export default function EditCategory() {
         }
     }, [isAdmin, authLoading]);
 
+    const imagesPreview = useMemo(() => {
+        if (!category) {
+            return {};
+        }
+        return {
+            movable: false,
+            toolbarRender() {
+                const isMainImage = category.images[currentImage] === category.mainImage;
+                return (
+                    <Button
+                        type="primary"
+                        disabled={isMainImage}
+                        onClick={() => {
+                            updateCategory({
+                                categoryName: category.categoryName,
+                                mainImage: category.images[currentImage],
+                            });
+                        }}
+                    >
+                        {isMainImage ? 'Current main image' : 'Select as main image'}
+                    </Button>
+                );
+            },
+            onChange(current: number) {
+                setCurrentImage(current);
+            },
+            onVisibleChange(_value: boolean, _prevValue: boolean, current: number) {
+                setCurrentImage(current);
+            },
+        };
+    }, [category, currentImage]);
+
     if (!category || isLoading || authLoading) {
         return <Spin size="large" />;
     }
 
     return (
-        <>
+        <Layout>
             <Layout.Header>
                 <Typography.Title level={1} style={{ color: 'white' }}>
                     {categoryName}
                 </Typography.Title>
             </Layout.Header>
-            <Layout.Content style={{ padding: '0 20px', display: 'grid', placeContent: 'center' }}>
-                <Space direction="vertical">
-                    <Divider>
-                        <Typography.Title level={2}>Options</Typography.Title>
-                    </Divider>
-                    <Space direction="horizontal" size="large">
-                        {category.mainImage && (
-                            <Image
-                                preview={false}
-                                width={400}
-                                src={`/image/${category.mainImage}`}
-                                style={{ ...(!category.visible && { filter: 'grayscale(100%)' }) }}
-                            />
-                        )}
-                        <Space>
-                            <Checkbox
-                                checked={category.visible}
-                                onChange={(event) => {
-                                    updateCategory({
-                                        categoryName: category.categoryName,
-                                        visible: event.target.checked,
-                                    });
-                                }}
-                            >
-                                Is visible
-                            </Checkbox>
-                        </Space>
-                    </Space>
-
-                    <Divider>
-                        <Typography.Title level={2}>Images</Typography.Title>
-                    </Divider>
-                    <Image.PreviewGroup
-                        preview={{
-                            movable: false,
-                            toolbarRender() {
-                                const isMainImage = category.images[currentImage] === category.mainImage;
-                                return (
-                                    <Button
-                                        type="primary"
-                                        disabled={isMainImage}
-                                        onClick={() => {
-                                            updateCategory({
-                                                categoryName: category.categoryName,
-                                                mainImage: category.images[currentImage],
-                                            });
-                                        }}
-                                    >
-                                        {isMainImage ? 'Current main image' : 'Select as main image'}
-                                    </Button>
-                                );
-                            },
-                            onChange(current) {
-                                setCurrentImage(current);
-                            },
-                            onVisibleChange(_value, _prevValue, current) {
-                                setCurrentImage(current);
-                            },
-                        }}
-                    >
-                        <Space>
-                            {category.images.map((image) => (
-                                <Image key={image} width={200} src={`/image/${image}`} preview={{}} />
-                            ))}
-                        </Space>
-                    </Image.PreviewGroup>
-
-                    <Divider>
-                        <Typography.Title level={2}>Recipes</Typography.Title>
-                    </Divider>
-                    <ExpandedRecipeTable category={category} />
-                </Space>
-            </Layout.Content>
             <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
                 Go back
             </Link>
-        </>
+            <Layout.Content
+                style={{
+                    padding: '0 20px',
+                }}
+            >
+                <Row>
+                    <Col span={24}>
+                        <Divider>
+                            <Typography.Title level={3}>Main image & visibility</Typography.Title>
+                        </Divider>
+                        <Row gutter={[20, 20]}>
+                            <Col
+                                md={12}
+                                sm={24}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'right',
+                                }}
+                            >
+                                {!category.mainImage && <Empty description="No main image" />}
+                                {category.mainImage && (
+                                    <Image
+                                        preview={false}
+                                        src={`/image/${category.mainImage}`}
+                                        style={{
+                                            maxWidth: 400,
+                                            ...(!category.visible && { filter: 'grayscale(100%)' }),
+                                        }}
+                                    />
+                                )}
+                            </Col>
+                            <Col md={12} sm={24}>
+                                <Checkbox
+                                    checked={category.visible}
+                                    onChange={(event) => {
+                                        updateCategory({
+                                            categoryName: category.categoryName,
+                                            visible: event.target.checked,
+                                        });
+                                    }}
+                                >
+                                    Is visible
+                                </Checkbox>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Divider>
+                            <Typography.Title level={3}>Images</Typography.Title>
+                        </Divider>
+                        <Image.PreviewGroup preview={imagesPreview}>
+                            <Space>
+                                {category.images.map((image) => (
+                                    <Image key={image} style={{ maxWidth: 200 }} src={`/image/${image}`} />
+                                ))}
+                            </Space>
+                        </Image.PreviewGroup>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Divider>
+                            <Typography.Title level={3}>Recipes</Typography.Title>
+                        </Divider>
+                        <ExpandedRecipeTable category={category} />
+                    </Col>
+                </Row>
+            </Layout.Content>
+        </Layout>
     );
 }

@@ -27,6 +27,11 @@ const items: TabsProps['items'] = [
         label: 'Images',
         disabled: true,
     },
+    {
+        key: '5',
+        label: 'Data import/export',
+        disabled: true,
+    },
 ];
 
 export default function AdminTabs() {
