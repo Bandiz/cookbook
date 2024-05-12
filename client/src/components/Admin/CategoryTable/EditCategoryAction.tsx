@@ -6,7 +6,7 @@ interface EditCategoryActionProps {
     categoryName: string;
 }
 
-export function EditCategoryAction({ categoryName }: EditCategoryActionProps) {
+export default function EditCategoryAction({ categoryName }: EditCategoryActionProps) {
     const navigate = useNavigate();
     return (
         <Button

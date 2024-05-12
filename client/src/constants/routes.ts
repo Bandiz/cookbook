@@ -4,6 +4,7 @@ export const RECIPES = '/recipes';
 export const EDIT_RECIPE = '/recipe/:recipe/edit';
 export const CATEGORY = '/category/:category';
 export const EDIT_CATEGORY = '/category/:category/edit';
+export const CREATE_CATEGORY = '/category/new';
 export const CATEGORIES = '/categories';
 export const ABOUT = '/about';
 export const ADMIN = '/admin';

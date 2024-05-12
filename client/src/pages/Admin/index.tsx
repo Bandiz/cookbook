@@ -2,7 +2,6 @@ import { Layout, Typography } from 'antd';
 import AdminTabs from '../../components/Admin';
 
 export default function Admin() {
-    console.log('hello');
     return (
         <Layout>
             <Layout.Header>
@@ -10,7 +9,9 @@ export default function Admin() {
                     Admin page
                 </Typography.Title>
             </Layout.Header>
-            <AdminTabs />
+            <Layout.Content>
+                <AdminTabs />
+            </Layout.Content>
         </Layout>
     );
 }

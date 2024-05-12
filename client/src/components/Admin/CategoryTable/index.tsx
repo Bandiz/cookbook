@@ -1,9 +1,12 @@
-import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { useCategoryList } from '../../../api/categories';
+import { CREATE_CATEGORY } from '../../../constants/routes';
 import { Category } from '../../../types';
 import { displayDate } from '../utils';
-import { DeleteCategoryAction } from './DeleteCategoryAction';
-import { EditCategoryAction } from './EditCategoryAction';
+import DeleteCategoryAction from './DeleteCategoryAction';
+import EditCategoryAction from './EditCategoryAction';
 import ExpandedRecipeTable from './ExpandedRecipeTable';
 
 const columns: TableColumnsType<Category> = [
@@ -39,6 +42,7 @@ const columns: TableColumnsType<Category> = [
 
 export default function CategoriesTable() {
     const { data: categories, isLoading, isError } = useCategoryList();
+    const navigate = useNavigate();
 
     if (isLoading) {
         return <Spin spinning size="large" />;
@@ -49,17 +53,26 @@ export default function CategoriesTable() {
     }
 
     return (
-        <Table
-            columns={columns}
-            rowKey="categoryName"
-            expandable={{
-                expandedRowRender: (record) => (
-                    <Space size="middle">
-                        <ExpandedRecipeTable category={record} />
-                    </Space>
-                ),
-            }}
-            dataSource={categories}
-        />
+        <>
+            <Table
+                columns={columns}
+                rowKey="categoryName"
+                expandable={{
+                    expandedRowRender: (record) => (
+                        <Space size="middle">
+                            <ExpandedRecipeTable category={record} />
+                        </Space>
+                    ),
+                }}
+                dataSource={categories}
+            />
+            <FloatButton
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => {
+                    navigate(CREATE_CATEGORY);
+                }}
+            />
+        </>
     );
 }

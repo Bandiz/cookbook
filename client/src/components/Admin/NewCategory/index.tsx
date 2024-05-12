@@ -1,4 +1,4 @@
-import { Alert, Checkbox, Spin, Table, TableColumnsType } from 'antd';
+import { Alert, Checkbox, Col, Row, Spin, Table, TableColumnsType } from 'antd';
 import { useCategoryList } from '../../../api/categories';
 import { Category } from '../../../types';
 
@@ -31,5 +31,11 @@ export default function CategoriesTable() {
         return <Alert message="Failed to load recipes" type="error" />;
     }
 
-    return <Table columns={columns} rowKey="categoryName" dataSource={categories} />;
+    return (
+        <Row justify="center" align="middle">
+            <Col span={24}>
+                <Table columns={columns} rowKey="categoryName" dataSource={categories} />;
+            </Col>
+        </Row>
+    );
 }

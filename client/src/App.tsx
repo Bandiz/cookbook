@@ -1,10 +1,10 @@
 import { Layout } from 'antd';
 import { lazy, Suspense } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-
 import './App.scss';
 import { Header, Loading, RouteGuard } from './components/Shared';
 import * as ROUTES from './constants/routes';
+import CreateCategory from './pages/CreateCategory';
 import EditCategory from './pages/EditCategory';
 import EditRecipe from './pages/EditRecipe';
 
@@ -36,6 +36,9 @@ function App() {
                             <Route path={ROUTES.CATEGORY} element={<Category />} />
                             <Route path={ROUTES.EDIT_CATEGORY} element={<RouteGuard />}>
                                 <Route index element={<EditCategory />} />
+                            </Route>
+                            <Route path={ROUTES.CREATE_CATEGORY} element={<RouteGuard />}>
+                                <Route index element={<CreateCategory />} />
                             </Route>
                             <Route path={ROUTES.ADMIN} element={<RouteGuard />}>
                                 <Route index element={<Admin />} />

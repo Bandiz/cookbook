@@ -5,7 +5,7 @@ interface DeleteCategoryActionProps {
     categoryName: string;
 }
 
-export function DeleteCategoryAction({ categoryName }: DeleteCategoryActionProps) {
+export default function DeleteCategoryAction({ categoryName }: DeleteCategoryActionProps) {
     const { mutate } = useDeleteCategoryMutation();
     return (
         <Button
