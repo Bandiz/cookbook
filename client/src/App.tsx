@@ -35,16 +35,16 @@ function App() {
                             <Route path={ROUTES.RECIPE} element={<Recipe />} />
                             <Route path={ROUTES.CATEGORY} element={<Category />} />
                             <Route path={ROUTES.EDIT_CATEGORY} element={<RouteGuard />}>
-                                <Route element={<EditCategory />} />
+                                <Route index element={<EditCategory />} />
                             </Route>
                             <Route path={ROUTES.ADMIN} element={<RouteGuard />}>
-                                <Route element={<Admin />} />
+                                <Route index element={<Admin />} />
                             </Route>
                             <Route path={ROUTES.CREATE_RECIPE} element={<RouteGuard />}>
-                                <Route element={<CreateRecipe />} />
+                                <Route index element={<CreateRecipe />} />
                             </Route>
                             <Route path={ROUTES.EDIT_RECIPE} element={<RouteGuard />}>
-                                <Route element={<EditRecipe />} />
+                                <Route index element={<EditRecipe />} />
                             </Route>
                             <Route path="*" element={<NotFound />} />
                         </Routes>

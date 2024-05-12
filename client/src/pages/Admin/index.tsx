@@ -1,13 +1,16 @@
-import { Typography } from 'antd';
+import { Layout, Typography } from 'antd';
 import AdminTabs from '../../components/Admin';
 
 export default function Admin() {
+    console.log('hello');
     return (
-        <div className="admin-page">
-            <section className="admin-section">
-                <Typography.Title level={4}>Admin page</Typography.Title>
-            </section>
+        <Layout>
+            <Layout.Header>
+                <Typography.Title level={1} style={{ color: 'white' }}>
+                    Admin page
+                </Typography.Title>
+            </Layout.Header>
             <AdminTabs />
-        </div>
+        </Layout>
     );
 }
