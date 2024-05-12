@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import './App.scss';
-import { Header, Loading } from './components/Shared';
+import { Header, Loading, RouteGuard } from './components/Shared';
 import * as ROUTES from './constants/routes';
 import EditCategory from './pages/EditCategory';
 import EditRecipe from './pages/EditRecipe';
@@ -29,15 +29,23 @@ function App() {
                         <Routes>
                             <Route path={ROUTES.HOME} element={<Home />} />
                             <Route path={ROUTES.RECIPES} element={<Recipes />} />
-                            <Route path={ROUTES.CATEGORY} element={<Category />} />
-                            <Route path={ROUTES.CATEGORY} element={<Categories />} />
-                            <Route path={ROUTES.EDIT_CATEGORY} element={<EditCategory />} />
+                            <Route path={ROUTES.CATEGORIES} element={<Categories />} />
                             <Route path={ROUTES.ABOUT} element={<About />} />
-                            <Route path={ROUTES.ADMIN} element={<Admin />} />
-                            <Route path={ROUTES.RECIPE} element={<Recipe />} />
-                            <Route path={ROUTES.CREATE_RECIPE} element={<CreateRecipe />} />
-                            <Route path={ROUTES.EDIT_RECIPE} element={<EditRecipe />} />
                             <Route path={ROUTES.LOGIN} element={<Login />} />
+                            <Route path={ROUTES.RECIPE} element={<Recipe />} />
+                            <Route path={ROUTES.CATEGORY} element={<Category />} />
+                            <Route path={ROUTES.EDIT_CATEGORY} element={<RouteGuard />}>
+                                <Route element={<EditCategory />} />
+                            </Route>
+                            <Route path={ROUTES.ADMIN} element={<RouteGuard />}>
+                                <Route element={<Admin />} />
+                            </Route>
+                            <Route path={ROUTES.CREATE_RECIPE} element={<RouteGuard />}>
+                                <Route element={<CreateRecipe />} />
+                            </Route>
+                            <Route path={ROUTES.EDIT_RECIPE} element={<RouteGuard />}>
+                                <Route element={<EditRecipe />} />
+                            </Route>
                             <Route path="*" element={<NotFound />} />
                         </Routes>
                     </Suspense>

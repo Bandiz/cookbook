@@ -1,24 +1,15 @@
 import { Button, Checkbox, Col, Divider, Empty, Image, Layout, Row, Space, Spin, Typography } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { useCategory, useUpdateCategoryMutation } from '../../api/categories';
 import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
 import { ADMIN } from '../../constants/routes';
-import { useAuth } from '../../contexts/AuthContext';
 
 export default function EditCategory() {
     const { category: categoryName } = useParams<{ category: string }>();
-    const { isAdmin, isLoading: authLoading } = useAuth();
     const [currentImage, setCurrentImage] = useState(0);
-    const navigate = useNavigate();
     const { data: category, isLoading } = useCategory(categoryName ?? '');
     const { mutate: updateCategory } = useUpdateCategoryMutation();
-
-    useEffect(() => {
-        if (!isAdmin && !authLoading) {
-            navigate('/');
-        }
-    }, [isAdmin, authLoading]);
 
     const imagesPreview = useMemo(() => {
         if (!category) {
@@ -52,7 +43,7 @@ export default function EditCategory() {
         };
     }, [category, currentImage]);
 
-    if (!category || isLoading || authLoading) {
+    if (!category || isLoading) {
         return <Spin size="large" />;
     }
 
