@@ -1,16 +1,15 @@
-import { useNavigate } from 'react-router-dom';
-import { Avatar, Layout, Menu, MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { useAuth } from '../../../contexts/AuthContext';
-import { ABOUT, ADMIN, HOME, LOGIN, RECIPES } from '../../../constants/routes';
+import { Avatar, Layout, Menu, MenuProps } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { useLogoutSessionMutation } from '../../../api/session';
+import { ABOUT, ADMIN, HOME, LOGIN, RECIPES } from '../../../constants/routes';
+import { useAuth } from '../../../contexts/AuthContext';
 import Logo from './Logo';
 
 function Header() {
     const navigate = useNavigate();
     const logoutSessionMutation = useLogoutSessionMutation();
-    const { isAuthenticated } = useAuth();
-    const { isAdmin } = useAuth();
+    const { isAuthenticated, isAdmin } = useAuth();
 
     const onClick: MenuProps['onClick'] = (e) => {
         if (e.key === HOME) {

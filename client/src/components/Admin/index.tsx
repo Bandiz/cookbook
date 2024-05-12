@@ -2,7 +2,6 @@ import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { AdminProvider } from '../../contexts/AdminContext';
 import CategoryTable from './CategoryTable';
 import RecipesTable from './RecipesTable';
 
@@ -62,9 +61,5 @@ export default function AdminTabs() {
         [setActiveTab]
     );
 
-    return (
-        <AdminProvider>
-            <Tabs defaultActiveKey={activeTab} items={items} style={{ padding: '0 20px' }} onChange={handleTabChange} />
-        </AdminProvider>
-    );
+    return <Tabs defaultActiveKey={activeTab} items={items} style={{ padding: '0 20px' }} onChange={handleTabChange} />;
 }

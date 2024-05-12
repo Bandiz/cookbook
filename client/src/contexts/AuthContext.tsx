@@ -1,12 +1,9 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react';
-import { AxiosInstance } from 'axios';
-import { User } from '../api/session/types';
 import { useSession } from '../api/session';
-import httpClient from '../api/httpClient';
+import { User } from '../api/session/types';
 
 interface AuthObject {
     isAuthenticated: boolean;
-    httpClient: AxiosInstance;
     user: User | null;
     isAdmin: boolean;
     isLoading: boolean;
@@ -14,7 +11,6 @@ interface AuthObject {
 
 const defaultContextObject: AuthObject = {
     isAuthenticated: false,
-    httpClient,
     user: null,
     isAdmin: false,
     isLoading: true,
@@ -38,7 +34,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         return {
             isAuthenticated: isLoggedIn,
-            httpClient,
             user: user ?? null,
             isAdmin: user?.isAdmin ?? false,
             isLoading: session.isLoading,
