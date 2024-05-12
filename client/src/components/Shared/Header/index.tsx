@@ -1,6 +1,6 @@
-import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Menu, MenuProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { LoginOutlined, UserOutlined } from '@ant-design/icons';
 import { useLogoutSessionMutation } from '../../../api/session';
 import { ABOUT, ADMIN, HOME, LOGIN, RECIPES } from '../../../constants/routes';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -54,7 +54,7 @@ function Header() {
             <Menu
                 theme="dark"
                 mode="horizontal"
-                style={{ minWidth: 0 }}
+                style={{ flex: 0 }}
                 selectable={false}
                 onClick={onClick}
                 items={[
@@ -63,6 +63,7 @@ function Header() {
                               {
                                   key: LOGIN,
                                   label: 'Login',
+                                  icon: <LoginOutlined />,
                               },
                           ]
                         : [
