@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
     Box,
     Button,
@@ -14,12 +14,12 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import React, { useRef, useState } from 'react';
+import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { useNavigate } from 'react-router';
-
-import { useStyles } from './Login';
+import { useLocation } from 'react-router-dom';
 import { useGoogleSessionMutation, useLoginSessionMutation } from '../../api/session';
+import { useStyles } from './Login';
 
 interface FormState {
     username?: string;
@@ -33,6 +33,7 @@ export default function Login() {
     const googleSessionMutation = useGoogleSessionMutation();
     const loginSessionMutation = useLoginSessionMutation();
     const navigate = useNavigate();
+    const location = useLocation();
     const { classes } = useStyles();
 
     function handleOnSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
@@ -73,7 +74,13 @@ export default function Login() {
     }
 
     function handleLogin() {
-        navigate('/');
+        const params = new URLSearchParams(location.search);
+        const returnUrl = params.get('returnTo');
+        if (returnUrl) {
+            navigate(decodeURIComponent(returnUrl));
+        } else {
+            navigate('/');
+        }
     }
 
     return (

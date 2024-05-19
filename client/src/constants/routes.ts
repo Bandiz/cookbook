@@ -12,12 +12,21 @@ export const CREATE_RECIPE = '/create-recipe';
 export const LOGIN = '/login';
 export const NOT_FOUND = '/not-found';
 
-export function replaceRouteParams(route: string, keys: Record<string, string | number> = {}) {
+export function replaceRouteParams(
+    route: string,
+    keys: Record<string, string | number> = {},
+    queryString: Record<string, string> = {}
+): string {
     let newRoute = route;
 
     Object.entries(keys).forEach(([key, value]) => {
         newRoute = newRoute.replaceAll(`:${key}`, value.toString());
     });
+
+    const params = new URLSearchParams(queryString).toString();
+    if (params) {
+        newRoute += '?' + params;
+    }
 
     return newRoute;
 }
