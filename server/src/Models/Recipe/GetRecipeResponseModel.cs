@@ -11,7 +11,7 @@ public record GetRecipeResponseModel(
 	int PrepTimeMinutes,
 	int CookTimeMinutes,
 	int TotalTimeMinutes,
-	string ImageUrl,
+	string MainImage,
 	IEnumerable<string> Categories,
 	IEnumerable<InstructionResponseModel> Instructions,
 	IEnumerable<IngredientResponseModel> Ingredients)
@@ -23,9 +23,9 @@ public record GetRecipeResponseModel(
 		recipe.PrepTimeMinutes,
 		recipe.CookTimeMinutes,
 		recipe.TotalTimeMinutes,
-		recipe.ImageUrl,
+		recipe.MainImage,
 		recipe.Categories,
-		recipe.Instructions.Select(x => new InstructionResponseModel(x.Description, x.Position)),
+		recipe.Instructions.Select(x => new InstructionResponseModel(x.Description)),
 		recipe.Ingredients.Select(x => new IngredientResponseModel(x)))
 	{
 	}

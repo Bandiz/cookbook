@@ -21,7 +21,7 @@ public class Recipe
 
 	public int TotalTimeMinutes { get; set; }
 
-	public string ImageUrl { get; set; }
+	public string MainImage { get; set; }
 
 	public string CreatedBy { get; set; }
 
