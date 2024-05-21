@@ -1,3 +1,10 @@
-﻿namespace Cookbook.API.Models.Category;
+﻿using System.Collections.Generic;
 
-public record UpdateCategoryRequestModel(bool? Visible, string MainImage);
+namespace Cookbook.API.Models.Category;
+
+#nullable enable
+
+public record UpdateCategoryRequestModel(
+	bool? Visible,
+	string? MainImage,
+	List<string>? Images);

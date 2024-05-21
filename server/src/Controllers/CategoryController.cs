@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
@@ -6,6 +7,7 @@ using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
 
@@ -77,8 +79,8 @@ public class CategoryController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
-	public IActionResult CreateCategory(
-		[FromBody] CreateCategoryRequestModel model)
+	public async Task<IActionResult> CreateCategory(
+		[FromForm] CreateCategoryRequestModel model)
 	{
 		if (model == null)
 		{
@@ -91,10 +93,31 @@ public class CategoryController(
 			return BadRequest($"Category exists: {model.CategoryName}");
 		}
 
+		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null && model.Images.Count > 0)
+		{
+			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
+			
+			var (parsedImageIds, failedParsedIds) = ParseImageIds(imagesToCheck);
+
+			if (failedParsedIds.Count != 0)
+			{
+				return BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
+			}
+
+			var missingIds = await imageService.CheckExistingImages(parsedImageIds);
+
+			if (missingIds.Count != 0)
+			{
+				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
+			}
+		}
+
 		var category = new Category()
 		{
 			CategoryName = model.CategoryName,
 			Visible = model.Visible,
+			MainImage = model.MainImage,
+			Images = model.Images?.Distinct().ToList() ?? [],
 			CreatedBy = User.Identity.Name,
 			CreatedAt = DateTime.UtcNow
 		};
@@ -154,17 +177,36 @@ public class CategoryController(
 			updated = true;
 		}
 
-		if (!string.IsNullOrEmpty(model.MainImage))
+		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null && model.Images.Count > 0)
 		{
-			var missingIds = await imageService.CheckExistingImages([model.MainImage]);
+			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
+
+			var (parsedImageIds, failedParsedIds) = ParseImageIds(imagesToCheck);
+
+			if (failedParsedIds.Count != 0)
+			{
+				return BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
+			}
+
+			var missingIds = await imageService.CheckExistingImages(parsedImageIds);
 
 			if (missingIds.Count != 0)
 			{
-				return BadRequest($"Image does not exist");
+				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
 			}
 
-			existingCategory.MainImage = model.MainImage;
-			updated = true;
+			if (!string.IsNullOrEmpty(model.MainImage))
+			{
+				existingCategory.MainImage = model.MainImage;
+				updated = true;
+			}
+
+			if (model.Images != null && model.Images.Count > 0)
+			{
+				existingCategory.Images = model.Images.Distinct().ToList();
+				updated = true;
+			}
+
 		}
 
 		if (updated)
@@ -177,87 +219,24 @@ public class CategoryController(
 		return Ok(new CategoryResponseModel(existingCategory));
 	}
 
-	[Authorize(Roles = "Admin")]
-	[HttpPut("{categoryName}/images")]
-	public async Task<IActionResult> AddImages(
-		string categoryName,
-		[FromBody] CategoryImagesRequestModel model)
+	private static (List<ObjectId>, List<string>) ParseImageIds(IEnumerable<string> imagesToCheck)
 	{
-		if (string.IsNullOrEmpty(categoryName))
-		{
-			return BadRequest("Category name required");
-		}
-		if (model.ImageIds.Count == 0)
-		{
-			return BadRequest("No image id's were provided");
-		}
-		var existingCategory = categoryService.GetCategory(categoryName);
+		List<ObjectId> parsedImageIds = [];
+		List<string> failedParsedIds = [];
 
-		if (existingCategory == null)
-		{
-			return NotFound(categoryName);
-		}
+		var imagesIds = new List<string>(imagesToCheck)
+						.Where(x => !string.IsNullOrEmpty(x));
 
-		var missingIds = await imageService.CheckExistingImages(model.ImageIds);
-
-		if (missingIds.Count != 0)
+		foreach (var imageId in imagesIds)
 		{
-			return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
+			if (!ObjectId.TryParse(imageId, out var parsedId))
+			{
+				failedParsedIds.Add(imageId);
+				continue;
+			}
+			parsedImageIds.Add(parsedId);
 		}
 
-		var imagesBefore = existingCategory.Images.Count;
-
-		var uniqueIds = model.ImageIds.Except(existingCategory.Images).ToList();
-
-		if (uniqueIds.Count > 0)
-		{
-			existingCategory.Images.AddRange(uniqueIds);
-		}
-
-		if (imagesBefore != existingCategory.Images.Count)
-		{
-			existingCategory.UpdatedAt = DateTime.UtcNow;
-			existingCategory.UpdatedBy = User.Identity.Name;
-			categoryService.UpdateCategory(existingCategory);
-		}
-
-		return Ok(new CategoryResponseModel(existingCategory));
-	}
-
-	[Authorize(Roles = "Admin")]
-	[HttpDelete("{categoryName}/images")]
-	public IActionResult RemoveImages(
-		string categoryName,
-		[FromBody] CategoryImagesRequestModel model)
-	{
-		if (string.IsNullOrEmpty(categoryName))
-		{
-			return BadRequest("Category name required");
-		}
-
-		var existingCategory = categoryService.GetCategory(categoryName);
-
-		if (existingCategory == null)
-		{
-			return NotFound(categoryName);
-		}
-
-		if (model.ImageIds.Count == 0)
-		{
-			return Ok(new CategoryResponseModel(existingCategory));
-		}
-
-		var imagesBefore = existingCategory.Images.Count;
-
-		existingCategory.Images.RemoveAll(model.ImageIds.Contains);
-
-		if (imagesBefore != existingCategory.Images.Count)
-		{
-			existingCategory.UpdatedAt = DateTime.UtcNow;
-			existingCategory.UpdatedBy = User.Identity.Name;
-			categoryService.UpdateCategory(existingCategory);
-		}
-
-		return Ok(new CategoryResponseModel(existingCategory));
+		return (parsedImageIds, failedParsedIds);
 	}
 }

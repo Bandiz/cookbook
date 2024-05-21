@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Cookbook.API.Services.Interfaces;
 
@@ -12,5 +13,5 @@ public interface IImageService
 
 	Task<string[]> GetImageIds();
 
-	Task<List<string>> CheckExistingImages(List<string> imageIds);
+	Task<List<string>> CheckExistingImages(List<ObjectId> imageIds);
 }

@@ -1,3 +1,5 @@
-﻿namespace Cookbook.API.Models.Recipe;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record CreateInstructionRequestModel(string Description);
+namespace Cookbook.API.Models.Recipe;
+
+public record CreateInstructionRequestModel([Required] string Description);

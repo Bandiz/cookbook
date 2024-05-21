@@ -96,7 +96,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 	[Authorize(Roles = "Admin")]
 	[HttpPatch("{id:int}")]
-	public IActionResult UpdateRecipe(int id, UpdateRecipeRequestModel model)
+	public IActionResult UpdateRecipe(int id, [FromForm] UpdateRecipeRequestModel model)
 	{
 		if (model == null)
 		{

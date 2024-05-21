@@ -56,13 +56,9 @@ public class ImageService : IImageService
 		return imageIds;
 	}
 
-	public async Task<List<string>> CheckExistingImages(List<string> imageIds)
+	public async Task<List<string>> CheckExistingImages(List<ObjectId> imageIds)
 	{
-		var objectIdList = imageIds
-			.Select(id => new ObjectId(id))
-			.ToList();
-
-		var filter = Builders<GridFSFileInfo>.Filter.In("_id", objectIdList);
+		var filter = Builders<GridFSFileInfo>.Filter.In("_id", imageIds);
 		var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
 
 		var cursor = await _fileCollection
@@ -75,7 +71,7 @@ public class ImageService : IImageService
 			.Select(doc => doc["_id"].ToString())
 			.ToList();
 
-		var missingIds = imageIds.Except(existingIdStrings).ToList();
+		var missingIds = imageIds.Select(x => x.ToString()).Except(existingIdStrings).ToList();
 
 		return missingIds;
 	}
