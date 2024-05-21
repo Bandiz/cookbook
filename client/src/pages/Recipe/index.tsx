@@ -27,7 +27,7 @@ const RecipePage = () => {
         return <Typography variant="h2">no recipe to display</Typography>;
     }
     const {
-        imageUrl,
+        mainImage,
         title,
         categories,
         description,
@@ -62,7 +62,7 @@ const RecipePage = () => {
                         );
                     })}
                 </Stack>
-                <CardMedia component="img" src={imageUrl} alt={title} className={classes.image} />
+                <CardMedia component="img" src={mainImage} alt={title} className={classes.image} />
                 <CardContent className={classes.content}>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}

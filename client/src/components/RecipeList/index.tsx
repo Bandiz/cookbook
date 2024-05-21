@@ -19,11 +19,11 @@ export default function RecipeList({ recipes }: RecipeListProps) {
     return (
         <div className={classes.recipes}>
             {recipes.map((recipe: Recipe, index) => {
-                const { title, id, imageUrl, categories, totalTimeMinutes } = recipe;
+                const { title, id, mainImage, categories, totalTimeMinutes } = recipe;
                 return (
                     <Card key={index} className={classes.item}>
                         <Link to={`/recipe/${id}`}>
-                            <CardMedia component="img" src={imageUrl} alt={title} className={classes.image} />
+                            <CardMedia component="img" src={mainImage} alt={title} className={classes.image} />
                             <CardHeader title={title} align="center" titleTypographyProps={{ variant: 'h6' }} />
                         </Link>
                         <CardContent sx={{ pt: 0 }}>
