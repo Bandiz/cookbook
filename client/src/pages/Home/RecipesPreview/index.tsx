@@ -17,8 +17,8 @@ export default function RecipesPreview() {
                 <ImageListItem component={Link} to={`/recipe/${item.id}`} key={item.id}>
                     <img
                         className={classes.image}
-                        src={item.imageUrl}
-                        srcSet={item.imageUrl}
+                        src={item.mainImage}
+                        srcSet={item.mainImage}
                         alt={item.title}
                         loading="lazy"
                     />

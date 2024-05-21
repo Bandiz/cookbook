@@ -24,7 +24,7 @@ export type Ingredients = {
 export type Recipe = {
     id: string;
     categories: string[];
-    imageUrl: string;
+    mainImage: string;
     title: string;
     description: string;
     isPublished: boolean;
