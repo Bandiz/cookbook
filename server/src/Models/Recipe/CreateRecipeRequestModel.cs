@@ -9,7 +9,7 @@ public record CreateRecipeRequestModel(
 	int PrepTimeMinutes,
 	int CookTimeMinutes,
 	int TotalTimeMinutes,
-	string ImageUrl,
+	string MainImage,
 	List<string> Categories,
 	List<CreateInstructionRequestModel> Instructions,
 	List<CreateIngredientRequestModel> Ingredients);

@@ -56,7 +56,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 		{
 			Title = model.Title,
 			Description = model.Description,
-			MainImage = model.ImageUrl,
+			MainImage = model.MainImage,
 			CookTimeMinutes = model.CookTimeMinutes,
 			PrepTimeMinutes = model.PrepTimeMinutes,
 			TotalTimeMinutes = model.TotalTimeMinutes,

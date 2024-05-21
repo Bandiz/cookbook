@@ -6,5 +6,5 @@ public record GetRecipesResponseModel(
 	int Id,
 	string Title,
 	int TotalTimeMinutes,
-	string ImageUrl,
+	string MainImage,
 	IEnumerable<string> Categories);
