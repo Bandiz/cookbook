@@ -4,12 +4,18 @@ import { useRecipe } from '../../api/recipes';
 import { useCategoryList } from '../../api/categories';
 import { ADMIN } from '../../constants/routes';
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { Store } from 'antd/es/form/interface';
 
 export default function EditRecipe() {
     const { recipe } = useParams();
     const { data: recipeData, isLoading } = useRecipe(recipe ?? '');
     const { data: categories } = useCategoryList();
+    const [form] = Form.useForm();
     console.log('Edit recipe:', recipeData);
+
+    const onSubmit = (values: Store) => {
+        console.log('Form values:', values);
+    };
 
     if (!categories) {
         return null;
@@ -32,6 +38,8 @@ export default function EditRecipe() {
                     autoComplete="off"
                     // style={{ maxWidth: 500 }}
                     layout="vertical"
+                    form={form}
+                    onFinish={onSubmit}
                 >
                     <Row justify="space-evenly" gutter={[20, 20]}>
                         <Col span={12}>
@@ -106,6 +114,19 @@ export default function EditRecipe() {
                                                 >
                                                     <Form.Item
                                                         {...restField}
+                                                        name={[name, 'position']}
+                                                        label="Position"
+                                                        rules={[{ required: true, message: 'Missing position' }]}
+                                                    >
+                                                        <Input
+                                                            placeholder="1"
+                                                            type="number"
+                                                            min={1}
+                                                            style={{ width: '60px' }}
+                                                        />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        {...restField}
                                                         name={[name, 'amount']}
                                                         label="Amount"
                                                         rules={[{ required: true, message: 'Missing amount' }]}
@@ -160,8 +181,18 @@ export default function EditRecipe() {
                                                 >
                                                     <Form.Item
                                                         {...restField}
-                                                        name={[name, 'name']}
-                                                        rules={[{ required: true, message: 'Missing instruction' }]}
+                                                        name={[name, 'position']}
+                                                        label="Position"
+                                                        rules={[{ required: true, message: 'Missing position' }]}
+                                                        style={{ width: '60px' }}
+                                                    >
+                                                        <Input placeholder="1" type="number" min={1} />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        {...restField}
+                                                        name={[name, 'description']}
+                                                        label="Description"
+                                                        rules={[{ required: true, message: 'Missing description' }]}
                                                     >
                                                         <Input placeholder="Pour milk into a bowl" type="text" />
                                                     </Form.Item>
@@ -183,13 +214,7 @@ export default function EditRecipe() {
                                 </Form.List>
                             </Form.Item>
 
-                            <Button
-                                type="primary"
-                                loading={isLoading}
-                                icon={<SaveOutlined />}
-                                key="save"
-                                // onClick={handleSave}
-                            >
+                            <Button type="primary" loading={isLoading} icon={<SaveOutlined />} htmlType="submit">
                                 Save
                             </Button>
                         </Col>
