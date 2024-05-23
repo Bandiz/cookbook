@@ -1,6 +1,6 @@
 import { Button, Checkbox, Col, Form, Input, Layout, Row, Select, Spin, Typography, Image, Space } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { useRecipe } from '../../api/recipes';
+import { useRecipe, useUpdateRecipeMutation } from '../../api/recipes';
 import { useCategoryList } from '../../api/categories';
 import { ADMIN } from '../../constants/routes';
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
@@ -11,11 +11,8 @@ export default function EditRecipe() {
     const { data: recipeData, isLoading } = useRecipe(recipe ?? '');
     const { data: categories } = useCategoryList();
     const [form] = Form.useForm();
+    const { mutate: updateRecipe } = useUpdateRecipeMutation();
     console.log('Edit recipe:', recipeData);
-
-    const onSubmit = (values: Store) => {
-        console.log('Form values:', values);
-    };
 
     if (!categories) {
         return null;
@@ -23,6 +20,17 @@ export default function EditRecipe() {
     if (!recipeData || isLoading) {
         return <Spin size="large" />;
     }
+
+    const onSubmit = (values: Store) => {
+        console.log('Form values:', values);
+        !values.isPublished && (values.isPublished = false);
+        !values.description && (values.description = '');
+
+        values.id = recipeData.id;
+        values.updatedAt = new Date().toISOString();
+        updateRecipe(values);
+    };
+
     return (
         <Layout>
             <Layout.Header style={{ background: 'light' }}>
@@ -34,13 +42,7 @@ export default function EditRecipe() {
                 Go back
             </Link>
             <Layout.Content style={{ padding: '0 20px' }}>
-                <Form
-                    autoComplete="off"
-                    // style={{ maxWidth: 500 }}
-                    layout="vertical"
-                    form={form}
-                    onFinish={onSubmit}
-                >
+                <Form autoComplete="off" layout="vertical" form={form} onFinish={onSubmit}>
                     <Row justify="space-evenly" gutter={[20, 20]}>
                         <Col span={12}>
                             <Form.Item label="Title" name="title" initialValue={recipeData.title}>
@@ -98,7 +100,7 @@ export default function EditRecipe() {
                                     })}
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="Description">
+                            <Form.Item label="Description" name="description">
                                 <Input.TextArea placeholder="..." />
                             </Form.Item>
 
@@ -112,19 +114,6 @@ export default function EditRecipe() {
                                                     style={{ display: 'flex', marginBottom: 2 }}
                                                     align="baseline"
                                                 >
-                                                    <Form.Item
-                                                        {...restField}
-                                                        name={[name, 'position']}
-                                                        label="Position"
-                                                        rules={[{ required: true, message: 'Missing position' }]}
-                                                    >
-                                                        <Input
-                                                            placeholder="1"
-                                                            type="number"
-                                                            min={1}
-                                                            style={{ width: '60px' }}
-                                                        />
-                                                    </Form.Item>
                                                     <Form.Item
                                                         {...restField}
                                                         name={[name, 'amount']}
@@ -179,15 +168,6 @@ export default function EditRecipe() {
                                                     style={{ display: 'flex', marginBottom: 2 }}
                                                     align="baseline"
                                                 >
-                                                    <Form.Item
-                                                        {...restField}
-                                                        name={[name, 'position']}
-                                                        label="Position"
-                                                        rules={[{ required: true, message: 'Missing position' }]}
-                                                        style={{ width: '60px' }}
-                                                    >
-                                                        <Input placeholder="1" type="number" min={1} />
-                                                    </Form.Item>
                                                     <Form.Item
                                                         {...restField}
                                                         name={[name, 'description']}

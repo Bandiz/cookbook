@@ -8,7 +8,7 @@ export const CREATE_CATEGORY = '/category/new';
 export const CATEGORIES = '/categories';
 export const ABOUT = '/about';
 export const ADMIN = '/admin';
-export const CREATE_RECIPE = '/create-recipe';
+export const CREATE_RECIPE = '/recipe/new';
 export const LOGIN = '/login';
 export const NOT_FOUND = '/not-found';
 

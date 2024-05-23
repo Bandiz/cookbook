@@ -1,8 +1,11 @@
-import { Alert, Checkbox, Space, Spin, Table, TableColumnsType } from 'antd';
+import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType } from 'antd';
 import { Recipe } from '../../../types';
 import { displayDate } from '../utils';
 import { useRecipes } from '../../../api/recipes';
 import { DeleteRecipeAction, EditRecipeAction } from './ActionButtons';
+import { PlusOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { CREATE_RECIPE } from '../../../constants/routes';
 
 const columns: TableColumnsType<Recipe> = [
     {
@@ -53,6 +56,7 @@ const columns: TableColumnsType<Recipe> = [
 
 export default function RecipesTable() {
     const { data: recipes, isLoading, isError } = useRecipes();
+    const navigate = useNavigate();
 
     if (isLoading) {
         return <Spin spinning size="large" />;
@@ -62,5 +66,16 @@ export default function RecipesTable() {
         return <Alert message="Failed to load recipes" type="error" />;
     }
 
-    return <Table columns={columns} rowKey="id" dataSource={recipes} />;
+    return (
+        <>
+            <Table columns={columns} rowKey="id" dataSource={recipes} />;
+            <FloatButton
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => {
+                    navigate(CREATE_RECIPE);
+                }}
+            />
+        </>
+    );
 }
