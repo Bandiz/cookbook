@@ -8,17 +8,13 @@ type Auditable = {
 };
 
 export type Instructions = {
-    id: number;
     description: string;
-    position: number;
 };
 
 export type Ingredients = {
-    id: number;
     amount: number;
     measurementType: string;
     name: string;
-    position: number;
 };
 
 export type Recipe = {
