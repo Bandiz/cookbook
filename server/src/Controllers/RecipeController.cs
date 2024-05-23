@@ -57,20 +57,20 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 			Title = model.Title,
 			Description = model.Description,
 			MainImage = model.MainImage,
-			CookTimeMinutes = model.CookTimeMinutes,
-			PrepTimeMinutes = model.PrepTimeMinutes,
-			TotalTimeMinutes = model.TotalTimeMinutes,
-			Categories = model.Categories,
-			Ingredients = model.Ingredients.Select((x, index) => new Ingredient
+			CookTimeMinutes = model.CookTimeMinutes ?? 0,
+			PrepTimeMinutes = model.PrepTimeMinutes ?? 0,
+			TotalTimeMinutes = model.TotalTimeMinutes ?? 0,
+			Categories = model.Categories ?? [],
+			Ingredients = model.Ingredients?.Select((x, index) => new Ingredient
 			{
 				Amount = x.Amount,
 				MeasurementType = x.MeasurementType,
 				Name = x.Name,
-			}).ToList(),
-			Instructions = model.Instructions.Select(x => new Instruction
+			}).ToList() ?? [],
+			Instructions = model.Instructions?.Select(x => new Instruction
 			{
 				Description = x.Description,
-			}).ToList(),
+			}).ToList() ?? [],
 			CreatedBy = User.Identity.Name,
 			CreatedAt = DateTime.UtcNow
 		};
