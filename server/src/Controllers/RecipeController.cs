@@ -45,7 +45,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
-	public IActionResult CreateRecipe([FromForm] CreateRecipeRequestModel model)
+	public IActionResult CreateRecipe([FromBody] CreateRecipeRequestModel model)
 	{
 		if (model == null)
 		{
@@ -96,7 +96,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 	[Authorize(Roles = "Admin")]
 	[HttpPatch("{id:int}")]
-	public IActionResult UpdateRecipe(int id, [FromForm] UpdateRecipeRequestModel model)
+	public IActionResult UpdateRecipe(int id, [FromBody] UpdateRecipeRequestModel model)
 	{
 		if (model == null)
 		{

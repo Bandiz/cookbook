@@ -80,7 +80,7 @@ public class CategoryController(
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> CreateCategory(
-		[FromForm] CreateCategoryRequestModel model)
+		[FromBody] CreateCategoryRequestModel model)
 	{
 		if (model == null)
 		{
