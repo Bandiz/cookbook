@@ -5,7 +5,7 @@ namespace Cookbook.API.Models.Recipe;
 
 #nullable enable
 public record UpdateRecipeRequestModel(
-	[property: MinLength(2)] string? Title,
+	[MinLength(2)] string? Title,
 	string? Description,
 	int? PrepTimeMinutes,
 	int? CookTimeMinutes,
