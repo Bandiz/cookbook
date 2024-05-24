@@ -71,6 +71,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 			{
 				Description = x.Description,
 			}).ToList() ?? [],
+			IsPublished = model.IsPublished ?? false,
 			CreatedBy = User.Identity.Name,
 			CreatedAt = DateTime.UtcNow
 		};
@@ -171,6 +172,12 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 			{
 				Description = x.Description,
 			}).ToList();
+		}
+
+		if (model.IsPublished.HasValue && recipe.IsPublished != model.IsPublished)
+		{
+			updated = true;
+			recipe.IsPublished = model.IsPublished.Value;
 		}
 
 		if (updated)

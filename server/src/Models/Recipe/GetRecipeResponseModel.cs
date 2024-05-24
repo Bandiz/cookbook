@@ -14,7 +14,8 @@ public record GetRecipeResponseModel(
 	string MainImage,
 	IEnumerable<string> Categories,
 	IEnumerable<InstructionResponseModel> Instructions,
-	IEnumerable<IngredientResponseModel> Ingredients)
+	IEnumerable<IngredientResponseModel> Ingredients,
+	bool IsPublished)
 {
 	public GetRecipeResponseModel(RecipeEntity recipe) : this(
 		recipe.Id,
@@ -26,7 +27,8 @@ public record GetRecipeResponseModel(
 		recipe.MainImage,
 		recipe.Categories,
 		recipe.Instructions.Select(x => new InstructionResponseModel(x.Description)),
-		recipe.Ingredients.Select(x => new IngredientResponseModel(x)))
+		recipe.Ingredients.Select(x => new IngredientResponseModel(x)),
+		recipe.IsPublished)
 	{
 	}
 }

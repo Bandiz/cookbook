@@ -12,4 +12,6 @@ public record CreateRecipeRequestModel(
 	string MainImage,
 	List<string> Categories,
 	List<CreateInstructionRequestModel> Instructions,
-	List<CreateIngredientRequestModel> Ingredients);
+	List<CreateIngredientRequestModel> Ingredients,
+	bool? IsPublished
+	);

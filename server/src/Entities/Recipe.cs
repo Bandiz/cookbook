@@ -37,4 +37,6 @@ public class Recipe
 
 	public ICollection<Ingredient> Ingredients { get; set; }
 
+	public bool IsPublished { get; set; }
+
 }

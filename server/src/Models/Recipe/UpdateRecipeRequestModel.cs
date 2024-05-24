@@ -13,5 +13,6 @@ public record UpdateRecipeRequestModel(
 	string? MainImage,
 	List<string>? Categories,
 	List<IngredientRequestModel>? Ingredients,
-	List<InstructionRequestModel>? Instructions
+	List<InstructionRequestModel>? Instructions,
+	bool? IsPublished
 	);
