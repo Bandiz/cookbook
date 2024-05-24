@@ -40,7 +40,8 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 			recipe.Title,
 			recipe.TotalTimeMinutes,
 			recipe.MainImage,
-			recipe.Categories)));
+			recipe.Categories,
+			recipe.IsPublished)));
 	}
 
 	[Authorize(Roles = "Admin")]
