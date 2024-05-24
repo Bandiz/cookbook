@@ -40,9 +40,25 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 			recipe.Title,
 			recipe.TotalTimeMinutes,
 			recipe.MainImage,
+			recipe.Categories)));
+	}
+
+	[Authorize(Roles = "Admin")]
+	[HttpGet("list")]
+	public IActionResult GetRecipesList()
+	{
+		var recipes = recipeService.GetRecipes("", 0, []);
+		return Ok(recipes.Select(recipe => new GetRecipesListResponseModel(
+			recipe.Id,
+			recipe.Title,
+			recipe.CreatedBy,
+			recipe.CreatedAt,
+			recipe.UpdatedBy,
+			recipe.UpdatedAt,
 			recipe.Categories,
 			recipe.IsPublished)));
 	}
+
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost]

@@ -7,5 +7,4 @@ public record GetRecipesResponseModel(
 	string Title,
 	int TotalTimeMinutes,
 	string MainImage,
-	IEnumerable<string> Categories,
-	bool IsPublished);
+	IEnumerable<string> Categories);
