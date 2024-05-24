@@ -12,7 +12,6 @@ export default function EditRecipe() {
     const { data: categories } = useCategoryList();
     const [form] = Form.useForm();
     const { mutate: updateRecipe } = useUpdateRecipeMutation();
-    console.log('Edit recipe:', recipeData);
 
     if (!categories) {
         return null;
@@ -22,12 +21,7 @@ export default function EditRecipe() {
     }
 
     const onSubmit = (values: Store) => {
-        console.log('Form values:', values);
-        !values.isPublished && (values.isPublished = false);
-        !values.description && (values.description = '');
-
         values.id = recipeData.id;
-        values.updatedAt = new Date().toISOString();
         updateRecipe(values);
     };
 
