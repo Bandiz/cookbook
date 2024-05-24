@@ -1,4 +1,4 @@
-import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType } from 'antd';
+import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType, Tag } from 'antd';
 import { Recipe } from '../../../types';
 import { displayDate } from '../utils';
 import { DeleteRecipeAction, EditRecipeAction } from './ActionButtons';
@@ -21,6 +21,19 @@ const columns: TableColumnsType<Recipe> = [
         dataIndex: 'isPublished',
         render: (value: boolean) => {
             return <Checkbox checked={value} disabled />;
+        },
+    },
+    {
+        title: 'Categories',
+        dataIndex: 'categories',
+        render: (_, record) => {
+            return record.categories.map((category) => {
+                return (
+                    <Tag key={category} color="lime">
+                        {category}
+                    </Tag>
+                );
+            });
         },
     },
     {
