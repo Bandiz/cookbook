@@ -26,7 +26,7 @@ const columns: TableColumnsType<Category> = [
     { title: 'Created by', dataIndex: 'createdBy' },
     { title: 'Created at', dataIndex: 'createdAt', render: displayDate },
     { title: 'Updated by', dataIndex: 'updatedBy' },
-    { title: 'Updated at', dataIndex: 'UpdatedAt', render: displayDate },
+    { title: 'Updated at', dataIndex: 'updatedAt', render: displayDate },
     {
         title: 'Action',
         dataIndex: '',
