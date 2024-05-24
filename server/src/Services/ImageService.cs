@@ -22,16 +22,31 @@ public class ImageService : IImageService
 		_imageBucket = new GridFSBucket(cookbookDb, new GridFSBucketOptions() { BucketName = "images" });
 	}
 
-	public async Task<string> UploadImage(Stream fs, string filename)
+	public async Task<string> UploadImage(Stream fs, string filename, int? recipeId = null, List<string> categories = null)
 	{
-		var result = await _imageBucket.UploadFromStreamAsync(filename, fs);
+		var options = new GridFSUploadOptions();
+
+		if (recipeId.HasValue)
+		{
+			options.Metadata = new BsonDocument
+			{
+				{ "recipes", new BsonArray(new [] { recipeId.Value }) }
+			};
+		}
+
+		if (categories != null)
+		{
+			options.Metadata ??= [];
+			options.Metadata.Add("categories", new BsonArray(categories));
+		}
+
+		var result = await _imageBucket.UploadFromStreamAsync(filename, fs, options);
 
 		return result.ToString();
 	}
 
-	public async Task<(MemoryStream, string)> GetImage(string id)
+	public async Task<(MemoryStream, string)> GetImage(ObjectId imageId)
 	{
-		var imageId = ObjectId.Parse(id);
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
 		var fileInfo = (await _imageBucket.FindAsync(filter)).FirstOrDefault();
 
@@ -74,5 +89,19 @@ public class ImageService : IImageService
 		var missingIds = imageIds.Select(x => x.ToString()).Except(existingIdStrings).ToList();
 
 		return missingIds;
+	}
+
+	public async Task SetMetadata(ObjectId imageId, string metadataKey, string metadataValue)
+	{
+		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
+		var update = Builders<GridFSFileInfo>.Update.Set(x => x.Metadata[metadataKey], new BsonArray(new[] { metadataValue }));
+
+		await _fileCollection.UpdateOneAsync(filter, update);
+	}
+
+	public async Task DeleteImage(ObjectId imageId)
+	{
+		// TODO: Check if image is used in any recipes or categories
+		await _imageBucket.DeleteAsync(imageId);
 	}
 }

@@ -146,6 +146,8 @@ public class CategoryController(
 			return NotFound(categoryName);
 		}
 
+		// TODO: add transaction
+		// TODO: remove image metadata
 		recipeService.RemoveCategoryAll(categoryName);
 		categoryService.DeleteCategory(categoryName);
 
@@ -177,7 +179,7 @@ public class CategoryController(
 			updated = true;
 		}
 
-		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null && model.Images.Count > 0)
+		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null)
 		{
 			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
 
@@ -193,6 +195,11 @@ public class CategoryController(
 			if (missingIds.Count != 0)
 			{
 				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
+			}
+
+			foreach (var imageId in parsedImageIds)
+			{
+				await imageService.SetMetadata(imageId, "categories", existingCategory.CategoryName);
 			}
 
 			if (!string.IsNullOrEmpty(model.MainImage))

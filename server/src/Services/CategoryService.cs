@@ -1,9 +1,11 @@
 ﻿using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cookbook.API.Services;
 
@@ -54,5 +56,13 @@ public class CategoryService : ICategoryService
 	public void UpdateCategory(Category category)
 	{
 		_categories.ReplaceOne(x => x.CategoryName == category.CategoryName, category);
+	}
+
+	public async Task<bool> CheckIfExists(string categoryName)
+	{
+		var filter = Builders<Category>.Filter.Eq("_id", categoryName);
+		var count = await _categories.CountDocumentsAsync(filter);
+
+		return count > 0;
 	}
 }

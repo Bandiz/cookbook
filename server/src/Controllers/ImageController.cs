@@ -1,30 +1,79 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Cookbook.API.Models.Image;
 using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
+
 
 [Authorize]
 [Route("[controller]")]
 [ApiController]
-public class ImageController(IImageService imageService) : ControllerBase
+public class ImageController(IImageService imageService, ICategoryService categoryService) : ControllerBase
 {
+	const int MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+	static readonly IReadOnlyList<string> VALID_FILE_TYPES = new List<string>
+	{
+		"image/jpeg", 
+		"image/png", 
+		"image/gif" 
+	}.AsReadOnly();
+
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
-	public async Task<IActionResult> UploadImage(IFormFile file)
+	public async Task<IActionResult> UploadImages(
+		[FromForm] List<IFormFile> files,
+		[FromQuery] List<string> categories,
+		[FromQuery] int? recipeId)
 	{
-		var recipe = await imageService.UploadImage(file.OpenReadStream(), file.FileName);
+		if (files == null || files.Count == 0)
+		{
+			return BadRequest("No files uploaded");
+		}
+		foreach (var category in categories)
+		{
+			if (!await categoryService.CheckIfExists(category))
+			{
+				return BadRequest($"Category {category} does not exist");
+			}
+		}	
 
-		return Ok(recipe);
+		var imageIds = new List<string>();
+
+		foreach (var file in files)
+		{
+			if (file.Length > MAX_FILE_SIZE)
+			{
+				return BadRequest($"File {file.FileName} is too large");
+			}
+
+			if (!VALID_FILE_TYPES.Contains(file.ContentType))
+			{
+				return BadRequest($"Invalid file type for file {file.FileName}");
+			}
+
+			var imageId = await imageService.UploadImage(file.OpenReadStream(), file.FileName, recipeId, categories);
+			imageIds.Add(imageId);
+		}
+
+		return Ok(new UploadImagesResponseModel(imageIds));
 	}
 
 	[AllowAnonymous]
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetImage(string id)
 	{
-		var (imageStream, filename) = await imageService.GetImage(id);
+		if (!ObjectId.TryParse(id, out var imageId))
+		{
+			return BadRequest("Invalid imageId");
+		}
+
+		var (imageStream, filename) = await imageService.GetImage(imageId);
 
 		return File(imageStream.ToArray(), GetContentType(filename));
 	}
@@ -39,6 +88,28 @@ public class ImageController(IImageService imageService) : ControllerBase
 		return Ok(imageIds);
 	}
 
+	[Authorize(Roles = "Admin")]
+	[HttpGet("byCategory")]
+	public async Task<IActionResult> GetImagesByCategory()
+	{
+		var imageIds = await imageService.GetImageIds();
+
+		return Ok(new GetImagesByCategoryResponseModel([.. imageIds], []));
+	}
+
+	[Authorize(Roles = "Admin")]
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> DeleteImage(string id)
+	{
+		if (!ObjectId.TryParse(id, out var imageId))
+		{
+			return BadRequest("Invalid imageId");
+		}
+
+		await imageService.DeleteImage(imageId);
+
+		return Ok();
+	}
 
 	private static string GetContentType(string filename)
 	{
