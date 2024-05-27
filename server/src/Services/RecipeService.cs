@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Driver;
 
 namespace Cookbook.API.Services;
 
-public class RecipeService : IRecipeService
+public class RecipeService(IDataAccess DataAccess, ICategoryService categoryService) : IRecipeService
 {
-	private readonly IMongoCollection<Counter> _counters;
-	private readonly IMongoCollection<Recipe> _recipes;
-	private readonly ICategoryService categoryService;
-
-	public RecipeService(CookbookDatabaseSettings settings, IMongoClient mongoClient, ICategoryService categoryService)
-	{
-		this.categoryService = categoryService;
-		var cookbookDb = mongoClient.GetDatabase(settings.DatabaseName);
-
-		_counters = cookbookDb.GetCollection<Counter>($"{nameof(Counter).ToLower()}s");
-		_recipes = cookbookDb.GetCollection<Recipe>($"{nameof(Recipe).ToLower()}s");
-	}
+	private readonly IMongoCollection<Counter> _counters = DataAccess.Counters;
+	private readonly IMongoCollection<Recipe> _recipes = DataAccess.Recipes;
+	private readonly ICategoryService categoryService = categoryService;
 
 	public Recipe GetRecipe(int id)
 	{

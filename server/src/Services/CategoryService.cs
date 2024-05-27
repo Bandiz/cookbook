@@ -1,23 +1,15 @@
-﻿using Cookbook.API.Configuration;
-using Cookbook.API.Entities;
-using Cookbook.API.Services.Interfaces;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cookbook.API.Entities;
+using Cookbook.API.Services.Interfaces;
+using MongoDB.Driver;
 
 namespace Cookbook.API.Services;
 
-public class CategoryService : ICategoryService
+public class CategoryService(IDataAccess dataAccess) : ICategoryService
 {
-	private readonly IMongoCollection<Category> _categories;
-
-	public CategoryService(CookbookDatabaseSettings settings, IMongoClient mongoClient)
-	{
-		var cookbookDb = mongoClient.GetDatabase(settings.DatabaseName);
-		_categories = cookbookDb.GetCollection<Category>("categories");
-	}
+	private readonly IMongoCollection<Category> _categories = dataAccess.Categories;
 
 	public Category GetCategory(string categoryName)
 	{

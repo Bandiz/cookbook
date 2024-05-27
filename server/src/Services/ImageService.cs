@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Cookbook.API.Configuration;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -10,17 +9,10 @@ using MongoDB.Driver.GridFS;
 
 namespace Cookbook.API.Services;
 
-public class ImageService : IImageService
+public class ImageService(IDataAccess dataAccess) : IImageService
 {
-	private readonly GridFSBucket _imageBucket;
-	private readonly IMongoCollection<GridFSFileInfo> _fileCollection;
-
-	public ImageService(CookbookDatabaseSettings settings, IMongoClient mongoClient)
-	{
-		var cookbookDb = mongoClient.GetDatabase(settings.DatabaseName);
-		_fileCollection = cookbookDb.GetCollection<GridFSFileInfo>("images.files");
-		_imageBucket = new GridFSBucket(cookbookDb, new GridFSBucketOptions() { BucketName = "images" });
-	}
+	private readonly GridFSBucket _imageBucket = dataAccess.ImageBucket;
+	private readonly IMongoCollection<GridFSFileInfo> _files = dataAccess.Files;
 
 	public async Task<string> UploadImage(Stream fs, string filename, int? recipeId = null, List<string> categories = null)
 	{
@@ -60,7 +52,7 @@ public class ImageService : IImageService
 	{
 		var projection = Builders<GridFSFileInfo>.Projection
 			.Include("_id");
-		var cursor = await _fileCollection
+		var cursor = await _files
 			.Find(Builders<GridFSFileInfo>.Filter.Empty)
 			.Project(projection)
 			.ToCursorAsync();
@@ -77,7 +69,7 @@ public class ImageService : IImageService
 		var filter = Builders<GridFSFileInfo>.Filter.In("_id", imageIds);
 		var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
 
-		var cursor = await _fileCollection
+		var cursor = await _files
 			.Find(filter)
 			.Project(projection)
 			.ToCursorAsync();
@@ -97,7 +89,7 @@ public class ImageService : IImageService
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
 		var update = Builders<GridFSFileInfo>.Update.Set(x => x.Metadata[metadataKey], new BsonArray(new[] { metadataValue }));
 
-		await _fileCollection.UpdateOneAsync(filter, update);
+		await _files.UpdateOneAsync(filter, update);
 	}
 
 	public async Task DeleteImage(ObjectId imageId)

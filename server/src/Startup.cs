@@ -80,6 +80,7 @@ public class Startup(IConfiguration configuration)
 		});
 
 
+		services.AddSingleton<IDataAccess, DataAccess>();
 		services.AddSingleton<IRecipeService, RecipeService>();
 		services.AddSingleton<IImageService, ImageService>();
 		services.AddSingleton<ICategoryService, CategoryService>();
