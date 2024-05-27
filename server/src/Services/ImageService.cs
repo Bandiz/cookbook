@@ -58,17 +58,18 @@ public class ImageService : IImageService
 
 	public async Task<string[]> GetImageIds()
 	{
-		var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
+		var projection = Builders<GridFSFileInfo>.Projection
+			.Include("_id");
 		var cursor = await _fileCollection
 			.Find(Builders<GridFSFileInfo>.Filter.Empty)
 			.Project(projection)
 			.ToCursorAsync();
 		var imageIds = cursor
 			.ToEnumerable()
-			.Select(doc => doc["_id"].ToString())
-			.ToArray();
+			.Select(doc => new { id = doc["_id"].ToString()	})
+			.ToList();
 
-		return imageIds;
+		return imageIds.Select(x => x.id).ToArray();
 	}
 
 	public async Task<List<string>> CheckExistingImages(List<ObjectId> imageIds)
@@ -103,5 +104,28 @@ public class ImageService : IImageService
 	{
 		// TODO: Check if image is used in any recipes or categories
 		await _imageBucket.DeleteAsync(imageId);
+	}
+
+	public async Task<List<ImageInfo>> GetImageByCategory()
+	{
+		var filter = Builders<GridFSFileInfo>.Filter.Empty;
+
+		var cursor = await _imageBucket.FindAsync(filter);
+
+		var list = await cursor.ToListAsync();
+		var flattened = list.Select(x =>
+		{
+			List<string> categories = null;
+			if (x.Metadata is not null
+				&& x.Metadata.TryGetValue("categories", out var categoriesValue)
+				&& categoriesValue is BsonArray categoriesArray)
+			{
+				categories = categoriesArray.Select(x => x.AsString).ToList();
+			}
+
+			return new ImageInfo(x.Id.ToString(), categories ?? []);
+		});
+
+		return flattened.ToList();
 	}
 }
