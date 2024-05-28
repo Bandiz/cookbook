@@ -1,9 +1,6 @@
 ﻿using System;
-using AspNetCore.Identity.Mongo;
 using Cookbook.API.Configuration;
-using Cookbook.API.Entities;
-using Cookbook.API.Services;
-using Cookbook.API.Services.Interfaces;
+using Cookbook.API.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
 
 namespace Cookbook.API;
 
@@ -43,19 +39,6 @@ public class Startup(IConfiguration configuration)
 		Configuration.GetSection("Authentication").Bind(authenticationSettings);
 		services.AddSingleton(authenticationSettings);
 
-		var config = new CookbookDatabaseSettings();
-		Configuration.GetSection(nameof(CookbookDatabaseSettings)).Bind(config);
-		services.AddSingleton(config);
-
-		services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(config.ConnectionString));
-
-		services.AddIdentityMongoDbProvider<CookbookUser>(
-			identity => { },
-			mongo =>
-			{
-				mongo.ConnectionString = $"{config.ConnectionString}/{config.DatabaseName}";
-			});
-
 		services.AddAuthentication(
 			options =>
 			{
@@ -79,11 +62,8 @@ public class Startup(IConfiguration configuration)
 			c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cookbook.API", Version = "v1" });
 		});
 
-
-		services.AddSingleton<IDataAccess, DataAccess>();
-		services.AddSingleton<IRecipeService, RecipeService>();
-		services.AddSingleton<IImageService, ImageService>();
-		services.AddSingleton<ICategoryService, CategoryService>();
+		services.AddMongoDb(Configuration);
+		services.AddCookbookServices();
 
 		var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
 		ConventionRegistry.Register("camelCase", conventionPack, t => true);
