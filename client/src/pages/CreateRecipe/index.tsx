@@ -72,6 +72,9 @@ export default function CreateRecipe() {
                                 <Form.Item label="Categories" name="categories">
                                     <Select allowClear mode="multiple" placeholder="Breakfast, Dinner">
                                         {categories.map((category) => {
+                                            if (!category || !category.visible) {
+                                                return null;
+                                            }
                                             return (
                                                 <Select.Option
                                                     key={category.categoryName}
