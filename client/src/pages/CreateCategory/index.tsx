@@ -1,4 +1,18 @@
-import { Button, Checkbox, Col, Divider, Empty, Layout, Row, Space, Spin, Typography, Image } from 'antd';
+import {
+    Button,
+    Checkbox,
+    Col,
+    Divider,
+    Empty,
+    Layout,
+    Row,
+    Space,
+    Spin,
+    Typography,
+    Image,
+    Breadcrumb,
+    Card,
+} from 'antd';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useCategory, useUpdateCategoryMutation } from '../../api/categories';
@@ -49,83 +63,89 @@ export default function CreateCategory() {
 
     return (
         <Layout>
-            <Layout.Header>
-                <Typography.Title level={1} style={{ color: 'white' }}>
-                    {categoryName}
-                </Typography.Title>
-            </Layout.Header>
-            <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
-                Go back
-            </Link>
-            <Layout.Content
-                style={{
-                    padding: '0 20px',
-                }}
-            >
-                <Row>
-                    <Col span={24}>
-                        <Divider>
-                            <Typography.Title level={3}>Main image & visibility</Typography.Title>
-                        </Divider>
-                        <Row gutter={[20, 20]}>
-                            <Col
-                                md={12}
-                                sm={24}
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'right',
-                                }}
-                            >
-                                {!category.mainImage && <Empty description="No main image" />}
-                                {category.mainImage && (
-                                    <Image
-                                        preview={false}
-                                        src={`/image/${category.mainImage}`}
-                                        style={{
-                                            maxWidth: 400,
-                                            ...(!category.visible && { filter: 'grayscale(100%)' }),
-                                        }}
-                                    />
-                                )}
-                            </Col>
-                            <Col md={12} sm={24}>
-                                <Checkbox
-                                    checked={category.visible}
-                                    onChange={(event) => {
-                                        updateCategory({
-                                            categoryName: category.categoryName,
-                                            visible: event.target.checked,
-                                        });
+            <Layout.Content style={{ padding: '0 20px' }}>
+                <Breadcrumb style={{ margin: '16px 0' }}>
+                    <Breadcrumb.Item>
+                        <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                            Admin
+                        </Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        <Link
+                            className="ant-typography css-dev-only-do-not-override-mzwlov"
+                            to={ADMIN + '?activeTab=2'}
+                        >
+                            Categories
+                        </Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>{categoryName}</Breadcrumb.Item>
+                </Breadcrumb>
+                <Card>
+                    <Row>
+                        <Col span={24}>
+                            <Divider>
+                                <Typography.Title level={3}>Main image & visibility</Typography.Title>
+                            </Divider>
+                            <Row gutter={[20, 20]}>
+                                <Col
+                                    md={12}
+                                    sm={24}
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'right',
                                     }}
                                 >
-                                    Is visible
-                                </Checkbox>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Divider>
-                            <Typography.Title level={3}>Images</Typography.Title>
-                        </Divider>
-                        <Image.PreviewGroup preview={imagesPreview}>
-                            <Space>
-                                {category.images.map((image) => (
-                                    <Image key={image} style={{ maxWidth: 200 }} src={`/image/${image}`} />
-                                ))}
-                            </Space>
-                        </Image.PreviewGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Divider>
-                            <Typography.Title level={3}>Recipes</Typography.Title>
-                        </Divider>
-                        <ExpandedRecipeTable category={category} />
-                    </Col>
-                </Row>
+                                    {!category.mainImage && <Empty description="No main image" />}
+                                    {category.mainImage && (
+                                        <Image
+                                            preview={false}
+                                            src={`/image/${category.mainImage}`}
+                                            style={{
+                                                maxWidth: 400,
+                                                ...(!category.visible && { filter: 'grayscale(100%)' }),
+                                            }}
+                                        />
+                                    )}
+                                </Col>
+                                <Col md={12} sm={24}>
+                                    <Checkbox
+                                        checked={category.visible}
+                                        onChange={(event) => {
+                                            updateCategory({
+                                                categoryName: category.categoryName,
+                                                visible: event.target.checked,
+                                            });
+                                        }}
+                                    >
+                                        Is visible
+                                    </Checkbox>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Divider>
+                                <Typography.Title level={3}>Images</Typography.Title>
+                            </Divider>
+                            <Image.PreviewGroup preview={imagesPreview}>
+                                <Space>
+                                    {category.images.map((image) => (
+                                        <Image key={image} style={{ maxWidth: 200 }} src={`/image/${image}`} />
+                                    ))}
+                                </Space>
+                            </Image.PreviewGroup>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Divider>
+                                <Typography.Title level={3}>Recipes</Typography.Title>
+                            </Divider>
+                            <ExpandedRecipeTable category={category} />
+                        </Col>
+                    </Row>
+                </Card>
             </Layout.Content>
         </Layout>
     );
