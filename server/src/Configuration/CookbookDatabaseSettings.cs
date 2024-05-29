@@ -8,5 +8,6 @@ public class CookbookDatabaseSettings
 	public string RecipeCollectionName { get; set; }
 	public string CategoryCollectionName { get; set; }
 	public string ImageCollectionName { get; set; }
+	public string ImageChunksCollectionName { get; set; }
 	public string ImageBucketName { get; set; }
 }

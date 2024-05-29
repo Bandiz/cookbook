@@ -1,6 +1,7 @@
 ﻿using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
@@ -8,21 +9,24 @@ namespace Cookbook.API.Services;
 
 public class DataAccess : IDataAccess
 {
-	private readonly IMongoDatabase _database;
-
 	public DataAccess(CookbookDatabaseSettings settings, IMongoClient mongoClient)
 	{
-		_database = mongoClient.GetDatabase(settings.DatabaseName);
-		Counters = _database.GetCollection<Counter>(settings.CounterCollectionName);
-		Recipes = _database.GetCollection<Recipe>(settings.RecipeCollectionName
+		Database = mongoClient.GetDatabase(settings.DatabaseName);
+		Counters = Database.GetCollection<Counter>(settings.CounterCollectionName);
+		Recipes = Database.GetCollection<Recipe>(settings.RecipeCollectionName
 			);
-		Categories = _database.GetCollection<Category>(settings.CategoryCollectionName);
-		Files = _database.GetCollection<GridFSFileInfo>(settings.ImageCollectionName);
-		ImageBucket = new GridFSBucket(_database, new() 
+		Categories = Database.GetCollection<Category>(settings.CategoryCollectionName);
+		Files = Database.GetCollection<GridFSFileInfo>(settings.ImageCollectionName);
+		FilesChunks = Database.GetCollection<BsonDocument>(settings.ImageChunksCollectionName);
+		ImageBucket = new GridFSBucket(Database, new() 
 		{ 
 			BucketName = settings.ImageBucketName 
 		});
 	}
+
+	private IMongoDatabase Database { get; }
+
+	public IMongoClient Client => Database.Client;
 
 	public IMongoCollection<Counter> Counters { get; }
 
@@ -31,6 +35,8 @@ public class DataAccess : IDataAccess
 	public IMongoCollection<Category> Categories { get; }
 
 	public IMongoCollection<GridFSFileInfo> Files { get; }
+
+	public IMongoCollection<BsonDocument> FilesChunks { get; }
 
 	public GridFSBucket ImageBucket { get; }
 

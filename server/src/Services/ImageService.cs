@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
 namespace Cookbook.API.Services;
 
-public class ImageService(IDataAccess dataAccess) : IImageService
+public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpContextAccessor) : IImageService
 {
 	private readonly GridFSBucket _imageBucket = dataAccess.ImageBucket;
 	private readonly IMongoCollection<GridFSFileInfo> _files = dataAccess.Files;
+	private readonly IMongoCollection<BsonDocument> _filesChunks = dataAccess.FilesChunks;
 
 	public async Task<string> UploadImage(Stream fs, string filename, int? recipeId = null, List<string> categories = null)
 	{
@@ -58,7 +62,7 @@ public class ImageService(IDataAccess dataAccess) : IImageService
 			.ToCursorAsync();
 		var imageIds = cursor
 			.ToEnumerable()
-			.Select(doc => new { id = doc["_id"].ToString()	})
+			.Select(doc => new { id = doc["_id"].ToString() })
 			.ToList();
 
 		return imageIds.Select(x => x.id).ToArray();
@@ -94,8 +98,80 @@ public class ImageService(IDataAccess dataAccess) : IImageService
 
 	public async Task DeleteImage(ObjectId imageId)
 	{
-		// TODO: Check if image is used in any recipes or categories
-		await _imageBucket.DeleteAsync(imageId);
+		using var session = dataAccess.Client.StartSession();
+		try
+		{
+			session.StartTransaction();
+
+			var metadata = (await _files.FindOneAndDeleteAsync(session, Builders<GridFSFileInfo>.Filter.Eq("_id", imageId))).Metadata;
+
+			await _filesChunks.DeleteManyAsync(session, Builders<BsonDocument>.Filter.Eq("files_id", imageId));
+
+			var imageIdString = imageId.ToString();
+			var userName = httpContextAccessor.HttpContext.User.Identity.Name;
+
+			if (metadata.TryGetValue("recipes", out var recipesValue) && recipesValue is BsonArray recipesArray)
+			{
+				foreach (var recipeId in recipesArray.Select(x => x.AsInt32))
+				{
+					var filter = Builders<Recipe>.Filter.Eq("_id", recipeId);
+					var recipe = (await dataAccess.Recipes.FindAsync(session, filter)).Single();
+					var isUpdated = false;
+
+					if (recipe.MainImage == imageIdString)
+					{
+						isUpdated = true;
+						recipe.MainImage = null;
+						//TODO: create system warring for admin
+					}
+
+					if (isUpdated)
+					{
+						recipe.UpdatedAt = DateTime.UtcNow;
+						recipe.UpdatedBy = userName;
+						await dataAccess.Recipes.ReplaceOneAsync(session, filter, recipe);
+					}
+				}
+			}
+
+			if (metadata.TryGetValue("categories", out var categoriesValue) && categoriesValue is BsonArray categoriesArray)
+			{
+				foreach (var categoryName in categoriesArray.Select(x => x.AsString))
+				{
+					var filter = Builders<Category>.Filter.Eq("categoryName", categoryName);
+					var category = (await dataAccess.Categories.FindAsync(session, filter)).Single();
+					var isUpdated = false;
+
+					if (category.MainImage == imageIdString)
+					{
+						isUpdated = true;
+						category.MainImage = null;
+						//TODO: create system warring for admin
+					}
+
+					if (category.Images.Contains(imageIdString))
+					{
+						isUpdated = true;
+						category.Images.Remove(imageIdString);
+					}
+
+					if (isUpdated)
+					{
+						category.UpdatedAt = DateTime.UtcNow;
+						category.UpdatedBy = userName;
+						await dataAccess.Categories.ReplaceOneAsync(session, filter, category);
+					}
+				}
+			}
+
+		}
+		catch (Exception)
+		{
+			session.AbortTransaction();
+			throw;
+		}
+
+		session.CommitTransaction();
 	}
 
 	public async Task<List<ImageInfo>> GetImageByCategory()

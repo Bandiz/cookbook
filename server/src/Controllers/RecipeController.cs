@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cookbook.API.Controllers;
 
@@ -45,9 +46,9 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 	[Authorize(Roles = "Admin")]
 	[HttpGet("list")]
-	public IActionResult GetRecipesList()
+	public async Task<IActionResult> GetRecipesList()
 	{
-		var recipes = recipeService.GetRecipes("", 0, []);
+		var recipes = await recipeService.GetAllRecipes();
 		return Ok(recipes.Select(recipe => new GetRecipesListResponseModel(
 			recipe.Id,
 			recipe.Title,

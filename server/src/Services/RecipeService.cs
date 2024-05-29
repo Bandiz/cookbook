@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Driver;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Cookbook.API.Services;
 
@@ -20,7 +22,7 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 
 	public List<Recipe> GetRecipes(string text, int count, List<string> categories)
 	{
-		var filter = Builders<Recipe>.Filter.Empty;
+		var filter = Builders<Recipe>.Filter.Where(x => x.IsPublished);
 
 		if (!string.IsNullOrEmpty(text))
 		{
@@ -37,12 +39,23 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 			filter = Builders<Recipe>.Filter.And(filter, categoryFilter);
 		}
 
-		var query = _recipes.Find(filter).SortBy(x => x.CreatedBy);
+		var query = _recipes.Find(filter).SortByDescending(x => x.CreatedAt);
 
 		if (count > 0)
 		{
 			return query.Limit(count).ToList();
 		}
+
+		return query.ToList();
+	}
+
+	public async Task<List<Recipe>> GetAllRecipes()
+	{
+		var filter = Builders<Recipe>.Filter.Empty;
+		var query = await _recipes.FindAsync(filter, new()
+		{
+			Sort = Builders<Recipe>.Sort.Descending(x => x.CreatedAt)
+		});
 
 		return query.ToList();
 	}
