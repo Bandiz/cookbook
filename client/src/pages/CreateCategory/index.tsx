@@ -64,22 +64,31 @@ export default function CreateCategory() {
     return (
         <Layout>
             <Layout.Content style={{ padding: '0 20px' }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item>
-                        <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
-                            Admin
-                        </Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>
-                        <Link
-                            className="ant-typography css-dev-only-do-not-override-mzwlov"
-                            to={ADMIN + '?activeTab=2'}
-                        >
-                            Categories
-                        </Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>{categoryName}</Breadcrumb.Item>
-                </Breadcrumb>
+                <Breadcrumb
+                    style={{ margin: '16px 0' }}
+                    items={[
+                        {
+                            title: (
+                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                                    Admin
+                                </Link>
+                            ),
+                        },
+                        {
+                            title: (
+                                <Link
+                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
+                                    to={ADMIN + '?activeTab=2'}
+                                >
+                                    Categories
+                                </Link>
+                            ),
+                        },
+                        {
+                            title: `New ${categoryName}`,
+                        },
+                    ]}
+                />
                 <Card>
                     <Row>
                         <Col span={24}>

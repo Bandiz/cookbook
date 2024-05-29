@@ -28,22 +28,31 @@ export default function EditRecipe() {
     return (
         <Layout>
             <Layout.Content style={{ padding: '0 20px' }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item>
+                <Breadcrumb
+                    style={{ margin: '16px 0' }}
+                    items={[
+                        {
+                            title: (
                         <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
                             Admin
                         </Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>
+                            ),
+                        },
+                        {
+                            title: (
                         <Link
                             className="ant-typography css-dev-only-do-not-override-mzwlov"
                             to={ADMIN + '?activeTab=3'}
                         >
                             Recipes
                         </Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>Edit Recipe</Breadcrumb.Item>
-                </Breadcrumb>
+                            ),
+                        },
+                        {
+                            title: `Edit ${recipeData.title}`,
+                        },
+                    ]}
+                />
                 <Card>
                     <Form autoComplete="off" layout="vertical" form={form} onFinish={onSubmit}>
                         <Row justify="space-evenly" gutter={[20, 20]}>
