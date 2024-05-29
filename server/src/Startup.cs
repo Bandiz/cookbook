@@ -43,18 +43,7 @@ public class Startup(IConfiguration configuration)
 		Configuration.GetSection("Authentication").Bind(authenticationSettings);
 		services.AddSingleton(authenticationSettings);
 
-		var config = new CookbookDatabaseSettings();
-		Configuration.GetSection(nameof(CookbookDatabaseSettings)).Bind(config);
-		services.AddSingleton(config);
-
-		services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(config.ConnectionString));
-
-		services.AddIdentityMongoDbProvider<CookbookUser>(
-			identity => { },
-			mongo =>
-			{
-				mongo.ConnectionString = $"{config.ConnectionString}/{config.DatabaseName}";
-			});
+		services.AddMongoDb(Configuration);
 
 		services.AddAuthentication(
 			options =>
@@ -79,11 +68,7 @@ public class Startup(IConfiguration configuration)
 			c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cookbook.API", Version = "v1" });
 		});
 
-
-		services.AddSingleton<IDataAccess, DataAccess>();
-		services.AddSingleton<IRecipeService, RecipeService>();
-		services.AddSingleton<IImageService, ImageService>();
-		services.AddSingleton<ICategoryService, CategoryService>();
+		services.AddCookbookServices();
 
 		var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
 		ConventionRegistry.Register("camelCase", conventionPack, t => true);
