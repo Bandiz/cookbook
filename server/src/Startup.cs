@@ -39,6 +39,8 @@ public class Startup(IConfiguration configuration)
 		Configuration.GetSection("Authentication").Bind(authenticationSettings);
 		services.AddSingleton(authenticationSettings);
 
+		services.AddMongoDb(Configuration);
+
 		services.AddAuthentication(
 			options =>
 			{
@@ -62,7 +64,6 @@ public class Startup(IConfiguration configuration)
 			c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cookbook.API", Version = "v1" });
 		});
 
-		services.AddMongoDb(Configuration);
 		services.AddCookbookServices();
 
 		var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
