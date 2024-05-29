@@ -1,9 +1,5 @@
 ﻿using System;
-using AspNetCore.Identity.Mongo;
 using Cookbook.API.Configuration;
-using Cookbook.API.Entities;
-using Cookbook.API.Services;
-using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
+using Cookbook.API.Extensions;
 
 namespace Cookbook.API;
 
