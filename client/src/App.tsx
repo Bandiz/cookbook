@@ -7,11 +7,10 @@ import * as ROUTES from './constants/routes';
 import CreateCategory from './pages/CreateCategory';
 import EditCategory from './pages/EditCategory';
 import EditRecipe from './pages/EditRecipe';
+import Recipes from './pages/Recipes';
 
 const Home = lazy(() => import('./pages/Home'));
-const Recipes = lazy(() => import('./pages/Recipes'));
 const Recipe = lazy(() => import('./pages/Recipe'));
-const Category = lazy(() => import('./pages/Category'));
 const Categories = lazy(() => import('./pages/Categories'));
 const About = lazy(() => import('./pages/About'));
 const Admin = lazy(() => import('./pages/Admin'));
@@ -33,7 +32,6 @@ function App() {
                             <Route path={ROUTES.ABOUT} element={<About />} />
                             <Route path={ROUTES.LOGIN} element={<Login />} />
                             <Route path={ROUTES.RECIPE} element={<Recipe />} />
-                            <Route path={ROUTES.CATEGORY} element={<Category />} />
                             <Route path={ROUTES.EDIT_CATEGORY} element={<RouteGuard />}>
                                 <Route index element={<EditCategory />} />
                             </Route>
