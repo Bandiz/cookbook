@@ -1,5 +1,6 @@
-import { Button } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { useRemoveFromCategoryMutation } from '../../../api/recipes';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 interface RemoveRecipeActionProps {
     recipeId: string;
@@ -9,15 +10,17 @@ interface RemoveRecipeActionProps {
 export function RemoveRecipeAction({ recipeId, categoryName }: RemoveRecipeActionProps) {
     const { mutate } = useRemoveFromCategoryMutation();
     return (
-        <Button
-            type="primary"
-            danger
-            ghost
-            onClick={() => {
+        <Popconfirm
+            title=""
+            description="Are you sure to remove this recipe?"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            onConfirm={() => {
                 mutate({ recipeId, categoryName });
             }}
         >
-            Remove
-        </Button>
+            <Button type="primary" danger ghost>
+                Remove
+            </Button>
+        </Popconfirm>
     );
 }

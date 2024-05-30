@@ -1,5 +1,6 @@
-import { Button } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { useDeleteCategoryMutation } from '../../../api/categories';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 interface DeleteCategoryActionProps {
     categoryName: string;
@@ -8,15 +9,17 @@ interface DeleteCategoryActionProps {
 export default function DeleteCategoryAction({ categoryName }: DeleteCategoryActionProps) {
     const { mutate } = useDeleteCategoryMutation();
     return (
-        <Button
-            type="primary"
-            danger
-            ghost
-            onClick={() => {
+        <Popconfirm
+            title=""
+            description="Are you sure to delete this category?"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            onConfirm={() => {
                 mutate({ categoryName });
             }}
         >
-            Delete
-        </Button>
+            <Button type="primary" danger ghost>
+                Delete
+            </Button>
+        </Popconfirm>
     );
 }
