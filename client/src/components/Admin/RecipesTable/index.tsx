@@ -1,7 +1,8 @@
 import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType, Tag } from 'antd';
 import { Recipe } from '../../../types';
 import { displayDate } from '../utils';
-import { DeleteRecipeAction, EditRecipeAction } from './ActionButtons';
+import { DeleteRecipeAction } from './DeleteRecipeAction';
+import { EditRecipeAction } from './EditRecipeAction';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { CREATE_RECIPE } from '../../../constants/routes';
