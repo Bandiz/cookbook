@@ -24,3 +24,11 @@ export type CreateRecipeContext = RecipeListContext;
 interface RecipeListContext {
     previousRecipes?: RecipeListResponse;
 }
+
+export interface DeleteRecipeVariables {
+    recipe: string;
+}
+
+export interface DeleteRecipeContext extends RecipeListContext {
+    previousRecipe?: Recipe;
+}
