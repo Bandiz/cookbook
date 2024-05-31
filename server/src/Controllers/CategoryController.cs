@@ -196,6 +196,7 @@ public class CategoryController(
 			{
 				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
 			}
+			var removedImages = existingCategory.Images.Except(imagesToCheck).ToList();
 
 			foreach (var imageId in parsedImageIds)
 			{
@@ -228,7 +229,7 @@ public class CategoryController(
 
 	private static (List<ObjectId>, List<string>) ParseImageIds(IEnumerable<string> imagesToCheck)
 	{
-		List<ObjectId> parsedImageIds = [];
+		HashSet<ObjectId> parsedImageIds = [];
 		List<string> failedParsedIds = [];
 
 		var imagesIds = new List<string>(imagesToCheck)
@@ -244,6 +245,6 @@ public class CategoryController(
 			parsedImageIds.Add(parsedId);
 		}
 
-		return (parsedImageIds, failedParsedIds);
+		return (parsedImageIds.ToList(), failedParsedIds);
 	}
 }

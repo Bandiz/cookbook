@@ -91,87 +91,77 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 	public async Task SetMetadata(ObjectId imageId, string metadataKey, string metadataValue)
 	{
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
-		var update = Builders<GridFSFileInfo>.Update.Set(x => x.Metadata[metadataKey], new BsonArray(new[] { metadataValue }));
+		var update = Builders<GridFSFileInfo>.Update.AddToSet($"metadata.{metadataKey}", metadataValue);
 
 		await _files.UpdateOneAsync(filter, update);
 	}
 
 	public async Task DeleteImage(ObjectId imageId)
 	{
-		using var session = dataAccess.Client.StartSession();
-		try
+		var image = (await _imageBucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", imageId))).Single();
+		var metadata = image.Metadata;
+
+		var imageIdString = imageId.ToString();
+		var userName = httpContextAccessor.HttpContext.User.Identity.Name;
+
+		if (metadata is not null
+			&& metadata.TryGetValue("recipes", out var recipesValue)
+			&& recipesValue is BsonArray recipesArray)
 		{
-			session.StartTransaction();
-
-			var metadata = (await _files.FindOneAndDeleteAsync(session, Builders<GridFSFileInfo>.Filter.Eq("_id", imageId))).Metadata;
-
-			await _filesChunks.DeleteManyAsync(session, Builders<BsonDocument>.Filter.Eq("files_id", imageId));
-
-			var imageIdString = imageId.ToString();
-			var userName = httpContextAccessor.HttpContext.User.Identity.Name;
-
-			if (metadata.TryGetValue("recipes", out var recipesValue) && recipesValue is BsonArray recipesArray)
+			foreach (var recipeId in recipesArray.Select(x => x.AsInt32))
 			{
-				foreach (var recipeId in recipesArray.Select(x => x.AsInt32))
+				var filter = Builders<Recipe>.Filter.Eq("_id", recipeId);
+				var recipe = (await dataAccess.Recipes.FindAsync(filter)).Single();
+				var isUpdated = false;
+
+				if (recipe.MainImage == imageIdString)
 				{
-					var filter = Builders<Recipe>.Filter.Eq("_id", recipeId);
-					var recipe = (await dataAccess.Recipes.FindAsync(session, filter)).Single();
-					var isUpdated = false;
+					isUpdated = true;
+					recipe.MainImage = null;
+					//TODO: create system warning for admin
+				}
 
-					if (recipe.MainImage == imageIdString)
-					{
-						isUpdated = true;
-						recipe.MainImage = null;
-						//TODO: create system warring for admin
-					}
-
-					if (isUpdated)
-					{
-						recipe.UpdatedAt = DateTime.UtcNow;
-						recipe.UpdatedBy = userName;
-						await dataAccess.Recipes.ReplaceOneAsync(session, filter, recipe);
-					}
+				if (isUpdated)
+				{
+					recipe.UpdatedAt = DateTime.UtcNow;
+					recipe.UpdatedBy = userName;
+					await dataAccess.Recipes.ReplaceOneAsync(filter, recipe);
 				}
 			}
+		}
 
-			if (metadata.TryGetValue("categories", out var categoriesValue) && categoriesValue is BsonArray categoriesArray)
+		if (metadata is not null
+			&& metadata.TryGetValue("categories", out var categoriesValue)
+			&& categoriesValue is BsonArray categoriesArray)
+		{
+			foreach (var categoryName in categoriesArray.Select(x => x.AsString))
 			{
-				foreach (var categoryName in categoriesArray.Select(x => x.AsString))
+				var filter = Builders<Category>.Filter.Eq("_id", categoryName);
+				var category = (await dataAccess.Categories.FindAsync(filter)).Single();
+				var isUpdated = false;
+
+				if (category.MainImage == imageIdString)
 				{
-					var filter = Builders<Category>.Filter.Eq("categoryName", categoryName);
-					var category = (await dataAccess.Categories.FindAsync(session, filter)).Single();
-					var isUpdated = false;
+					isUpdated = true;
+					category.MainImage = null;
+					//TODO: create system warning for admin
+				}
 
-					if (category.MainImage == imageIdString)
-					{
-						isUpdated = true;
-						category.MainImage = null;
-						//TODO: create system warring for admin
-					}
+				if (category.Images.Contains(imageIdString))
+				{
+					isUpdated = true;
+					category.Images.Remove(imageIdString);
+				}
 
-					if (category.Images.Contains(imageIdString))
-					{
-						isUpdated = true;
-						category.Images.Remove(imageIdString);
-					}
-
-					if (isUpdated)
-					{
-						category.UpdatedAt = DateTime.UtcNow;
-						category.UpdatedBy = userName;
-						await dataAccess.Categories.ReplaceOneAsync(session, filter, category);
-					}
+				if (isUpdated)
+				{
+					category.UpdatedAt = DateTime.UtcNow;
+					category.UpdatedBy = userName;
+					await dataAccess.Categories.ReplaceOneAsync(filter, category);
 				}
 			}
-
 		}
-		catch (Exception)
-		{
-			session.AbortTransaction();
-			throw;
-		}
-
-		session.CommitTransaction();
+		await _imageBucket.DeleteAsync(imageId);
 	}
 
 	public async Task<List<ImageInfo>> GetImageByCategory()

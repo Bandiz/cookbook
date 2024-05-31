@@ -130,19 +130,19 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 		var updated = false;
 
-		if (!string.IsNullOrEmpty(model.Title))
+		if (!string.IsNullOrEmpty(model.Title) && recipe.Title != model.Title)
 		{
 			updated = true;
 			recipe.Title = model.Title;
 		}
 
-		if (!string.IsNullOrEmpty(model.Description))
+		if (recipe.Description != model.Description)
 		{
 			updated = true;
 			recipe.Description = model.Description;
 		}
 
-		if (!string.IsNullOrEmpty(model.MainImage))
+		if (recipe.MainImage != model.MainImage)
 		{
 			updated = true;
 			recipe.MainImage = model.MainImage;
