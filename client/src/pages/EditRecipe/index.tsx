@@ -20,8 +20,8 @@ import { useRecipe, useUpdateRecipeMutation } from '../../api/recipes';
 import { useCategoryList } from '../../api/categories';
 import { ADMIN } from '../../constants/routes';
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Store } from 'antd/es/form/interface';
 import { useEffect } from 'react';
+import { Recipe } from '../../types';
 
 export default function EditRecipe() {
     const { recipe } = useParams();
@@ -46,7 +46,7 @@ export default function EditRecipe() {
         return <Spin size="large" />;
     }
 
-    const onSubmit = (values: Store) => {
+    const onSubmit = (values: Partial<Recipe>) => {
         values.id = recipeData.id;
         updateRecipe(values);
     };
@@ -83,7 +83,18 @@ export default function EditRecipe() {
                     <Form autoComplete="off" layout="vertical" form={form} onFinish={onSubmit}>
                         <Row justify="space-evenly" gutter={[20, 20]}>
                             <Col span={12}>
-                                <Form.Item label="Title" name="title" initialValue={recipeData.title}>
+                                <Form.Item
+                                    label="Title"
+                                    name="title"
+                                    initialValue={recipeData.title}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'First character needs to be capital',
+                                            pattern: /^[A-Z][a-z0-9_-]{3,19}$/,
+                                        },
+                                    ]}
+                                >
                                     <Input placeholder="Pancakes" />
                                 </Form.Item>
                                 <Form.Item>

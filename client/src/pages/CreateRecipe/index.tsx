@@ -62,7 +62,17 @@ export default function CreateRecipe() {
                     <Form autoComplete="off" layout="vertical" form={form} onFinish={onSubmit}>
                         <Row justify="space-evenly" gutter={[20, 20]}>
                             <Col span={12}>
-                                <Form.Item label="Title" name="title">
+                                <Form.Item
+                                    label="Title"
+                                    name="title"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'First character needs to be capital',
+                                            pattern: /^[A-Z][a-z0-9_-]{3,19}$/,
+                                        },
+                                    ]}
+                                >
                                     <Input placeholder="Pancakes" />
                                 </Form.Item>
                                 <Form.Item>
@@ -210,13 +220,6 @@ export default function CreateRecipe() {
                                 <Form.Item label="Main image" name="mainImage">
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
-                                {/* <Image
-                                preview={false}
-                                src={`/image/${recipeData.mainImage}`}
-                                style={{
-                                    maxWidth: 400,
-                                }}
-                            /> */}
                             </Col>
                         </Row>
                     </Form>
