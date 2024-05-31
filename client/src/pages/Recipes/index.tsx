@@ -1,4 +1,4 @@
-import { Alert, Card, Col, Layout, Row, Space, Spin, Tag } from 'antd';
+import { Alert, Card, Col, Layout, Row, Skeleton, Space, Spin, Tag } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useRecipes } from '../../api/recipes';
 
@@ -15,7 +15,7 @@ export default function Recipes() {
 
     return (
         <Layout>
-            <Row justify="center" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Row justify="center" gutter={[16, 16]} style={{ padding: '16px 0' }}>
                 {recipes.map((recipe) => {
                     return (
                         <Col key={recipe.id}>
@@ -23,7 +23,17 @@ export default function Recipes() {
                                 key={recipe.id}
                                 hoverable
                                 style={{ width: 240, minHeight: 370, height: '100%' }}
-                                cover={<img alt={recipe.title} src={`/image/${recipe.mainImage}`} />}
+                                cover={
+                                    recipe.mainImage ? (
+                                        <img
+                                            alt={recipe.title}
+                                            src={`/image/${recipe.mainImage}`}
+                                            style={{ width: '100%', objectFit: 'cover', minHeight: 240 }}
+                                        />
+                                    ) : (
+                                        <Skeleton.Image style={{ width: 240, height: 240 }} />
+                                    )
+                                }
                             >
                                 <Space direction="vertical" wrap>
                                     <Meta title={recipe.title} />
