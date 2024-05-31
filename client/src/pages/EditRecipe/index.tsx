@@ -1,22 +1,48 @@
-import { Button, Checkbox, Col, Form, Input, Layout, Row, Select, Spin, Image, Space, Card, Breadcrumb } from 'antd';
+import {
+    Button,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    Layout,
+    Row,
+    Select,
+    Spin,
+    Image,
+    Space,
+    Card,
+    Breadcrumb,
+    message,
+    Skeleton,
+} from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useRecipe, useUpdateRecipeMutation } from '../../api/recipes';
 import { useCategoryList } from '../../api/categories';
 import { ADMIN } from '../../constants/routes';
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Store } from 'antd/es/form/interface';
+import { useEffect } from 'react';
 
 export default function EditRecipe() {
     const { recipe } = useParams();
-    const { data: recipeData, isLoading } = useRecipe(recipe ?? '');
+    const { data: recipeData, isLoading: loading } = useRecipe(recipe ?? '');
     const { data: categories } = useCategoryList();
     const [form] = Form.useForm();
-    const { mutate: updateRecipe } = useUpdateRecipeMutation();
+    const { mutate: updateRecipe, isLoading, isError, isSuccess } = useUpdateRecipeMutation();
+
+    useEffect(() => {
+        if (isSuccess) {
+            message.success('Recipe updated successfully');
+        }
+        if (isError) {
+            message.error('Failed to update recipe, try again later');
+        }
+    }, [isError, isSuccess]);
 
     if (!categories) {
         return null;
     }
-    if (!recipeData || isLoading) {
+    if (!recipeData || loading) {
         return <Spin size="large" />;
     }
 
@@ -33,19 +59,19 @@ export default function EditRecipe() {
                     items={[
                         {
                             title: (
-                        <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
-                            Admin
-                        </Link>
+                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                                    Admin
+                                </Link>
                             ),
                         },
                         {
                             title: (
-                        <Link
-                            className="ant-typography css-dev-only-do-not-override-mzwlov"
-                            to={ADMIN + '?activeTab=3'}
-                        >
-                            Recipes
-                        </Link>
+                                <Link
+                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
+                                    to={ADMIN + '?activeTab=3'}
+                                >
+                                    Recipes
+                                </Link>
                             ),
                         },
                         {
@@ -222,13 +248,17 @@ export default function EditRecipe() {
                                 <Form.Item label="Main image" name="mainImage" initialValue={recipeData.mainImage}>
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
-                                <Image
-                                    preview={false}
-                                    src={`/image/${recipeData.mainImage}`}
-                                    style={{
-                                        maxWidth: 400,
-                                    }}
-                                />
+                                {recipeData.mainImage ? (
+                                    <Image
+                                        preview={false}
+                                        src={`/image/${recipeData.mainImage}`}
+                                        style={{
+                                            maxWidth: 400,
+                                        }}
+                                    />
+                                ) : (
+                                    <Skeleton.Image />
+                                )}
                             </Col>
                         </Row>
                     </Form>
