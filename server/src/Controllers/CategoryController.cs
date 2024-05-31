@@ -198,23 +198,27 @@ public class CategoryController(
 			}
 			var removedImages = existingCategory.Images.Except(imagesToCheck).ToList();
 
+			foreach (var imageId in removedImages)
+			{
+				await imageService.RemoveMetadata(new(imageId), "categories", existingCategory.CategoryName);
+			}
+
 			foreach (var imageId in parsedImageIds)
 			{
 				await imageService.SetMetadata(imageId, "categories", existingCategory.CategoryName);
 			}
 
-			if (!string.IsNullOrEmpty(model.MainImage))
+			if (existingCategory.MainImage != model.MainImage)
 			{
 				existingCategory.MainImage = model.MainImage;
 				updated = true;
 			}
 
-			if (model.Images != null && model.Images.Count > 0)
+			if (model.Images != null)
 			{
 				existingCategory.Images = model.Images.Distinct().ToList();
 				updated = true;
 			}
-
 		}
 
 		if (updated)

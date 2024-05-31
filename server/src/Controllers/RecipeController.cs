@@ -1,19 +1,22 @@
-﻿using Cookbook.API.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class RecipeController(IRecipeService recipeService) : ControllerBase
+public class RecipeController(
+	IRecipeService recipeService,
+	IImageService imageService) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpGet("{id:int}")]
@@ -115,7 +118,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 	[Authorize(Roles = "Admin")]
 	[HttpPatch("{id:int}")]
-	public IActionResult UpdateRecipe(int id, [FromBody] UpdateRecipeRequestModel model)
+	public async Task<IActionResult> UpdateRecipe(int id, [FromBody] UpdateRecipeRequestModel model)
 	{
 		if (model == null)
 		{
@@ -144,8 +147,28 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 
 		if (recipe.MainImage != model.MainImage)
 		{
+			if (!string.IsNullOrEmpty(model.MainImage))
+			{
+				if (!ObjectId.TryParse(model.MainImage, out var parsedId))
+				{
+					return BadRequest("MainImage is not a valid ObjectId");
+				}
+				var notFoundIds = await imageService.CheckExistingImages([parsedId]);
+
+				if (notFoundIds.Count > 0)
+				{
+					return BadRequest("MainImage does not exist");
+				}
+				await imageService.SetMetadata(parsedId, "recipes", recipe.Id);
+			}
+			else
+			{
+				await imageService.RemoveMetadata(new(recipe.MainImage), "recipes", recipe.Id);
+			}
+
 			updated = true;
 			recipe.MainImage = model.MainImage;
+
 		}
 
 		if (model.PrepTimeMinutes.HasValue)
@@ -180,7 +203,7 @@ public class RecipeController(IRecipeService recipeService) : ControllerBase
 				Amount = x.Amount,
 				MeasurementType = x.MeasurementType,
 				Name = x.Name,
-			}).ToList();		
+			}).ToList();
 		}
 
 		if (model.Instructions != null)

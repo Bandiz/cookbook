@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Driver;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Cookbook.API.Services;
 
