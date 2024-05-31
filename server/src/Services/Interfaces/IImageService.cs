@@ -19,5 +19,7 @@ public interface IImageService
 
 	Task<List<string>> CheckExistingImages(List<ObjectId> imageIds);
 
-	Task SetMetadata(ObjectId imageId, string metadataKey, string metadataValue);
+	Task SetMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue);
+
+	Task RemoveMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue);
 }

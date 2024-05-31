@@ -88,7 +88,7 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 		return missingIds;
 	}
 
-	public async Task SetMetadata(ObjectId imageId, string metadataKey, string metadataValue)
+	public async Task SetMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue)
 	{
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
 		var update = Builders<GridFSFileInfo>.Update.AddToSet($"metadata.{metadataKey}", metadataValue);
@@ -185,5 +185,13 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 		});
 
 		return flattened.ToList();
+	}
+
+	public async Task RemoveMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue)
+	{
+		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
+		var update = Builders<GridFSFileInfo>.Update.Pull($"metadata.{metadataKey}", metadataValue);
+
+		await _files.UpdateOneAsync(filter, update);
 	}
 }
