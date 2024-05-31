@@ -1,21 +1,32 @@
 import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Card, Checkbox, Col, Form, Input, Layout, Row, Select, Space } from 'antd';
+import { Breadcrumb, Button, Card, Checkbox, Col, Form, Input, Layout, Row, Select, Space, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { ADMIN } from '../../constants/routes';
 import { useCategoryList } from '../../api/categories';
 import useCreateRecipeMutation from '../../api/recipes/useCreateRecipeMutation';
 import { Recipe } from '../../types';
+import { useEffect } from 'react';
 
 export default function CreateRecipe() {
-    const { data: categories } = useCategoryList();
+    const { data: categories, isError: error } = useCategoryList();
     const [form] = Form.useForm<Partial<Recipe>>();
-    const { mutate: createRecipe } = useCreateRecipeMutation();
+    const { mutate: createRecipe, isError, isLoading, isSuccess } = useCreateRecipeMutation();
+
+    useEffect(() => {
+        if (isSuccess) {
+            message.success('Recipe created successfully');
+        }
+        if (isError) {
+            message.error('Failed to create recipe, try again later');
+        }
+    }, [isSuccess, isError]);
 
     const onSubmit = (values: Partial<Recipe>) => {
         createRecipe(values);
     };
 
     if (!categories) {
+        error && message.error('Failed to load categories');
         return null;
     }
 
@@ -27,19 +38,19 @@ export default function CreateRecipe() {
                     items={[
                         {
                             title: (
-                        <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
-                            Admin
-                        </Link>
+                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                                    Admin
+                                </Link>
                             ),
                         },
                         {
                             title: (
-                        <Link
-                            className="ant-typography css-dev-only-do-not-override-mzwlov"
-                            to={ADMIN + '?activeTab=3'}
-                        >
-                            Recipes
-                        </Link>
+                                <Link
+                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
+                                    to={ADMIN + '?activeTab=3'}
+                                >
+                                    Recipes
+                                </Link>
                             ),
                         },
                         {
@@ -191,7 +202,7 @@ export default function CreateRecipe() {
                                     </Form.List>
                                 </Form.Item>
 
-                                <Button type="primary" icon={<SaveOutlined />} htmlType="submit">
+                                <Button type="primary" loading={isLoading} icon={<SaveOutlined />} htmlType="submit">
                                     Save
                                 </Button>
                             </Col>
