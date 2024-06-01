@@ -48,9 +48,15 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 		return query.ToList();
 	}
 
-	public async Task<List<Recipe>> GetAllRecipes()
+	public async Task<List<Recipe>> GetAllRecipes(List<string> categories = null)
 	{
 		var filter = Builders<Recipe>.Filter.Empty;
+
+		if (categories != null)
+		{
+			Builders<Recipe>.Filter.And(filter, Builders<Recipe>.Filter.AnyIn(recipe => recipe.Categories, categories));
+		}
+
 		var query = await _recipes.FindAsync(filter, new()
 		{
 			Sort = Builders<Recipe>.Sort.Descending(x => x.CreatedAt)
@@ -118,7 +124,7 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 			categoryService.CreateCategories(notAddedCategories.Select(x => new Category()
 			{
 				CategoryName = x,
-				CreatedBy = recipe.UpdatedBy == null ? recipe.CreatedBy : recipe.UpdatedBy,
+				CreatedBy = recipe.UpdatedBy ?? recipe.CreatedBy,
 				CreatedAt = DateTime.UtcNow
 			}).ToList());
 		}

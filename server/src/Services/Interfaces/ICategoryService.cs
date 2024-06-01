@@ -20,4 +20,5 @@ public interface ICategoryService
 
 	void UpdateCategory(Category category);
 
+	Task<Dictionary<string, List<string>>> GetCategoryImages();
 }

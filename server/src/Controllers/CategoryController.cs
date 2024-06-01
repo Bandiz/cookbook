@@ -55,7 +55,7 @@ public class CategoryController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpGet("{categoryName}/recipes")]
-	public IActionResult GetCategoryDetails(string categoryName)
+	public async Task<IActionResult> GetCategoryDetails(string categoryName)
 	{
 		var category = categoryService.GetCategory(categoryName);
 
@@ -63,7 +63,7 @@ public class CategoryController(
 		{
 			return NotFound(categoryName);
 		}
-		var recipes = recipeService.GetRecipes(null, 0, [categoryName]);
+		var recipes = await recipeService.GetAllRecipes([categoryName]);
 
 		return Ok(
 			new CategoryRecipesResponseModel(recipes.Select(x =>
@@ -148,6 +148,7 @@ public class CategoryController(
 
 		// TODO: add transaction
 		// TODO: remove image metadata
+        // TODO: create admin warnings
 		recipeService.RemoveCategoryAll(categoryName);
 		categoryService.DeleteCategory(categoryName);
 

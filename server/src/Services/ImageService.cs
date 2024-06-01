@@ -164,29 +164,6 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 		await _imageBucket.DeleteAsync(imageId);
 	}
 
-	public async Task<List<ImageInfo>> GetImageByCategory()
-	{
-		var filter = Builders<GridFSFileInfo>.Filter.Empty;
-
-		var cursor = await _imageBucket.FindAsync(filter);
-
-		var list = await cursor.ToListAsync();
-		var flattened = list.Select(x =>
-		{
-			List<string> categories = null;
-			if (x.Metadata is not null
-				&& x.Metadata.TryGetValue("categories", out var categoriesValue)
-				&& categoriesValue is BsonArray categoriesArray)
-			{
-				categories = categoriesArray.Select(x => x.AsString).ToList();
-			}
-
-			return new ImageInfo(x.Id.ToString(), categories ?? []);
-		});
-
-		return flattened.ToList();
-	}
-
 	public async Task RemoveMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue)
 	{
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);

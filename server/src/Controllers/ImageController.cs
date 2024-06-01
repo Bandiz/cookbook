@@ -10,7 +10,7 @@ using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
 
-[Authorize]	
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ImageController(IImageService imageService, ICategoryService categoryService) : ControllerBase
@@ -91,30 +91,29 @@ public class ImageController(IImageService imageService, ICategoryService catego
 	[HttpGet("byCategory")]
 	public async Task<IActionResult> GetImagesByCategory()
 	{
-		var imageInfo = await imageService.GetImageByCategory();
+		var imageIds = await imageService.GetImageIds();
+		var categories = await categoryService.GetCategoryImages();
 
-		var results = imageInfo.Aggregate(new
+		var results = imageIds.Aggregate(new
 		{
 			Uncategorized = new List<string>(),
-			Categorized = new Dictionary<string, List<string>>()
+			Categorized = categories
 		}, (acc, curr) => {
-			if (curr.Categories.Count > 0)
+			var containsCategory = false;
+			foreach(var category in acc.Categorized)
 			{
-				foreach(var category in curr.Categories)
+				if (category.Value.Contains(curr))
 				{
-					if (!acc.Categorized.TryGetValue(category, out var value))
-					{
-						value = ([]);
-						acc.Categorized[category] = value;
-					}
-
-					value.Add(curr.Id);
+					containsCategory = true;
+					break;
 				}
-			} 
-			else
-			{
-				acc.Uncategorized.Add(curr.Id);
 			}
+
+			if (!containsCategory)
+			{
+				acc.Uncategorized.Add(curr);
+			}
+
 			return acc;
 		});
 

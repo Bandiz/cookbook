@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Cookbook.API.Services;
@@ -56,5 +57,23 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 		var count = await _categories.CountDocumentsAsync(filter);
 
 		return count > 0;
+	}
+
+	public async Task<Dictionary<string, List<string>>> GetCategoryImages()
+	{
+		var result = new Dictionary<string, List<string>>();
+		var filter = Builders<Category>.Filter.Where(x => x.Images != null && x.Images.Count > 0);
+		var projection = Builders<Category>.Projection
+			.Include(c => c.CategoryName)
+			.Include(c => c.Images);
+
+		var cursor = await _categories.FindAsync(filter, new() { Projection = projection });
+
+		await cursor.ForEachAsync(document =>
+		{
+			result.Add(document.CategoryName, document.Images);
+		});
+
+		return result;
 	}
 }

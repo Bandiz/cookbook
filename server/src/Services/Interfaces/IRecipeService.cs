@@ -10,7 +10,7 @@ public interface IRecipeService
 
 	List<Recipe> GetRecipes(string text, int count, List<string> categories);
 
-	Task<List<Recipe>> GetAllRecipes();
+	Task<List<Recipe>> GetAllRecipes(List<string> categories = null);
 
 	Recipe CreateRecipe(Recipe recipe);
 

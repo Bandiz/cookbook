@@ -13,8 +13,6 @@ public interface IImageService
 
 	Task<string[]> GetImageIds();
 
-	Task<List<ImageInfo>> GetImageByCategory();
-
 	Task DeleteImage(ObjectId imageId);
 
 	Task<List<string>> CheckExistingImages(List<ObjectId> imageIds);
