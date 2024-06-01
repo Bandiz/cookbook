@@ -88,14 +88,6 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 		return missingIds;
 	}
 
-	public async Task SetMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue)
-	{
-		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
-		var update = Builders<GridFSFileInfo>.Update.AddToSet($"metadata.{metadataKey}", metadataValue);
-
-		await _files.UpdateOneAsync(filter, update);
-	}
-
 	public async Task DeleteImage(ObjectId imageId)
 	{
 		var image = (await _imageBucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", imageId))).Single();
@@ -164,11 +156,4 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 		await _imageBucket.DeleteAsync(imageId);
 	}
 
-	public async Task RemoveMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue)
-	{
-		var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", imageId);
-		var update = Builders<GridFSFileInfo>.Update.Pull($"metadata.{metadataKey}", metadataValue);
-
-		await _files.UpdateOneAsync(filter, update);
-	}
 }

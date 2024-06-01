@@ -108,7 +108,7 @@ export default function EditCategory() {
                                     {category.mainImage && (
                                         <Image
                                             preview={false}
-                                            src={`/image/${category.mainImage}`}
+                                            src={`/api/image/${category.mainImage}`}
                                             style={{
                                                 maxWidth: 400,
                                                 ...(!category.visible && { filter: 'grayscale(100%)' }),
@@ -140,7 +140,7 @@ export default function EditCategory() {
                             <Image.PreviewGroup preview={imagesPreview}>
                                 <Space>
                                     {category.images.map((image) => (
-                                        <Image key={image} style={{ maxWidth: 200 }} src={`/image/${image}`} />
+                                        <Image key={image} style={{ maxWidth: 200 }} src={`/api/image/${image}`} />
                                     ))}
                                 </Space>
                             </Image.PreviewGroup>

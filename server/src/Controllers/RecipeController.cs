@@ -159,36 +159,10 @@ public class RecipeController(
 				{
 					return BadRequest("MainImage does not exist");
 				}
-				await imageService.SetMetadata(parsedId, "recipes", recipe.Id);
-
-				if (model.Categories != null && model.Categories.Count > 0)
-				{
-					var removedCategories = recipe.Categories.Except(model.Categories).ToList();
-
-					foreach (var category in removedCategories)
-					{
-						await imageService.RemoveMetadata(parsedId, "categories", category);
-					}
-
-					foreach(var category in model.Categories.Except(recipe.Categories))
-					{
-						await imageService.SetMetadata(parsedId, "categories", model.Categories);
-					}
-				}
-				else
-				{
-					await imageService.RemoveMetadata(parsedId, "categories", recipe.Categories);
-				}
-				
-			}
-			else
-			{
-				await imageService.RemoveMetadata(new(recipe.MainImage), "recipes", recipe.Id);
 			}
 
 			updated = true;
 			recipe.MainImage = model.MainImage;
-
 		}
 
 		if (model.PrepTimeMinutes.HasValue)

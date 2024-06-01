@@ -197,17 +197,6 @@ public class CategoryController(
 			{
 				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
 			}
-			var removedImages = existingCategory.Images.Except(imagesToCheck).ToList();
-
-			foreach (var imageId in removedImages)
-			{
-				await imageService.RemoveMetadata(new(imageId), "categories", existingCategory.CategoryName);
-			}
-
-			foreach (var imageId in parsedImageIds)
-			{
-				await imageService.SetMetadata(imageId, "categories", existingCategory.CategoryName);
-			}
 
 			if (existingCategory.MainImage != model.MainImage)
 			{

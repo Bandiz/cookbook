@@ -16,8 +16,4 @@ public interface IImageService
 	Task DeleteImage(ObjectId imageId);
 
 	Task<List<string>> CheckExistingImages(List<ObjectId> imageIds);
-
-	Task SetMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue);
-
-	Task RemoveMetadata<T>(ObjectId imageId, string metadataKey, T metadataValue);
 }

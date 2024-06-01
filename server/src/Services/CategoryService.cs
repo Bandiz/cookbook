@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Cookbook.API.Services;
