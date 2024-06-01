@@ -10,8 +10,8 @@ using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
 
-[Authorize]
-[Route("[controller]")]
+[Authorize]	
+[Route("api/[controller]")]
 [ApiController]
 public class ImageController(IImageService imageService, ICategoryService categoryService) : ControllerBase
 {
