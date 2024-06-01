@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 import { Category } from '../../types';
-import { CategoryKey, CategoryListKey } from '../apiQueryKeys';
+import { CategoryKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
 import { CategoryResponse, UpdateCategoryContext, UpdateCategoryVariables } from './types';
 
@@ -47,7 +47,8 @@ export default function useUpdateCategoryMutation() {
                 }
             },
             onSettled: (_data, _err, { categoryName }) => {
-                queryClient.invalidateQueries(CategoryListKey);
+                // TODO: Invalidate public category list
+                // queryClient.invalidateQueries(CategoryListKey);
                 queryClient.invalidateQueries([CategoryKey, categoryName]);
             },
         }

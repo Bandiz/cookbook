@@ -26,21 +26,12 @@ public class ImageController(IImageService imageService, ICategoryService catego
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> UploadImages(
-		[FromForm] List<IFormFile> files,
-		[FromQuery] List<string> categories,
-		[FromQuery] int? recipeId)
+		[FromForm] List<IFormFile> files)
 	{
 		if (files == null || files.Count == 0)
 		{
 			return BadRequest("No files uploaded");
 		}
-		foreach (var category in categories)
-		{
-			if (!await categoryService.CheckIfExists(category))
-			{
-				return BadRequest($"Category {category} does not exist");
-			}
-		}	
 
 		var imageIds = new List<string>();
 
@@ -56,7 +47,7 @@ public class ImageController(IImageService imageService, ICategoryService catego
 				return BadRequest($"Invalid file type for file {file.FileName}");
 			}
 
-			var imageId = await imageService.UploadImage(file.OpenReadStream(), file.FileName, recipeId, categories);
+			var imageId = await imageService.UploadImage(file.OpenReadStream(), file.FileName);
 			imageIds.Add(imageId);
 		}
 

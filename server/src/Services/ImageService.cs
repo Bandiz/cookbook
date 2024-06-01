@@ -16,27 +16,10 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 {
 	private readonly GridFSBucket _imageBucket = dataAccess.ImageBucket;
 	private readonly IMongoCollection<GridFSFileInfo> _files = dataAccess.Files;
-	private readonly IMongoCollection<BsonDocument> _filesChunks = dataAccess.FilesChunks;
 
-	public async Task<string> UploadImage(Stream fs, string filename, int? recipeId = null, List<string> categories = null)
+	public async Task<string> UploadImage(Stream fs, string filename)
 	{
-		var options = new GridFSUploadOptions();
-
-		if (recipeId.HasValue)
-		{
-			options.Metadata = new BsonDocument
-			{
-				{ "recipes", new BsonArray(new [] { recipeId.Value }) }
-			};
-		}
-
-		if (categories != null)
-		{
-			options.Metadata ??= [];
-			options.Metadata.Add("categories", new BsonArray(categories));
-		}
-
-		var result = await _imageBucket.UploadFromStreamAsync(filename, fs, options);
+		var result = await _imageBucket.UploadFromStreamAsync(filename, fs);
 
 		return result.ToString();
 	}
