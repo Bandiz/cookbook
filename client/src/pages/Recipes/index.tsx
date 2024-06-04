@@ -27,7 +27,7 @@ export default function Recipes() {
                                     recipe.mainImage ? (
                                         <img
                                             alt={recipe.title}
-                                            src={`/image/${recipe.mainImage}`}
+                                            src={`/api/image/${recipe.mainImage}`}
                                             style={{ width: '100%', objectFit: 'cover', minHeight: 240 }}
                                         />
                                     ) : (

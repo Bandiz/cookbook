@@ -262,7 +262,7 @@ export default function EditRecipe() {
                                 {recipeData.mainImage ? (
                                     <Image
                                         preview={false}
-                                        src={`/image/${recipeData.mainImage}`}
+                                        src={`/api/image/${recipeData.mainImage}`}
                                         style={{
                                             maxWidth: 400,
                                         }}
