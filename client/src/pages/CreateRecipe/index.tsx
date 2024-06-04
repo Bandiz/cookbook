@@ -1,16 +1,32 @@
-import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Card, Checkbox, Col, Form, Input, Layout, Row, Select, Space, message } from 'antd';
+import { MinusCircleOutlined, PlusOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+    Breadcrumb,
+    Button,
+    Card,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    Layout,
+    Row,
+    Select,
+    Space,
+    Typography,
+    message,
+} from 'antd';
 import { Link } from 'react-router-dom';
 import { ADMIN } from '../../constants/routes';
 import { useCategoryList } from '../../api/categories';
 import useCreateRecipeMutation from '../../api/recipes/useCreateRecipeMutation';
 import { Recipe } from '../../types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ImageDrawer } from './ImageDrawer';
 
 export default function CreateRecipe() {
-    const { data: categories, isError: error } = useCategoryList();
+    const { data: categories, isError: categoryListError } = useCategoryList();
     const [form] = Form.useForm<Partial<Recipe>>();
     const { mutate: createRecipe, isError, isLoading, isSuccess } = useCreateRecipeMutation();
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         if (isSuccess) {
@@ -25,8 +41,16 @@ export default function CreateRecipe() {
         createRecipe(values);
     };
 
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
     if (!categories) {
-        error && message.error('Failed to load categories');
+        categoryListError && message.error('Failed to load categories');
         return null;
     }
 
@@ -217,6 +241,13 @@ export default function CreateRecipe() {
                                 </Button>
                             </Col>
                             <Col span={8}>
+                                <Row justify="end">
+                                    <Button type="primary" icon={<UploadOutlined />} onClick={showDrawer}>
+                                        Upload image
+                                    </Button>
+                                    <ImageDrawer onClose={onClose} open={open} />
+                                </Row>
+                                <Typography.Title level={5}>Image Preview</Typography.Title>
                                 <Form.Item label="Main image" name="mainImage">
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
