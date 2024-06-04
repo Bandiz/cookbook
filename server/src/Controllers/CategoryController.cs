@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -86,7 +87,13 @@ public class CategoryController(
 		{
 			return NotFound(ModelState);
 		}
-		var existingCategory = categoryService.GetCategory(model.CategoryName);
+
+		var normalizedCategoryName = model.CategoryName
+			.ToLower()
+			.Trim()
+			.CapitalizeFirstLetter();
+
+		var existingCategory = categoryService.GetCategory(normalizedCategoryName);
 
 		if (existingCategory != null)
 		{
@@ -96,7 +103,7 @@ public class CategoryController(
 		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null && model.Images.Count > 0)
 		{
 			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
-			
+
 			var (parsedImageIds, failedParsedIds) = ParseImageIds(imagesToCheck);
 
 			if (failedParsedIds.Count != 0)
@@ -114,7 +121,7 @@ public class CategoryController(
 
 		var category = new Category()
 		{
-			CategoryName = model.CategoryName,
+			CategoryName = normalizedCategoryName,
 			Visible = model.Visible,
 			MainImage = model.MainImage,
 			Images = model.Images?.Distinct().ToList() ?? [],
@@ -146,9 +153,7 @@ public class CategoryController(
 			return NotFound(categoryName);
 		}
 
-		// TODO: add transaction
-		// TODO: remove image metadata
-        // TODO: create admin warnings
+		// TODO: create admin warnings
 		recipeService.RemoveCategoryAll(categoryName);
 		categoryService.DeleteCategory(categoryName);
 
