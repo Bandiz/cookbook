@@ -1,26 +1,13 @@
-import { MinusCircleOutlined, PlusOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
-import {
-    Breadcrumb,
-    Button,
-    Card,
-    Checkbox,
-    Col,
-    Form,
-    Input,
-    Layout,
-    Row,
-    Select,
-    Space,
-    Typography,
-    message,
-} from 'antd';
-import { Link } from 'react-router-dom';
-import { ADMIN } from '../../constants/routes';
+import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Card, Checkbox, Col, Form, Input, Layout, Row, Select, Typography, message } from 'antd';
 import { useCategoryList } from '../../api/categories';
 import useCreateRecipeMutation from '../../api/recipes/useCreateRecipeMutation';
 import { Recipe } from '../../types';
 import { useEffect, useState } from 'react';
 import { ImageDrawer } from './ImageDrawer';
+import { Breadcrumbs } from './Breadcrumbs';
+import { Ingredients } from './Ingredients';
+import { Instructions } from './Instructions';
 
 export default function CreateRecipe() {
     const { data: categories, isError: categoryListError } = useCategoryList();
@@ -58,31 +45,7 @@ export default function CreateRecipe() {
     return (
         <Layout>
             <Layout.Content style={{ padding: '0 20px' }}>
-                <Breadcrumb
-                    style={{ margin: '16px 0' }}
-                    items={[
-                        {
-                            title: (
-                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
-                                    Admin
-                                </Link>
-                            ),
-                        },
-                        {
-                            title: (
-                                <Link
-                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
-                                    to={ADMIN + '?activeTab=3'}
-                                >
-                                    Recipes
-                                </Link>
-                            ),
-                        },
-                        {
-                            title: 'New Recipe',
-                        },
-                    ]}
-                />
+                <Breadcrumbs />
                 <Card>
                     <Form autoComplete="off" layout="vertical" form={form} onFinish={onSubmit}>
                         <Row justify="space-evenly" gutter={[20, 20]}>
@@ -145,97 +108,9 @@ export default function CreateRecipe() {
                                     <Input.TextArea placeholder="..." />
                                 </Form.Item>
 
-                                <Form.Item label="Ingredients">
-                                    <Form.List name="ingredients">
-                                        {(fields, { add, remove }) => (
-                                            <>
-                                                {fields.map(({ key, name, ...restField }) => (
-                                                    <Space
-                                                        key={key}
-                                                        style={{ display: 'flex', marginBottom: 2 }}
-                                                        align="baseline"
-                                                    >
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'amount']}
-                                                            label="Amount"
-                                                            rules={[{ required: true, message: 'Missing amount' }]}
-                                                        >
-                                                            <Input placeholder="1" style={{ width: '100px' }} />
-                                                        </Form.Item>
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'measurementType']}
-                                                            label="Measurement type"
-                                                            rules={[
-                                                                { required: true, message: 'Missing measurement type' },
-                                                            ]}
-                                                        >
-                                                            <Input placeholder="liter" type="text" />
-                                                        </Form.Item>
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'name']}
-                                                            label="Name"
-                                                            rules={[
-                                                                { required: true, message: 'Missing ingredient name' },
-                                                            ]}
-                                                        >
-                                                            <Input placeholder="milk" type="text" />
-                                                        </Form.Item>
-                                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                                    </Space>
-                                                ))}
-                                                <Form.Item>
-                                                    <Button
-                                                        type="dashed"
-                                                        onClick={() => add()}
-                                                        block
-                                                        icon={<PlusOutlined />}
-                                                    >
-                                                        Add field
-                                                    </Button>
-                                                </Form.Item>
-                                            </>
-                                        )}
-                                    </Form.List>
-                                </Form.Item>
+                                <Ingredients />
 
-                                <Form.Item label="Instructions">
-                                    <Form.List name="instructions">
-                                        {(fields, { add, remove }) => (
-                                            <>
-                                                {fields.map(({ key, name, ...restField }) => (
-                                                    <Space
-                                                        key={key}
-                                                        style={{ display: 'flex', marginBottom: 2 }}
-                                                        align="baseline"
-                                                    >
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'description']}
-                                                            label="Description"
-                                                            rules={[{ required: true, message: 'Missing description' }]}
-                                                        >
-                                                            <Input placeholder="Pour milk into a bowl" type="text" />
-                                                        </Form.Item>
-                                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                                    </Space>
-                                                ))}
-                                                <Form.Item>
-                                                    <Button
-                                                        type="dashed"
-                                                        onClick={() => add()}
-                                                        block
-                                                        icon={<PlusOutlined />}
-                                                    >
-                                                        Add field
-                                                    </Button>
-                                                </Form.Item>
-                                            </>
-                                        )}
-                                    </Form.List>
-                                </Form.Item>
+                                <Instructions />
 
                                 <Button type="primary" loading={isLoading} icon={<SaveOutlined />} htmlType="submit">
                                     Save
