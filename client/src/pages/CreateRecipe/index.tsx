@@ -27,6 +27,7 @@ export default function CreateRecipe() {
     const [form] = Form.useForm<Partial<Recipe>>();
     const { mutate: createRecipe, isError, isLoading, isSuccess } = useCreateRecipeMutation();
     const [open, setOpen] = useState(false);
+    const [_, setCurrentImage] = useState('');
 
     useEffect(() => {
         if (isSuccess) {
@@ -245,7 +246,12 @@ export default function CreateRecipe() {
                                     <Button type="primary" icon={<UploadOutlined />} onClick={showDrawer}>
                                         Upload image
                                     </Button>
-                                    <ImageDrawer onClose={onClose} open={open} />
+                                    <ImageDrawer
+                                        form={form}
+                                        onClose={onClose}
+                                        open={open}
+                                        setCurrentImage={setCurrentImage}
+                                    />
                                 </Row>
                                 <Typography.Title level={5}>Image Preview</Typography.Title>
                                 <Form.Item label="Main image" name="mainImage">
