@@ -57,7 +57,7 @@ export default function CreateRecipe() {
                                         {
                                             required: true,
                                             message: 'First character needs to be capital',
-                                            pattern: /^[A-Z][a-z0-9_-]{3,19}$/,
+                                            pattern: /^[A-Z][a-z0-9 _-]*\b/,
                                         },
                                     ]}
                                 >
