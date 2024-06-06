@@ -1,4 +1,4 @@
-import { Button, Drawer, Space, Typography, Image, Flex, message, FormInstance } from 'antd';
+import { Button, Drawer, Space, Typography, Image, message, FormInstance } from 'antd';
 import { useImagesByCategory } from '../../api/images/useImagesByCategory';
 
 interface ImageDrawerProps {
@@ -42,42 +42,45 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                     },
                 }}
             >
-                <Typography.Text strong>Uncategorized images</Typography.Text>
-                <Flex gap="small" wrap="wrap">
-                    {images.uncategorizedImages.map((image) => {
-                        return (
-                            <Image
-                                key={image}
-                                src={`/api/image/${image}`}
-                                style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                }}
-                            />
-                        );
-                    })}
-                </Flex>
-                <Space direction="horizontal" size="middle">
+                <Space direction="vertical" size="middle">
+                    <Typography.Text strong>Uncategorized images</Typography.Text>
+                    <Space direction="horizontal" size="small">
+                        {images.uncategorizedImages.map((image) => {
+                            return (
+                                <Image
+                                    key={image}
+                                    src={`/api/image/${image}`}
+                                    style={{
+                                        width: '100px',
+                                        height: '100px',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            );
+                        })}
+                    </Space>
+
                     {images.categories.map((category) => {
                         const { categoryName, imageIds } = category;
                         return (
-                            <Space key={categoryName} direction="vertical" size="large">
+                            <>
                                 <Typography.Text strong>{categoryName}</Typography.Text>
-                                {imageIds.map((id) => {
-                                    return (
-                                        <Image
-                                            key={id}
-                                            src={`/api/image/${id}`}
-                                            style={{
-                                                width: '100px',
-                                                height: '100px',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </Space>
+                                <Space key={categoryName} direction="horizontal" size="small">
+                                    {imageIds.map((id) => {
+                                        return (
+                                            <Image
+                                                key={id}
+                                                src={`/api/image/${id}`}
+                                                style={{
+                                                    width: '100px',
+                                                    height: '100px',
+                                                    objectFit: 'cover',
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </Space>
+                            </>
                         );
                     })}
                 </Space>
