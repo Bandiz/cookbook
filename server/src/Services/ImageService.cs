@@ -98,8 +98,9 @@ public class ImageService(
 	{
 		var projection = Builders<GridFSFileInfo>.Projection
 			.Include("_id");
+		var parentImageExists = Builders<GridFSFileInfo>.Filter.Exists("metadata.parentImage");
 		var cursor = await _files
-			.Find(Builders<GridFSFileInfo>.Filter.Empty)
+			.Find(Builders<GridFSFileInfo>.Filter.Not(parentImageExists))
 			.Project(projection)
 			.ToCursorAsync();
 		var imageIds = cursor
@@ -132,6 +133,13 @@ public class ImageService(
 
 	public async Task DeleteImage(ObjectId imageId)
 	{
+		var filter = Builders<GridFSFileInfo>.Filter.Eq("metadata.parentImage", imageId);
+		var fileInfo = (await _imageBucket.FindAsync(filter)).FirstOrDefault();
+
+		if (fileInfo != null)
+		{
+			await _imageBucket.DeleteAsync(fileInfo.Id);
+		}
 		await _imageBucket.DeleteAsync(imageId);
 	}
 
