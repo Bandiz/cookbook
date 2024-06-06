@@ -19,7 +19,7 @@ import { useCategoryList } from '../../api/categories';
 import useCreateRecipeMutation from '../../api/recipes/useCreateRecipeMutation';
 import { Recipe } from '../../types';
 import { useEffect, useState } from 'react';
-import { ImageDrawer } from './ImageDrawer';
+import { ImageDrawer } from '../../components/Shared/imageDrawer';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Ingredients } from './Ingredients';
 import { Instructions } from './Instructions';

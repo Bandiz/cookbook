@@ -1,5 +1,5 @@
 import { Button, Drawer, Space, Typography, Image, message, FormInstance } from 'antd';
-import { useImagesByCategory } from '../../api/images/useImagesByCategory';
+import { useImagesByCategory } from '../../../api/images/useImagesByCategory';
 
 interface ImageDrawerProps {
     form: FormInstance;
@@ -29,6 +29,7 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                         const imageId = getImageId(info.image.url);
                         return (
                             <Button
+                                key={imageId}
                                 type="primary"
                                 disabled={imageId === form.getFieldValue('mainImage')}
                                 onClick={() => {
@@ -49,7 +50,8 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                             return (
                                 <Image
                                     key={image}
-                                    src={`/api/image/${image}`}
+                                    src={`/api/image/${image}/preview`}
+                                    preview={{ src: `/api/image/${image}` }}
                                     style={{
                                         width: '100px',
                                         height: '100px',
@@ -70,7 +72,8 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                                         return (
                                             <Image
                                                 key={id}
-                                                src={`/api/image/${id}`}
+                                                src={`/api/image/${id}/preview`}
+                                                preview={{ src: `/api/image/${id}` }}
                                                 style={{
                                                     width: '100px',
                                                     height: '100px',
