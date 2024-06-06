@@ -14,14 +14,16 @@ import {
     Breadcrumb,
     message,
     Skeleton,
+    FloatButton,
 } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useRecipe, useUpdateRecipeMutation } from '../../api/recipes';
 import { useCategoryList } from '../../api/categories';
 import { ADMIN } from '../../constants/routes';
-import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
+import { MinusCircleOutlined, PictureOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
 import { Recipe } from '../../types';
+import { ImageDrawer } from '../../components/Shared/imageDrawer';
 
 export default function EditRecipe() {
     const { recipe } = useParams();
@@ -29,6 +31,8 @@ export default function EditRecipe() {
     const { data: categories } = useCategoryList();
     const [form] = Form.useForm();
     const { mutate: updateRecipe, isLoading, isError, isSuccess } = useUpdateRecipeMutation();
+    const [open, setOpen] = useState(false);
+    const [currentImage, setCurrentImage] = useState('');
 
     useEffect(() => {
         if (isSuccess) {
@@ -38,6 +42,14 @@ export default function EditRecipe() {
             message.error('Failed to update recipe, try again later');
         }
     }, [isError, isSuccess]);
+
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
 
     if (!categories) {
         return null;
@@ -256,13 +268,21 @@ export default function EditRecipe() {
                                 </Button>
                             </Col>
                             <Col span={8}>
+                                <Row justify="end">
+                                    <ImageDrawer
+                                        form={form}
+                                        onClose={onClose}
+                                        open={open}
+                                        setCurrentImage={setCurrentImage}
+                                    />
+                                </Row>
                                 <Form.Item label="Main image" name="mainImage" initialValue={recipeData.mainImage}>
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
-                                {recipeData.mainImage ? (
+                                {currentImage || recipeData.mainImage ? (
                                     <Image
-                                        preview={false}
-                                        src={`/api/image/${recipeData.mainImage}`}
+                                        preview={{ src: `/api/image/${currentImage || recipeData.mainImage}` }}
+                                        src={`/api/image/${currentImage || recipeData.mainImage}/preview`}
                                         style={{
                                             maxWidth: 400,
                                         }}
@@ -273,6 +293,12 @@ export default function EditRecipe() {
                             </Col>
                         </Row>
                     </Form>
+                    <FloatButton
+                        type="primary"
+                        icon={<PictureOutlined />}
+                        onClick={showDrawer}
+                        tooltip="Select Image"
+                    />
                 </Card>
             </Layout.Content>
         </Layout>
