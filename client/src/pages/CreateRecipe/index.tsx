@@ -1,5 +1,20 @@
-import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Card, Checkbox, Col, Form, Input, Layout, Row, Select, Typography, message } from 'antd';
+import { PictureOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    Layout,
+    Row,
+    Select,
+    Skeleton,
+    Typography,
+    message,
+    Image,
+    FloatButton,
+} from 'antd';
 import { useCategoryList } from '../../api/categories';
 import useCreateRecipeMutation from '../../api/recipes/useCreateRecipeMutation';
 import { Recipe } from '../../types';
@@ -14,7 +29,7 @@ export default function CreateRecipe() {
     const [form] = Form.useForm<Partial<Recipe>>();
     const { mutate: createRecipe, isError, isLoading, isSuccess } = useCreateRecipeMutation();
     const [open, setOpen] = useState(false);
-    const [_, setCurrentImage] = useState('');
+    const [currentImage, setCurrentImage] = useState('');
 
     useEffect(() => {
         if (isSuccess) {
@@ -118,9 +133,6 @@ export default function CreateRecipe() {
                             </Col>
                             <Col span={8}>
                                 <Row justify="end">
-                                    <Button type="primary" icon={<UploadOutlined />} onClick={showDrawer}>
-                                        Upload image
-                                    </Button>
                                     <ImageDrawer
                                         form={form}
                                         onClose={onClose}
@@ -132,9 +144,26 @@ export default function CreateRecipe() {
                                 <Form.Item label="Main image" name="mainImage">
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
+                                {currentImage ? (
+                                    <Image
+                                        preview={false}
+                                        src={`/api/image/${currentImage}`}
+                                        style={{
+                                            maxWidth: 400,
+                                        }}
+                                    />
+                                ) : (
+                                    <Skeleton.Image />
+                                )}
                             </Col>
                         </Row>
                     </Form>
+                    <FloatButton
+                        type="primary"
+                        icon={<PictureOutlined />}
+                        onClick={showDrawer}
+                        tooltip="Select Image"
+                    />
                 </Card>
             </Layout.Content>
         </Layout>
