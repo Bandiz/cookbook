@@ -146,8 +146,8 @@ export default function CreateRecipe() {
                                 </Form.Item>
                                 {currentImage ? (
                                     <Image
-                                        preview={false}
-                                        src={`/api/image/${currentImage}`}
+                                        preview={{ src: `/api/image/${currentImage}` }}
+                                        src={`/api/image/${currentImage}/preview`}
                                         style={{
                                             maxWidth: 400,
                                         }}
