@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
+
 namespace Cookbook.API.Controllers;
 
 [Authorize]
@@ -64,6 +65,20 @@ public class ImageController(IImageService imageService, ICategoryService catego
 		}
 
 		var (imageStream, filename) = await imageService.GetImage(imageId);
+
+		return File(imageStream.ToArray(), GetContentType(filename));
+	}
+
+	[AllowAnonymous]
+	[HttpGet("{id}/preview")]
+	public async Task<IActionResult> GetImagePreview(string id)
+	{
+		if (!ObjectId.TryParse(id, out var imageId))
+		{
+			return BadRequest("Invalid imageId");
+		}
+
+		var (imageStream, filename) = await imageService.GetImagePreview(imageId);
 
 		return File(imageStream.ToArray(), GetContentType(filename));
 	}

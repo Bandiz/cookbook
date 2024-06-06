@@ -3,23 +3,82 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Cookbook.API.Entities;
 using Cookbook.API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using SkiaSharp;
 
 namespace Cookbook.API.Services;
 
-public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpContextAccessor) : IImageService
+public class ImageService(
+	IDataAccess dataAccess,
+	IHttpContextAccessor httpContextAccessor) : IImageService
 {
 	private readonly GridFSBucket _imageBucket = dataAccess.ImageBucket;
 	private readonly IMongoCollection<GridFSFileInfo> _files = dataAccess.Files;
 
 	public async Task<string> UploadImage(Stream fs, string filename)
 	{
-		var result = await _imageBucket.UploadFromStreamAsync(filename, fs);
+		var userName = httpContextAccessor.HttpContext.User.Identity.Name;
+		using var ms = new MemoryStream();
+		await fs.CopyToAsync(ms);
+		ms.Position = 0;
+		ms.Seek(0, SeekOrigin.Begin);
+		var result = await _imageBucket.UploadFromStreamAsync(filename, ms, new()
+		{
+			Metadata = new()
+			{
+				{ "createdBy", userName }
+			}
+		});
+
+		ms.Position = 0;
+		ms.Seek(0, SeekOrigin.Begin);
+
+		var format = Path.GetExtension(filename) switch
+		{
+			".jpg" => SKEncodedImageFormat.Jpeg,
+			".png" => SKEncodedImageFormat.Png,
+			".gif" => SKEncodedImageFormat.Gif,
+			_ => SKEncodedImageFormat.Png
+		};
+
+        using (var image = SKBitmap.Decode(ms))
+        {
+            double maxWidth = 200;
+            double maxHeight = 200;
+
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+
+            var info = new SKImageInfo(newWidth, newHeight);
+            var newImage = image.Resize(info, SKFilterQuality.Low);
+
+            var previewMs = new MemoryStream();
+            using (var resizedImage = SKImage.FromBitmap(newImage))
+            {
+                var data = resizedImage.Encode(format, 30);
+                data.SaveTo(previewMs);
+            }
+
+			previewMs.Position = 0;
+			previewMs.Seek(0, SeekOrigin.Begin);
+
+			var previewImage = await _imageBucket.UploadFromStreamAsync($"preview-{filename}", previewMs, new()
+			{
+				Metadata = new()
+				{
+					{ "createdBy", userName },
+					{ "parentImage", result }
+				}
+			});
+		}
 
 		return result.ToString();
 	}
@@ -73,70 +132,22 @@ public class ImageService(IDataAccess dataAccess, IHttpContextAccessor httpConte
 
 	public async Task DeleteImage(ObjectId imageId)
 	{
-		var image = (await _imageBucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", imageId))).Single();
-		var metadata = image.Metadata;
-
-		var imageIdString = imageId.ToString();
-		var userName = httpContextAccessor.HttpContext.User.Identity.Name;
-
-		if (metadata is not null
-			&& metadata.TryGetValue("recipes", out var recipesValue)
-			&& recipesValue is BsonArray recipesArray)
-		{
-			foreach (var recipeId in recipesArray.Select(x => x.AsInt32))
-			{
-				var filter = Builders<Recipe>.Filter.Eq("_id", recipeId);
-				var recipe = (await dataAccess.Recipes.FindAsync(filter)).Single();
-				var isUpdated = false;
-
-				if (recipe.MainImage == imageIdString)
-				{
-					isUpdated = true;
-					recipe.MainImage = null;
-					//TODO: create system warning for admin
-				}
-
-				if (isUpdated)
-				{
-					recipe.UpdatedAt = DateTime.UtcNow;
-					recipe.UpdatedBy = userName;
-					await dataAccess.Recipes.ReplaceOneAsync(filter, recipe);
-				}
-			}
-		}
-
-		if (metadata is not null
-			&& metadata.TryGetValue("categories", out var categoriesValue)
-			&& categoriesValue is BsonArray categoriesArray)
-		{
-			foreach (var categoryName in categoriesArray.Select(x => x.AsString))
-			{
-				var filter = Builders<Category>.Filter.Eq("_id", categoryName);
-				var category = (await dataAccess.Categories.FindAsync(filter)).Single();
-				var isUpdated = false;
-
-				if (category.MainImage == imageIdString)
-				{
-					isUpdated = true;
-					category.MainImage = null;
-					//TODO: create system warning for admin
-				}
-
-				if (category.Images.Contains(imageIdString))
-				{
-					isUpdated = true;
-					category.Images.Remove(imageIdString);
-				}
-
-				if (isUpdated)
-				{
-					category.UpdatedAt = DateTime.UtcNow;
-					category.UpdatedBy = userName;
-					await dataAccess.Categories.ReplaceOneAsync(filter, category);
-				}
-			}
-		}
 		await _imageBucket.DeleteAsync(imageId);
 	}
 
+	public async Task<(MemoryStream, string)> GetImagePreview(ObjectId imageId)
+	{
+		var filter = Builders<GridFSFileInfo>.Filter.Eq("metadata.parentImage", imageId);
+		var fileInfo = (await _imageBucket.FindAsync(filter)).FirstOrDefault();
+
+		if (fileInfo == null)
+		{
+			return await GetImage(imageId);
+		}
+
+		var stream = new MemoryStream();
+		await _imageBucket.DownloadToStreamAsync(fileInfo.Id, stream);
+
+		return (stream, fileInfo.Filename);
+	}
 }
