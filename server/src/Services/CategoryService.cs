@@ -11,11 +11,12 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 {
 	private readonly IMongoCollection<Category> _categories = dataAccess.Categories;
 
-	public Category GetCategory(string categoryName)
+	public async Task<Category> GetCategory(string categoryName)
 	{
-		return _categories
+		var category = await _categories
 			.Find(x => x.CategoryName == categoryName)
-			.SingleOrDefault();
+			.FirstOrDefaultAsync();
+		return category;
 	}
 
 	public List<Category> GetCategories(bool visible = true)
@@ -45,9 +46,9 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 		return categories;
 	}
 
-	public void UpdateCategory(Category category)
+	public async Task UpdateCategory(Category category)
 	{
-		_categories.ReplaceOne(x => x.CategoryName == category.CategoryName, category);
+		await _categories.ReplaceOneAsync(x => x.CategoryName == category.CategoryName, category);
 	}
 
 	public async Task<bool> CheckIfExists(string categoryName)

@@ -18,44 +18,13 @@ import { Link, useParams } from 'react-router-dom';
 import { useCategory, useUpdateCategoryMutation } from '../../api/categories';
 import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
 import { ADMIN } from '../../constants/routes';
+import UploadImages from './UploadImages';
 
 export default function EditCategory() {
     const { category: categoryName } = useParams<{ category: string }>();
     const [currentImage, setCurrentImage] = useState(0);
     const { data: category, isLoading } = useCategory(categoryName ?? '');
     const { mutate: updateCategory } = useUpdateCategoryMutation();
-
-    const imagesPreview = useMemo(() => {
-        if (!category) {
-            return {};
-        }
-        return {
-            movable: false,
-            toolbarRender() {
-                const isMainImage = category.images[currentImage] === category.mainImage;
-                return (
-                    <Button
-                        type="primary"
-                        disabled={isMainImage}
-                        onClick={() => {
-                            updateCategory({
-                                categoryName: category.categoryName,
-                                mainImage: category.images[currentImage],
-                            });
-                        }}
-                    >
-                        {isMainImage ? 'Current main image' : 'Select as main image'}
-                    </Button>
-                );
-            },
-            onChange(current: number) {
-                setCurrentImage(current);
-            },
-            onVisibleChange(_value: boolean, _prevValue: boolean, current: number) {
-                setCurrentImage(current);
-            },
-        };
-    }, [category, currentImage]);
 
     if (!category || isLoading) {
         return <Spin size="large" />;
@@ -137,13 +106,7 @@ export default function EditCategory() {
                             <Divider>
                                 <Typography.Title level={3}>Images</Typography.Title>
                             </Divider>
-                            <Image.PreviewGroup preview={imagesPreview}>
-                                <Space>
-                                    {category.images.map((image) => (
-                                        <Image key={image} style={{ maxWidth: 200 }} src={`/api/image/${image}`} />
-                                    ))}
-                                </Space>
-                            </Image.PreviewGroup>
+                            <UploadImages category={category} />
                         </Col>
                     </Row>
                     <Row>

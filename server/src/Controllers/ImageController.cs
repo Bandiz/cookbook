@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
-
 namespace Cookbook.API.Controllers;
 
 [Authorize]
@@ -19,14 +18,15 @@ public class ImageController(IImageService imageService, ICategoryService catego
 	const int MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 	static readonly IReadOnlyList<string> VALID_FILE_TYPES = new List<string>
 	{
-		"image/jpeg", 
-		"image/png", 
-		"image/gif" 
+		"image/jpeg",
+		"image/png",
+		"image/gif"
 	}.AsReadOnly();
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> UploadImages(
+		[FromForm] string categoryName,
 		[FromForm] List<IFormFile> files)
 	{
 		if (files == null || files.Count == 0)
@@ -34,7 +34,8 @@ public class ImageController(IImageService imageService, ICategoryService catego
 			return BadRequest("No files uploaded");
 		}
 
-		var imageIds = new List<string>();
+		var imageIds = new List<string>(); 
+		var warnings = new List<string>();
 
 		foreach (var file in files)
 		{
@@ -50,9 +51,25 @@ public class ImageController(IImageService imageService, ICategoryService catego
 
 			var imageId = await imageService.UploadImage(file.OpenReadStream(), file.FileName);
 			imageIds.Add(imageId);
+
+
+			if (!string.IsNullOrWhiteSpace(categoryName))
+			{
+				var category = await categoryService.GetCategory(categoryName);
+
+				if (category == null)
+				{
+					warnings.Add($"Category {categoryName} does not exist");
+				}
+				else
+				{
+					category.Images.Add(imageId);
+					await categoryService.UpdateCategory(category);
+				}
+			}
 		}
 
-		return Ok(new UploadImagesResponseModel(imageIds));
+		return Ok(new UploadImagesResponseModel(imageIds, warnings));
 	}
 
 	[AllowAnonymous]
@@ -104,9 +121,10 @@ public class ImageController(IImageService imageService, ICategoryService catego
 		{
 			Uncategorized = new List<string>(),
 			Categorized = categories
-		}, (acc, curr) => {
+		}, (acc, curr) =>
+		{
 			var containsCategory = false;
-			foreach(var category in acc.Categorized)
+			foreach (var category in acc.Categorized)
 			{
 				if (category.Value.Contains(curr))
 				{

@@ -6,7 +6,7 @@ namespace Cookbook.API.Services.Interfaces;
 
 public interface ICategoryService
 {
-	Category GetCategory(string categoryName);
+	Task<Category> GetCategory(string categoryName);
 
 	Task<bool> CheckIfExists(string categoryName);
 
@@ -18,7 +18,7 @@ public interface ICategoryService
 
 	List<Category> CreateCategories(List<Category> categories);
 
-	void UpdateCategory(Category category);
+	Task UpdateCategory(Category category);
 
 	Task<Dictionary<string, List<string>>> GetCategoryImages();
 }

@@ -32,9 +32,9 @@ public class CategoryController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpGet("{categoryName}")]
-	public IActionResult GetCategory(string categoryName)
+	public async Task<IActionResult> GetCategory(string categoryName)
 	{
-		var category = categoryService.GetCategory(categoryName);
+		var category = await categoryService.GetCategory(categoryName);
 
 		if (category == null)
 		{
@@ -170,7 +170,7 @@ public class CategoryController(
 		{
 			return BadRequest("Category name required");
 		}
-		var existingCategory = categoryService.GetCategory(categoryName);
+		var existingCategory = await categoryService.GetCategory(categoryName);
 
 		if (existingCategory == null)
 		{
@@ -220,7 +220,7 @@ public class CategoryController(
 		{
 			existingCategory.UpdatedAt = DateTime.UtcNow;
 			existingCategory.UpdatedBy = User.Identity.Name;
-			categoryService.UpdateCategory(existingCategory);
+			await categoryService.UpdateCategory(existingCategory);
 		}
 
 		return Ok(new CategoryResponseModel(existingCategory));
