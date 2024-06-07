@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button, Drawer, Space, Typography, Image, message, FormInstance } from 'antd';
 import { useImagesByCategory } from '../../../api/images/useImagesByCategory';
 
@@ -29,7 +30,6 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                         const imageId = getImageId(info.image.url);
                         return (
                             <Button
-                                key={imageId}
                                 type="primary"
                                 disabled={imageId === form.getFieldValue('mainImage')}
                                 onClick={() => {
@@ -65,9 +65,9 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                     {images.categories.map((category) => {
                         const { categoryName, imageIds } = category;
                         return (
-                            <>
+                            <React.Fragment key={categoryName}>
                                 <Typography.Text strong>{categoryName}</Typography.Text>
-                                <Space key={categoryName} direction="horizontal" size="small">
+                                <Space direction="horizontal" size="small">
                                     {imageIds.map((id) => {
                                         return (
                                             <Image
@@ -83,7 +83,7 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                                         );
                                     })}
                                 </Space>
-                            </>
+                            </React.Fragment>
                         );
                     })}
                 </Space>
