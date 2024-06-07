@@ -1,65 +1,55 @@
 import {
-    Button,
     Checkbox,
     Col,
     Divider,
-    Empty,
     Layout,
     Row,
-    Space,
-    Spin,
     Typography,
     Image,
     Breadcrumb,
     Card,
+    Form,
+    Input,
+    Skeleton,
+    Flex,
+    FloatButton,
+    message,
+    Button,
 } from 'antd';
-import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useCategory, useUpdateCategoryMutation } from '../../api/categories';
-import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ADMIN } from '../../constants/routes';
+import { Category } from '../../types';
+import { PictureOutlined, SaveOutlined } from '@ant-design/icons';
+import { ImageDrawer } from '../../components/Shared/imageDrawer';
+import { useCreateCategoryMutation } from '../../api/categories';
 
 export default function CreateCategory() {
-    const { category: categoryName } = useParams<{ category: string }>();
-    const [currentImage, setCurrentImage] = useState(0);
-    const { data: category, isLoading } = useCategory(categoryName ?? '');
-    const { mutate: updateCategory } = useUpdateCategoryMutation();
+    const [form] = Form.useForm<Category>();
+    const [open, setOpen] = useState(false);
+    const [currentImage, setCurrentImage] = useState('');
+    const { mutate: createCategory, isError, isLoading, isSuccess } = useCreateCategoryMutation();
 
-    const imagesPreview = useMemo(() => {
-        if (!category) {
-            return {};
+    const onSubmit = (values: Category) => {
+        createCategory(values);
+    };
+
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
+    useEffect(() => {
+        if (isSuccess) {
+            message.success('Category created successfully');
         }
-        return {
-            movable: false,
-            toolbarRender() {
-                const isMainImage = category.images[currentImage] === category.mainImage;
-                return (
-                    <Button
-                        type="primary"
-                        disabled={isMainImage}
-                        onClick={() => {
-                            updateCategory({
-                                categoryName: category.categoryName,
-                                mainImage: category.images[currentImage],
-                            });
-                        }}
-                    >
-                        {isMainImage ? 'Current main image' : 'Select as main image'}
-                    </Button>
-                );
-            },
-            onChange(current: number) {
-                setCurrentImage(current);
-            },
-            onVisibleChange(_value: boolean, _prevValue: boolean, current: number) {
-                setCurrentImage(current);
-            },
-        };
-    }, [category, currentImage]);
-
-    if (!category || isLoading) {
-        return <Spin size="large" />;
-    }
+        if (isError) {
+            message.error('Failed to create category, try again later');
+        }
+    }, [isSuccess, isError]);
 
     return (
         <Layout>
@@ -85,76 +75,72 @@ export default function CreateCategory() {
                             ),
                         },
                         {
-                            title: `New ${categoryName}`,
+                            title: 'New Category',
                         },
                     ]}
                 />
                 <Card>
-                    <Row>
-                        <Col span={24}>
-                            <Divider>
-                                <Typography.Title level={3}>Main image & visibility</Typography.Title>
-                            </Divider>
-                            <Row gutter={[20, 20]}>
-                                <Col
-                                    md={12}
-                                    sm={24}
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'right',
-                                    }}
+                    <Form autoComplete="off" layout="vertical" form={form} onFinish={onSubmit}>
+                        <Row justify="space-evenly" gutter={[20, 20]}>
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Category Name"
+                                    name="categoryName"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'First character needs to be capital',
+                                            pattern: /^[A-Z][a-z0-9 _-]*\b/,
+                                        },
+                                    ]}
                                 >
-                                    {!category.mainImage && <Empty description="No main image" />}
-                                    {category.mainImage && (
+                                    <Input placeholder="Breakfast" />
+                                </Form.Item>
+                                <Form.Item>
+                                    <Form.Item noStyle name="visible" valuePropName="checked">
+                                        <Checkbox style={{ marginRight: '10px' }} />
+                                    </Form.Item>
+                                    Is visible
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={24}>
+                                <Divider>
+                                    <Typography.Title level={3}>Main Image</Typography.Title>
+                                </Divider>
+                                <Flex justify="center">
+                                    {currentImage ? (
                                         <Image
-                                            preview={false}
-                                            src={`/image/${category.mainImage}`}
+                                            preview={{ src: `/api/image/${currentImage}` }}
+                                            src={`/api/image/${currentImage}/preview`}
                                             style={{
                                                 maxWidth: 400,
-                                                ...(!category.visible && { filter: 'grayscale(100%)' }),
                                             }}
                                         />
+                                    ) : (
+                                        <Skeleton.Image />
                                     )}
-                                </Col>
-                                <Col md={12} sm={24}>
-                                    <Checkbox
-                                        checked={category.visible}
-                                        onChange={(event) => {
-                                            updateCategory({
-                                                categoryName: category.categoryName,
-                                                visible: event.target.checked,
-                                            });
-                                        }}
-                                    >
-                                        Is visible
-                                    </Checkbox>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Divider>
-                                <Typography.Title level={3}>Images</Typography.Title>
-                            </Divider>
-                            <Image.PreviewGroup preview={imagesPreview}>
-                                <Space>
-                                    {category.images.map((image) => (
-                                        <Image key={image} style={{ maxWidth: 200 }} src={`/image/${image}`} />
-                                    ))}
-                                </Space>
-                            </Image.PreviewGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Divider>
-                                <Typography.Title level={3}>Recipes</Typography.Title>
-                            </Divider>
-                            <ExpandedRecipeTable category={category} />
-                        </Col>
-                    </Row>
+                                </Flex>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={24}>
+                                <Button type="primary" loading={isLoading} icon={<SaveOutlined />} htmlType="submit">
+                                    Save
+                                </Button>
+                            </Col>
+                        </Row>
+
+                        <FloatButton
+                            type="primary"
+                            icon={<PictureOutlined />}
+                            onClick={showDrawer}
+                            tooltip="Select Image"
+                        />
+                    </Form>
                 </Card>
+                <ImageDrawer form={form} onClose={onClose} open={open} setCurrentImage={setCurrentImage} />
             </Layout.Content>
         </Layout>
     );
