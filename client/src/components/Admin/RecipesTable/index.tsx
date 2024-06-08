@@ -9,14 +9,8 @@ import { CREATE_RECIPE } from '../../../constants/routes';
 import { useRecipesList } from '../../../api/recipes/useRecipesList';
 
 const columns: TableColumnsType<Recipe> = [
-    {
-        title: 'Id',
-        dataIndex: 'id',
-    },
-    {
-        title: 'Title',
-        dataIndex: 'title',
-    },
+    { title: 'Id', dataIndex: 'id' },
+    { title: 'Title', dataIndex: 'title' },
     {
         title: 'Is published',
         dataIndex: 'isPublished',
@@ -37,24 +31,10 @@ const columns: TableColumnsType<Recipe> = [
             });
         },
     },
-    {
-        title: 'Created by',
-        dataIndex: 'createdBy',
-    },
-    {
-        title: 'Created at',
-        dataIndex: 'createdAt',
-        render: displayDate,
-    },
-    {
-        title: 'Updated by',
-        dataIndex: 'updatedBy',
-    },
-    {
-        title: 'Updated at',
-        dataIndex: 'updatedAt',
-        render: displayDate,
-    },
+    { title: 'Created by', dataIndex: 'createdBy', responsive: ['md'] },
+    { title: 'Created at', dataIndex: 'createdAt', render: displayDate, responsive: ['md'] },
+    { title: 'Updated by', dataIndex: 'updatedBy', responsive: ['md'] },
+    { title: 'Updated at', dataIndex: 'updatedAt', render: displayDate, responsive: ['md'] },
     {
         title: 'Action',
         dataIndex: '',
