@@ -1,8 +1,6 @@
 import ReactDOM from 'react-dom';
-import { StylesProvider } from '@mui/styles';
 
-import './index.scss';
-import '@fontsource/inter';
+import './index.css';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -20,14 +18,12 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.render(
-    <StylesProvider injectFirst>
-        <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-                <App />
-            </AuthProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-    </StylesProvider>,
+    <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+            <App />
+        </AuthProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>,
     document.getElementById('root')
 );
 

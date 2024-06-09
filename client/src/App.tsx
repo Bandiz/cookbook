@@ -1,7 +1,6 @@
 import { Layout } from 'antd';
 import { lazy, Suspense } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import './App.scss';
 import { Header, Loading, RouteGuard } from './components/Shared';
 import * as ROUTES from './constants/routes';
 import CreateCategory from './pages/CreateCategory';
@@ -23,7 +22,7 @@ function App() {
         <Router>
             <Layout>
                 <Header />
-                <Layout>
+                <Layout style={{ height: 'calc(100vh - 64px)' }}>
                     <Suspense fallback={<Loading />}>
                         <Routes>
                             <Route path={ROUTES.HOME} element={<Home />} />
