@@ -1,30 +1,15 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardMedia,
-    Chip,
-    Divider,
-    Grid,
-    List,
-    ListItem,
-    Stack,
-    Typography,
-} from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useRecipe } from '../../api/recipes';
 import { RECIPES } from '../../constants/routes';
-import { useStyles } from './Recipe';
+import { Breadcrumb, Card, Layout, Image, Row, Col, Typography, Space, Tag } from 'antd';
 
 const RecipePage = () => {
     const { id } = useParams();
-    const { classes } = useStyles();
 
     const { data: recipe } = useRecipe(id!);
 
     if (!recipe) {
-        return <Typography variant="h2">no recipe to display</Typography>;
+        return null;
     }
     const {
         mainImage,
@@ -39,94 +24,118 @@ const RecipePage = () => {
     } = recipe;
 
     return (
-        <>
-            <Button variant="contained" href={RECIPES}>
-                back to recipes
-            </Button>
-            <Card
-                raised
-                sx={{ m: { xs: 0, sm: '16px auto' }, p: 3, width: { xs: '100%', sm: '90%' }, justifyContent: 'center' }}
-            >
-                <CardHeader title={title} align="center" titleTypographyProps={{ variant: 'h4' }} />
-                <Stack direction="row" spacing={1} justifyContent="center">
-                    {categories.map((category) => {
-                        return (
-                            <Chip
-                                key={category}
-                                label={category}
-                                size="small"
-                                component="a"
-                                href={`/category/${category.toLowerCase()}`}
-                                clickable
-                            />
-                        );
-                    })}
-                </Stack>
-                <CardMedia component="img" src={mainImage} alt={title} className={classes.image} />
-                <CardContent className={classes.content}>
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 1, sm: 2, md: 4 }}
-                        divider={<Divider orientation="vertical" flexItem />}
-                        justifyContent="center"
-                        mb={2}
-                    >
-                        <Stack alignItems="center">
-                            <Typography>Servings</Typography>
-                            <Typography>{description}</Typography>
-                        </Stack>
-                        <Stack alignItems="center">
-                            <Typography>Total Time</Typography>
-                            <Typography>{totalTimeMinutes} min</Typography>
-                        </Stack>
-                        <Stack alignItems="center">
-                            <Typography>Prep Time</Typography>
-                            <Typography>{prepTimeMinutes} min</Typography>
-                        </Stack>
-                        <Stack alignItems="center">
-                            <Typography>Cook Time</Typography>
-                            <Typography>{cookTimeMinutes} min</Typography>
-                        </Stack>
-                    </Stack>
-                    <Grid
-                        container
-                        direction={{ xs: 'column', sm: 'row' }}
-                        justifyContent="space-around"
-                        p={{ xs: 0, sm: 2 }}
-                    >
-                        <Grid item xs={5} md={4} lg={3}>
-                            <Typography variant="h5" textAlign={{ xs: 'center', sm: 'left' }} pl={{ xs: 0, sm: 2 }}>
-                                Ingredients
-                            </Typography>
-                            <List>
+        <Layout>
+            <Layout.Content style={{ padding: '0 20px' }}>
+                <Breadcrumb
+                    style={{ margin: '16px 0' }}
+                    items={[
+                        {
+                            title: (
+                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={RECIPES}>
+                                    Recipes
+                                </Link>
+                            ),
+                        },
+                        {
+                            title: title,
+                        },
+                    ]}
+                />
+                <Card>
+                    <Space direction="vertical" size="middle">
+                        <Row justify="space-evenly" gutter={[16, 16]}>
+                            <Space align="start">
+                                <Col>
+                                    <Image
+                                        preview={false}
+                                        src={`/api/image/${mainImage}/preview`}
+                                        // style={{ maxWidth: 200 }}
+                                    />
+                                </Col>
+                                <Col>
+                                    <Row>
+                                        <Typography.Title>{title}</Typography.Title>
+                                    </Row>
+                                    <Space direction="vertical" size="middle">
+                                        <Row>
+                                            {categories.map((category, index) => {
+                                                return (
+                                                    <Tag color="green" key={index}>
+                                                        {category}
+                                                    </Tag>
+                                                );
+                                            })}
+                                        </Row>
+                                        <Row>
+                                            <Typography.Text>{description}</Typography.Text>
+                                        </Row>
+                                        <Row>
+                                            <Space direction="horizontal" size="large">
+                                                <Col>
+                                                    <Row>
+                                                        <Typography.Text strong>Total</Typography.Text>
+                                                    </Row>
+                                                    <Row>{totalTimeMinutes} mins</Row>
+                                                </Col>
+                                                <Col>
+                                                    <Row>
+                                                        <Typography.Text strong>Prep</Typography.Text>
+                                                    </Row>
+                                                    <Row>{prepTimeMinutes} mins</Row>
+                                                </Col>
+                                                <Col>
+                                                    <Row>
+                                                        <Typography.Text strong>Cook</Typography.Text>
+                                                    </Row>
+                                                    <Row>{cookTimeMinutes} mins</Row>
+                                                </Col>
+                                            </Space>
+                                        </Row>
+                                    </Space>
+                                </Col>
+                            </Space>
+                        </Row>
+
+                        <Row gutter={[24, 24]} justify="space-around">
+                            <Col flex={2}>
+                                <Row>
+                                    <Typography.Title level={5}>Ingredients</Typography.Title>
+                                </Row>
+
                                 {ingredients.map((ingredient, index) => {
-                                    const { measurementType, name, amount } = ingredient;
-                                    return ingredient ? (
-                                        <ListItem key={index}>
-                                            {amount} {measurementType} {name}
-                                        </ListItem>
-                                    ) : null;
+                                    return (
+                                        <Row key={index}>
+                                            <Space size="small">
+                                                <Col>{ingredient.amount}</Col>
+                                                <Col>{ingredient.measurementType}</Col>
+                                                <Col>{ingredient.name}</Col>
+                                            </Space>
+                                        </Row>
+                                    );
                                 })}
-                            </List>
-                        </Grid>
-                        <Grid item xs={7} md={6}>
-                            <Typography variant="h5" textAlign={{ xs: 'center', sm: 'left' }} pl={{ xs: 0, sm: 2 }}>
-                                Instructions
-                            </Typography>
-                            <List sx={{ listStyleType: 'decimal' }}>
+                            </Col>
+
+                            <Col flex={3}>
+                                <Row>
+                                    <Typography.Title level={5}>Instructions</Typography.Title>
+                                </Row>
+
                                 {instructions.map((instruction, index) => {
-                                    return instruction ? (
-                                        <ListItem sx={{ display: 'list-item' }} key={index}>
-                                            {instruction.description}
-                                        </ListItem>
-                                    ) : null;
+                                    return (
+                                        <Row key={index}>
+                                            <Space size="small">
+                                                <Col>{index + 1}.</Col>
+                                                <Col>{instruction.description}</Col>
+                                            </Space>
+                                        </Row>
+                                    );
                                 })}
-                            </List>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
-        </>
+                            </Col>
+                        </Row>
+                    </Space>
+                </Card>
+            </Layout.Content>
+        </Layout>
     );
 };
 export default RecipePage;
