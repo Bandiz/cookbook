@@ -1,9 +1,12 @@
 import { Alert, Card, Col, Layout, Row, Skeleton, Space, Spin, Tag } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useRecipes } from '../../api/recipes';
+import { useNavigate } from 'react-router-dom';
+import { RECIPE, replaceRouteParams } from '../../constants/routes';
 
 export default function Recipes() {
     const { data: recipes, isLoading, isError } = useRecipes();
+    const navigate = useNavigate();
 
     if (isLoading) {
         return <Spin spinning size="large" />;
@@ -21,6 +24,9 @@ export default function Recipes() {
                         <Col key={recipe.id}>
                             <Card
                                 key={recipe.id}
+                                onClick={() => {
+                                    navigate(replaceRouteParams(RECIPE, { id: recipe.id }));
+                                }}
                                 hoverable
                                 style={{ width: 240, minHeight: 370, height: '100%' }}
                                 cover={
