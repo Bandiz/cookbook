@@ -1,4 +1,4 @@
-import { Avatar, Layout, Menu, MenuProps } from 'antd';
+import { Avatar, Button, Layout, Menu, MenuProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { LoginOutlined, UserOutlined } from '@ant-design/icons';
 import { useLogoutSessionMutation } from '../../../api/session';
@@ -18,8 +18,6 @@ function Header() {
             navigate(RECIPES);
         } else if (e.key === ABOUT) {
             navigate(ABOUT);
-        } else if (e.key === LOGIN) {
-            navigate(LOGIN);
         } else if (e.key === ADMIN) {
             navigate(ADMIN);
         } else if (e.key === 'logout') {
@@ -51,43 +49,44 @@ function Header() {
                     },
                 ]}
             />
-            <Menu
-                theme="dark"
-                mode="horizontal"
-                style={{ flex: 0 }}
-                selectable={false}
-                onClick={onClick}
-                items={[
-                    ...(!isAuthenticated
-                        ? [
-                              {
-                                  key: LOGIN,
-                                  label: 'Login',
-                                  icon: <LoginOutlined />,
-                              },
-                          ]
-                        : [
-                              {
-                                  key: '',
-                                  label: '',
-                                  icon: (
-                                      <Avatar
-                                          size="large"
-                                          icon={<UserOutlined />}
-                                          style={{
-                                              backgroundColor: '#f56a00',
-                                              verticalAlign: 'middle',
-                                          }}
-                                      />
-                                  ),
-                                  children: [
-                                      ...(isAdmin ? [{ label: 'Admin', key: ADMIN }] : []),
-                                      { label: 'Logout', key: 'logout' },
-                                  ],
-                              },
-                          ]),
-                ]}
-            />
+            {!isAuthenticated ? (
+                <Button
+                    icon={<LoginOutlined />}
+                    type="text"
+                    style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+                    onClick={() => navigate(LOGIN)}
+                >
+                    Login
+                </Button>
+            ) : (
+                <Menu
+                    theme="dark"
+                    mode="horizontal"
+                    style={{ flex: 0 }}
+                    selectable={false}
+                    onClick={onClick}
+                    items={[
+                        {
+                            key: '',
+                            label: '',
+                            icon: (
+                                <Avatar
+                                    size="large"
+                                    icon={<UserOutlined />}
+                                    style={{
+                                        backgroundColor: '#f56a00',
+                                        verticalAlign: 'middle',
+                                    }}
+                                />
+                            ),
+                            children: [
+                                ...(isAdmin ? [{ label: 'Admin', key: ADMIN }] : []),
+                                { label: 'Logout', key: 'logout' },
+                            ],
+                        },
+                    ]}
+                />
+            )}
         </Layout.Header>
     );
 }
