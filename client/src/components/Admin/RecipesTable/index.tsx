@@ -1,16 +1,20 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType, Tag } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useRecipesList } from '../../../api/recipes/useRecipesList';
+import { CREATE_RECIPE } from '../../../constants/routes';
 import { Recipe } from '../../../types';
 import { displayDate } from '../utils';
 import { DeleteRecipeAction } from './DeleteRecipeAction';
 import { EditRecipeAction } from './EditRecipeAction';
-import { PlusOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { CREATE_RECIPE } from '../../../constants/routes';
-import { useRecipesList } from '../../../api/recipes/useRecipesList';
 
 const columns: TableColumnsType<Recipe> = [
     { title: 'Id', dataIndex: 'id' },
-    { title: 'Title', dataIndex: 'title' },
+    {
+        title: 'Title',
+        dataIndex: 'title',
+        render: (value: string, record) => <a href={`/recipe/${record.id}`}>{value}</a>,
+    },
     {
         title: 'Is published',
         dataIndex: 'isPublished',
