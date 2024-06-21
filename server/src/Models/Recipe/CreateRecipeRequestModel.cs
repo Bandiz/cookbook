@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Cookbook.API.Models.Recipe;
 
 public record CreateRecipeRequestModel(
-	[Required][MinLength(2)] string Title,
+	string Title,
 	string Description,
 	int? PrepTimeMinutes,
 	int? CookTimeMinutes,

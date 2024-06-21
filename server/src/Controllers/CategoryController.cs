@@ -83,17 +83,7 @@ public class CategoryController(
 	public async Task<IActionResult> CreateCategory(
 		[FromBody] CreateCategoryRequestModel model)
 	{
-		if (model == null)
-		{
-			return NotFound(ModelState);
-		}
-
-		var normalizedCategoryName = model.CategoryName
-			.ToLower()
-			.Trim()
-			.CapitalizeFirstLetter();
-
-		var existingCategory = categoryService.GetCategory(normalizedCategoryName);
+		var existingCategory = categoryService.GetCategory(model.CategoryName);
 
 		if (existingCategory != null)
 		{
@@ -121,7 +111,7 @@ public class CategoryController(
 
 		var category = new Category()
 		{
-			CategoryName = normalizedCategoryName,
+			CategoryName = model.CategoryName,
 			Visible = model.Visible,
 			MainImage = model.MainImage,
 			Images = model.Images?.Distinct().ToList() ?? [],

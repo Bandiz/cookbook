@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Driver;
 
@@ -13,8 +14,12 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 
 	public async Task<Category> GetCategory(string categoryName)
 	{
+		var normalizedName = categoryName
+			.Trim()
+			.ToLower()
+			.CapitalizeFirstLetter();
 		var category = await _categories
-			.Find(x => x.CategoryName == categoryName)
+			.Find(x => x.CategoryName == normalizedName)
 			.FirstOrDefaultAsync();
 		return category;
 	}

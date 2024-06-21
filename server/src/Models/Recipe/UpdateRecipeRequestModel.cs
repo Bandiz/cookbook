@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Cookbook.API.Models.Recipe;
 
 #nullable enable
 public record UpdateRecipeRequestModel(
-	[MinLength(2)] string? Title,
+	int? Id,
+	string? Title,
 	string? Description,
 	int? PrepTimeMinutes,
 	int? CookTimeMinutes,

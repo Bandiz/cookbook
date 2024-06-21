@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Driver;
 
@@ -77,10 +78,9 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 		return recipe;
 	}
 
-	public void UpdateRecipe(Recipe recipe)
+	public async Task UpdateRecipe(Recipe recipe)
 	{
-		_recipes.ReplaceOne(x => x.Id == recipe.Id, recipe);
-
+		await _recipes.ReplaceOneAsync(x => x.Id == recipe.Id, recipe);
 		UpdateCategories(recipe);
 	}
 

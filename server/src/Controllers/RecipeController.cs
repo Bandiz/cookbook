@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
+using Cookbook.API.Validators.Recipe;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -68,9 +69,13 @@ public class RecipeController(
 	[HttpPost]
 	public IActionResult CreateRecipe([FromBody] CreateRecipeRequestModel model)
 	{
-		if (model == null)
+		var validator = new CreateRecipeRequestValidator();
+
+		var result = validator.Validate(model);
+
+		if (!result.IsValid)
 		{
-			return NotFound(ModelState);
+			return BadRequest(result.Errors);
 		}
 
 		var recipe = new Recipe
@@ -120,11 +125,6 @@ public class RecipeController(
 	[HttpPatch("{id:int}")]
 	public async Task<IActionResult> UpdateRecipe(int id, [FromBody] UpdateRecipeRequestModel model)
 	{
-		if (model == null)
-		{
-			return NotFound(ModelState);
-		}
-
 		var recipe = recipeService.GetRecipe(id);
 		if (recipe == null)
 		{
@@ -133,10 +133,17 @@ public class RecipeController(
 
 		var updated = false;
 
+		if (model.Id != recipe.Id && model.Id.HasValue)
+		{
+			updated = true;
+			recipe.Id = model.Id.Value;
+		}
+
 		if (!string.IsNullOrEmpty(model.Title) && recipe.Title != model.Title)
 		{
 			updated = true;
 			recipe.Title = model.Title;
+			
 		}
 
 		if (recipe.Description != model.Description)
@@ -217,9 +224,9 @@ public class RecipeController(
 
 		if (updated)
 		{
-			recipe.UpdatedBy = User.Identity.Name;
+			recipe.UpdatedBy = User.Identity!.Name;
 			recipe.UpdatedAt = DateTime.UtcNow;
-			recipeService.UpdateRecipe(recipe);
+			await recipeService.UpdateRecipe(recipe);
 		}
 
 		return Ok(new GetRecipeResponseModel(recipe));

@@ -14,7 +14,7 @@ public interface IRecipeService
 
 	Recipe CreateRecipe(Recipe recipe);
 
-	void UpdateRecipe(Recipe recipe);
+	Task UpdateRecipe(Recipe recipe);
 
 	void DeleteRecipe(int id);
 
