@@ -268,14 +268,6 @@ export default function EditRecipe() {
                                 </Button>
                             </Col>
                             <Col span={8}>
-                                <Row justify="end">
-                                    <ImageDrawer
-                                        form={form}
-                                        onClose={onClose}
-                                        open={open}
-                                        setCurrentImage={setCurrentImage}
-                                    />
-                                </Row>
                                 <Form.Item label="Main image" name="mainImage" initialValue={recipeData.mainImage}>
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
@@ -292,6 +284,7 @@ export default function EditRecipe() {
                                 )}
                             </Col>
                         </Row>
+                        <ImageDrawer form={form} onClose={onClose} open={open} setCurrentImage={setCurrentImage} />
                     </Form>
                     <FloatButton
                         type="primary"

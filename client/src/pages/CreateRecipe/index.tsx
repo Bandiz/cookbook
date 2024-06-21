@@ -10,7 +10,6 @@ import {
     Row,
     Select,
     Skeleton,
-    Typography,
     message,
     Image,
     FloatButton,
@@ -132,15 +131,6 @@ export default function CreateRecipe() {
                                 </Button>
                             </Col>
                             <Col span={8}>
-                                <Row justify="end">
-                                    <ImageDrawer
-                                        form={form}
-                                        onClose={onClose}
-                                        open={open}
-                                        setCurrentImage={setCurrentImage}
-                                    />
-                                </Row>
-                                <Typography.Title level={5}>Image Preview</Typography.Title>
                                 <Form.Item label="Main image" name="mainImage">
                                     <Input placeholder="664a460f4a6667de0f5dddea" />
                                 </Form.Item>
@@ -165,6 +155,7 @@ export default function CreateRecipe() {
                         tooltip="Select Image"
                     />
                 </Card>
+                <ImageDrawer form={form} onClose={onClose} open={open} setCurrentImage={setCurrentImage} />
             </Layout.Content>
         </Layout>
     );
