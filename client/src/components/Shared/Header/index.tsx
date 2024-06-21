@@ -22,6 +22,7 @@ function Header() {
             navigate(ADMIN);
         } else if (e.key === 'logout') {
             logoutSessionMutation.mutate();
+            navigate(HOME);
         }
     };
 
