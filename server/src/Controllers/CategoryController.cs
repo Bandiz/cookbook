@@ -83,11 +83,11 @@ public class CategoryController(
 	public async Task<IActionResult> CreateCategory(
 		[FromBody] CreateCategoryRequestModel model)
 	{
-		var existingCategory = categoryService.GetCategory(model.CategoryName);
+		var existingCategory = await categoryService.GetCategory(model.CategoryName);
 
 		if (existingCategory != null)
 		{
-			return BadRequest($"Category exists: {model.CategoryName}");
+			return BadRequest($"Category exists: {existingCategory.CategoryName}");
 		}
 
 		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null && model.Images.Count > 0)
