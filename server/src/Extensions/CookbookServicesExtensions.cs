@@ -1,4 +1,4 @@
-using AspNetCore.Identity.Mongo;
+﻿using AspNetCore.Identity.Mongo;
 using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services;
@@ -20,9 +20,13 @@ public static class CookbookServicesExtensions
 		services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(config.ConnectionString));
 
 		services.AddIdentityMongoDbProvider<CookbookUser>(
-			identity => { },
+			identity => 
+			{
+			},
 			mongo =>
 			{
+				mongo.UsersCollection = "users";
+				mongo.MigrationCollection = "users.migrations";
 				mongo.ConnectionString = $"{config.ConnectionString}/{config.DatabaseName}";
 			});
 	}

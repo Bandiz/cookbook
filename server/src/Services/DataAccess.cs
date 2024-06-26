@@ -12,15 +12,14 @@ public class DataAccess : IDataAccess
 	public DataAccess(CookbookDatabaseSettings settings, IMongoClient mongoClient)
 	{
 		Database = mongoClient.GetDatabase(settings.DatabaseName);
-		Counters = Database.GetCollection<Counter>(settings.CounterCollectionName);
-		Recipes = Database.GetCollection<Recipe>(settings.RecipeCollectionName
-			);
-		Categories = Database.GetCollection<Category>(settings.CategoryCollectionName);
-		Files = Database.GetCollection<GridFSFileInfo>(settings.ImageCollectionName);
-		FilesChunks = Database.GetCollection<BsonDocument>(settings.ImageChunksCollectionName);
+		Counters = Database.GetCollection<Counter>("counters");
+		Recipes = Database.GetCollection<Recipe>("recipes");
+		Categories = Database.GetCollection<Category>("categories");
+		Files = Database.GetCollection<GridFSFileInfo>("images.files");
+		FilesChunks = Database.GetCollection<BsonDocument>("images.chunks");
 		ImageBucket = new GridFSBucket(Database, new() 
 		{ 
-			BucketName = settings.ImageBucketName 
+			BucketName = "images" 
 		});
 	}
 

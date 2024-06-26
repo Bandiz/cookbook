@@ -9,5 +9,6 @@ public class Counter
 	[BsonRepresentation(BsonType.String)]
 	public string Id { get; set; }
 
+	[BsonElement("sequence")]
 	public int Sequence { get; set; }
 }
