@@ -16,7 +16,7 @@ public class UserController(UserManager<CookbookUser> userManager) : ControllerB
 	[AllowAnonymous]
 	[HttpPost]
 	public async Task<IActionResult> CreateUser(
-		[FromForm] CreateUserRequestModel model)
+		[FromForm] CreateUserRequest model)
 	{
 		if (!ModelState.IsValid)
 		{

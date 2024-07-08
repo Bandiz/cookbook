@@ -41,7 +41,7 @@ public class CategoryController(
 			return NotFound(categoryName);
 		}
 
-		return Ok(new CategoryResponseModel(category));
+		return Ok(new CategoryResponse(category));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -50,7 +50,7 @@ public class CategoryController(
 	{
 		var categories = categoryService
 			.GetCategories(false)
-			.Select(x => new CategoryResponseModel(x));
+			.Select(x => new CategoryResponse(x));
 		return Ok(categories);
 	}
 
@@ -67,8 +67,8 @@ public class CategoryController(
 		var recipes = await recipeService.GetAllRecipes([categoryName]);
 
 		return Ok(
-			new CategoryRecipesResponseModel(recipes.Select(x =>
-				new CategoryRecipeResponseModel(
+			new CategoryRecipesResponse(recipes.Select(x =>
+				new CategoryRecipeResponse(
 					x.Id,
 					x.Title,
 					categoryName,
@@ -81,7 +81,7 @@ public class CategoryController(
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> CreateCategory(
-		[FromBody] CreateCategoryRequestModel model)
+		[FromBody] CreateCategoryRequest model)
 	{
 		var existingCategory = await categoryService.GetCategory(model.CategoryName);
 
@@ -124,7 +124,7 @@ public class CategoryController(
 		return CreatedAtAction(
 			nameof(GetCategory),
 			new { category.CategoryName },
-			new CategoryResponseModel(category)
+			new CategoryResponse(category)
 		);
 	}
 
@@ -154,7 +154,7 @@ public class CategoryController(
 	[HttpPut("{categoryName}")]
 	public async Task<IActionResult> UpdateCategory(
 		string categoryName,
-		[FromBody] UpdateCategoryRequestModel model)
+		[FromBody] UpdateCategoryRequest model)
 	{
 		if (string.IsNullOrEmpty(categoryName))
 		{
@@ -213,7 +213,7 @@ public class CategoryController(
 			await categoryService.UpdateCategory(existingCategory);
 		}
 
-		return Ok(new CategoryResponseModel(existingCategory));
+		return Ok(new CategoryResponse(existingCategory));
 	}
 
 	private static (List<ObjectId>, List<string>) ParseImageIds(IEnumerable<string> imagesToCheck)

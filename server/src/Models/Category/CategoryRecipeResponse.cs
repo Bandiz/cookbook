@@ -2,7 +2,7 @@
 
 namespace Cookbook.API.Models.Category;
 
-public record CategoryRecipeResponseModel(
+public record CategoryRecipeResponse(
 	int Id,
 	string Title,
 	string CategoryName,

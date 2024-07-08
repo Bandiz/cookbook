@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Cookbook.API.Validators.Recipe;
 
-public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeRequestModel>
+public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeRequest>
 {
 	public CreateRecipeRequestValidator()
 	{
@@ -12,7 +12,7 @@ public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeReques
 		RuleFor(x => x.PrepTimeMinutes).GreaterThan(0);
 		RuleFor(x => x.CookTimeMinutes).GreaterThan(0);
 		RuleFor(x => x.TotalTimeMinutes).GreaterThan(0);
-		RuleFor(x => x.MainImage).Length(24).SetValidator(new ObjectIdValidator<CreateRecipeRequestModel>());
+		RuleFor(x => x.MainImage).Length(24).SetValidator(new ObjectIdValidator<CreateRecipeRequest>());
 		RuleForEach(x => x.Categories).NotEmpty().MaximumLength(50);
 		RuleForEach(x => x.Ingredients).SetValidator(new IngredientRequestValidator());
 		RuleForEach(x => x.Instructions).SetValidator(new InstructionRequestValidator());

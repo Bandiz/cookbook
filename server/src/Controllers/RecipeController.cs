@@ -29,7 +29,7 @@ public class RecipeController(
 		{
 			return NotFound(id);
 		}
-		return Ok(new GetRecipeResponseModel(recipe));
+		return Ok(new GetRecipeResponse(recipe));
 	}
 
 	[AllowAnonymous]
@@ -40,7 +40,7 @@ public class RecipeController(
 		int count)
 	{
 		var recipes = recipeService.GetRecipes(searchText, count, categories);
-		return Ok(recipes.Select(recipe => new GetRecipesResponseModel(
+		return Ok(recipes.Select(recipe => new GetRecipesResponse(
 			recipe.Id,
 			recipe.Title,
 			recipe.TotalTimeMinutes,
@@ -53,7 +53,7 @@ public class RecipeController(
 	public async Task<IActionResult> GetRecipesList()
 	{
 		var recipes = await recipeService.GetAllRecipes();
-		return Ok(recipes.Select(recipe => new GetRecipesListResponseModel(
+		return Ok(recipes.Select(recipe => new GetRecipesListResponse(
 			recipe.Id,
 			recipe.Title,
 			recipe.CreatedBy,
@@ -67,7 +67,7 @@ public class RecipeController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
-	public IActionResult CreateRecipe([FromBody] CreateRecipeRequestModel model)
+	public IActionResult CreateRecipe([FromBody] CreateRecipeRequest model)
 	{
 		var validator = new CreateRecipeRequestValidator();
 
@@ -103,7 +103,7 @@ public class RecipeController(
 		};
 		recipeService.CreateRecipe(recipe);
 
-		return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, new GetRecipeResponseModel(recipe));
+		return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, new GetRecipeResponse(recipe));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -123,7 +123,7 @@ public class RecipeController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpPatch("{id:int}")]
-	public async Task<IActionResult> UpdateRecipe(int id, [FromBody] UpdateRecipeRequestModel model)
+	public async Task<IActionResult> UpdateRecipe(int id, [FromBody] UpdateRecipeRequest model)
 	{
 		var recipe = recipeService.GetRecipe(id);
 		if (recipe == null)
@@ -228,6 +228,6 @@ public class RecipeController(
 			await recipeService.UpdateRecipe(recipe);
 		}
 
-		return Ok(new GetRecipeResponseModel(recipe));
+		return Ok(new GetRecipeResponse(recipe));
 	}
 }

@@ -1,6 +1,6 @@
 ﻿namespace Cookbook.API.Models.User;
 
-public record CreateUserRequestModel(
+public record CreateUserRequest(
 	string UserName,
 	string Password,
 	string Email,

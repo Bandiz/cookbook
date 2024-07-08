@@ -4,7 +4,7 @@ using CategoryEntity = Cookbook.API.Entities.Category;
 
 namespace Cookbook.API.Models.Category;
 
-public record CategoryResponseModel(
+public record CategoryResponse(
 	string CategoryName,
 	bool Visible,
 	string UpdatedBy,
@@ -14,7 +14,7 @@ public record CategoryResponseModel(
 	List<string> Images,
 	string MainImage)
 {
-	public CategoryResponseModel(CategoryEntity category) : this(
+	public CategoryResponse(CategoryEntity category) : this(
 		category.CategoryName,
 		category.Visible,
 		category.UpdatedBy,

@@ -2,6 +2,6 @@
 
 namespace Cookbook.API.Models.Image;
 
-public record GetImagesByCategoryResponseModel(
+public record GetImagesByCategoryResponse(
 	List<string> UncategorizedImages,
-	List<CategoryImageResponseModel> Categories);
+	List<CategoryImageResponse> Categories);

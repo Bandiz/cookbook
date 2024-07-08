@@ -69,7 +69,7 @@ public class ImageController(IImageService imageService, ICategoryService catego
 			}
 		}
 
-		return Ok(new UploadImagesResponseModel(imageIds, warnings));
+		return Ok(new UploadImagesResponse(imageIds, warnings));
 	}
 
 	[AllowAnonymous]
@@ -141,9 +141,9 @@ public class ImageController(IImageService imageService, ICategoryService catego
 			return acc;
 		});
 
-		return Ok(new GetImagesByCategoryResponseModel(
+		return Ok(new GetImagesByCategoryResponse(
 			results.Uncategorized,
-			results.Categorized.Select(x => new CategoryImageResponseModel(x.Key, x.Value)).ToList()));
+			results.Categorized.Select(x => new CategoryImageResponse(x.Key, x.Value)).ToList()));
 	}
 
 	[Authorize(Roles = "Admin")]

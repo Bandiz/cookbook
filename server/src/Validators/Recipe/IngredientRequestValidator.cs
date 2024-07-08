@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Cookbook.API.Validators.Recipe;
 
-public class IngredientRequestValidator : AbstractValidator<CreateIngredientRequestModel>
+public class IngredientRequestValidator : AbstractValidator<CreateIngredientRequest>
 {
 	public IngredientRequestValidator()
 	{

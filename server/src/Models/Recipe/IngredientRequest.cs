@@ -1,6 +1,6 @@
 ﻿namespace Cookbook.API.Models.Recipe;
 
-public record CreateIngredientRequestModel(
+public record IngredientRequest(
 	int Amount,
 	string MeasurementType,
 	string Name);

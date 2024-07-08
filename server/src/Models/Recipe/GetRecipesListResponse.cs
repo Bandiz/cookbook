@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cookbook.API.Models.Recipe;
 
-public record GetRecipesListResponseModel(
+public record GetRecipesListResponse(
 	int Id,
 	string Title,
 	string CreatedBy,

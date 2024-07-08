@@ -4,7 +4,7 @@ namespace Cookbook.API.Models.Category;
 
 #nullable enable
 
-public record UpdateCategoryRequestModel(
+public record UpdateCategoryRequest(
 	bool? Visible,
 	string? MainImage,
 	List<string>? Images);

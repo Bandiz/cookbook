@@ -2,6 +2,6 @@
 
 namespace Cookbook.API.Models.Image;
 
-public record CategoryImageResponseModel(
+public record CategoryImageResponse(
 	string CategoryName,
 	List<string> ImageIds);

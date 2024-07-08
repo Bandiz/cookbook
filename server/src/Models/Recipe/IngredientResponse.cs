@@ -2,12 +2,12 @@
 
 namespace Cookbook.API.Models.Recipe;
 
-public record IngredientResponseModel(
+public record IngredientResponse(
 	int Amount,
 	string MeasurementType,
 	string Name)
 {
-	public IngredientResponseModel(Ingredient ingredient) : this(
+	public IngredientResponse(Ingredient ingredient) : this(
 		ingredient.Amount,
 		ingredient.MeasurementType,
 		ingredient.Name)
