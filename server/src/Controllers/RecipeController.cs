@@ -75,7 +75,7 @@ public class RecipeController(
 
 		if (!result.IsValid)
 		{
-			return BadRequest(result.Errors);
+			return BadRequest(result.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
 		}
 
 		var recipe = new Recipe
@@ -143,7 +143,6 @@ public class RecipeController(
 		{
 			updated = true;
 			recipe.Title = model.Title;
-			
 		}
 
 		if (recipe.Description != model.Description)

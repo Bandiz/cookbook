@@ -8,16 +8,13 @@ public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeReques
 	public CreateRecipeRequestValidator()
 	{
 		RuleFor(x => x.Title).NotEmpty().MaximumLength(100);
-		RuleFor(x => x.Description).NotEmpty().MaximumLength(500);
-		RuleFor(x => x.PrepTimeMinutes).NotEmpty().GreaterThan(0);
-		RuleFor(x => x.CookTimeMinutes).NotEmpty().GreaterThan(0);
-		RuleFor(x => x.TotalTimeMinutes).NotEmpty().GreaterThan(0);
-		RuleFor(x => x.MainImage).NotEmpty().MaximumLength(500);
-		RuleFor(x => x.Categories).NotEmpty();
+		RuleFor(x => x.Description).MaximumLength(500);
+		RuleFor(x => x.PrepTimeMinutes).GreaterThan(0);
+		RuleFor(x => x.CookTimeMinutes).GreaterThan(0);
+		RuleFor(x => x.TotalTimeMinutes).GreaterThan(0);
+		RuleFor(x => x.MainImage).Length(24).SetValidator(new ObjectIdValidator<CreateRecipeRequestModel>());
 		RuleForEach(x => x.Categories).NotEmpty().MaximumLength(50);
-		RuleFor(x => x.Ingredients).NotEmpty();
 		RuleForEach(x => x.Ingredients).SetValidator(new IngredientRequestValidator());
-		RuleFor(x => x.Instructions).NotEmpty();
 		RuleForEach(x => x.Instructions).SetValidator(new InstructionRequestValidator());
 		RuleFor(x => x.IsPublished).NotNull();
 	}
