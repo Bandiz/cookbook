@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cookbook.API", "Cookbook.API\Cookbook.API.csproj", "{DE305685-74AF-4EB4-A040-EA087415552B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cookbook.Database", "Cookbook.Database\Cookbook.Database.csproj", "{88273534-19D2-4588-8C0B-ADCAA0671C2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE305685-74AF-4EB4-A040-EA087415552B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE305685-74AF-4EB4-A040-EA087415552B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE305685-74AF-4EB4-A040-EA087415552B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE305685-74AF-4EB4-A040-EA087415552B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88273534-19D2-4588-8C0B-ADCAA0671C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88273534-19D2-4588-8C0B-ADCAA0671C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88273534-19D2-4588-8C0B-ADCAA0671C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88273534-19D2-4588-8C0B-ADCAA0671C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC82645F-1502-41D4-95E2-50337519C898}
+	EndGlobalSection
+EndGlobal
