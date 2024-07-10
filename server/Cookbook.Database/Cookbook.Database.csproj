@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Cookbook.API.csproj" />
+    <ProjectReference Include="..\Cookbook.API\Cookbook.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
