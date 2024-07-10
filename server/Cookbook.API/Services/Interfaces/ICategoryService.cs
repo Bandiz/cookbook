@@ -1,5 +1,6 @@
 ﻿using Cookbook.API.Entities;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cookbook.API.Services.Interfaces;
@@ -16,7 +17,9 @@ public interface ICategoryService
 
 	void DeleteCategory(string categoryName);
 
-	List<Category> CreateCategories(List<Category> categories);
+	Task<List<Category>> CreateCategories(
+		List<Category> categories,
+		CancellationToken cancellationToken = default);
 
 	Task UpdateCategory(Category category);
 

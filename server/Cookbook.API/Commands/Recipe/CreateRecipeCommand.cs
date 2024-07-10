@@ -17,10 +17,10 @@ public class CreateRecipeCommand : IRequest<GetRecipeResponse>
 
 public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequestHandler<CreateRecipeCommand, GetRecipeResponse>
 {
-	public Task<GetRecipeResponse> Handle(CreateRecipeCommand command, CancellationToken cancellationToken)
+	public async Task<GetRecipeResponse> Handle(CreateRecipeCommand command, CancellationToken cancellationToken)
 	{
 		var request = command.Request;
-		var recipe = new Entities.Recipe
+		var newRecipe = new Entities.Recipe
 		{
 			Title = request.Title,
 			Description = request.Description,
@@ -43,7 +43,7 @@ public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequest
 			CreatedBy = command.User,
 			CreatedAt = DateTime.UtcNow
 		};
-		recipeService.CreateRecipe(recipe);
-		return Task.FromResult(new GetRecipeResponse(recipe));
+		var recipe = await recipeService.CreateRecipe(newRecipe, cancellationToken);
+		return new GetRecipeResponse(recipe);
 	}
 }

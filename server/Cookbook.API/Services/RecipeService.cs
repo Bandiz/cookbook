@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
-using Cookbook.API.Extensions;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Driver;
 
@@ -66,22 +66,22 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 		return query.ToList();
 	}
 
-	public Recipe CreateRecipe(Recipe recipe)
+	public async Task<Recipe> CreateRecipe(Recipe recipe, CancellationToken cancellationToken = default)
 	{
 		var newId = GetNewRecipeId();
 		recipe.Id = newId;
 
-		_recipes.InsertOne(recipe);
+		await _recipes.InsertOneAsync(recipe, new(), cancellationToken);
 
-		UpdateCategories(recipe);
+		await UpdateCategories(recipe, cancellationToken);
 
 		return recipe;
 	}
 
-	public async Task UpdateRecipe(Recipe recipe)
+	public async Task UpdateRecipe(Recipe recipe, CancellationToken cancellationToken = default)
 	{
-		await _recipes.ReplaceOneAsync(x => x.Id == recipe.Id, recipe);
-		UpdateCategories(recipe);
+		await _recipes.ReplaceOneAsync(x => x.Id == recipe.Id, recipe, cancellationToken: cancellationToken);
+		await UpdateCategories(recipe, cancellationToken);
 	}
 
 	public void DeleteRecipe(int id)
@@ -109,7 +109,7 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 			.Sequence;
 	}
 
-	private void UpdateCategories(Recipe recipe)
+	private async Task UpdateCategories(Recipe recipe, CancellationToken cancellationToken = default)
 	{
 		if (recipe.Categories.Count > 0)
 		{
@@ -121,12 +121,12 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 				return;
 			}
 
-			categoryService.CreateCategories(notAddedCategories.Select(x => new Category()
+			await categoryService.CreateCategories(notAddedCategories.Select(x => new Category()
 			{
 				CategoryName = x,
 				CreatedBy = recipe.UpdatedBy ?? recipe.CreatedBy,
 				CreatedAt = DateTime.UtcNow
-			}).ToList());
+			}).ToList(), cancellationToken);
 		}
 	}
 }

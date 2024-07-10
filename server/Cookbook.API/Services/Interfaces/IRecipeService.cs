@@ -1,5 +1,6 @@
 ﻿using Cookbook.API.Entities;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cookbook.API.Services.Interfaces;
@@ -12,9 +13,9 @@ public interface IRecipeService
 
 	Task<List<Recipe>> GetAllRecipes(List<string> categories = null);
 
-	Recipe CreateRecipe(Recipe recipe);
+	Task<Recipe> CreateRecipe(Recipe recipe, CancellationToken cancellationToken = default);
 
-	Task UpdateRecipe(Recipe recipe);
+	Task UpdateRecipe(Recipe recipe, CancellationToken cancellationToken = default);
 
 	void DeleteRecipe(int id);
 

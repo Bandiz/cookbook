@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
@@ -44,9 +45,11 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 		_categories.DeleteOne(x => x.CategoryName == categoryName);
 	}
 
-	public List<Category> CreateCategories(List<Category> categories)
+	public async Task<List<Category>> CreateCategories(
+		List<Category> categories,
+		CancellationToken cancellationToken = default)
 	{
-		_categories.InsertMany(categories);
+		await _categories.InsertManyAsync(categories, new(), cancellationToken);
 
 		return categories;
 	}
