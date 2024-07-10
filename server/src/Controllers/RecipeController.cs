@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Commands.Recipe;
 using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
 using Cookbook.API.Validators.Recipe;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -17,7 +21,8 @@ namespace Cookbook.API.Controllers;
 [ApiController]
 public class RecipeController(
 	IRecipeService recipeService,
-	IImageService imageService) : ControllerBase
+	IImageService imageService,
+	IMediator mediator) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpGet("{id:int}")]
@@ -67,7 +72,9 @@ public class RecipeController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
-	public IActionResult CreateRecipe([FromBody] CreateRecipeRequest model)
+	public async Task<IActionResult> CreateRecipe(
+		[FromBody] CreateRecipeRequest model,
+		CancellationToken cancellationToken)
 	{
 		var validator = new CreateRecipeRequestValidator();
 
@@ -77,33 +84,15 @@ public class RecipeController(
 		{
 			return BadRequest(result.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
 		}
-
-		var recipe = new Recipe
+		CreateRecipeCommand command = new()
 		{
-			Title = model.Title,
-			Description = model.Description,
-			MainImage = model.MainImage,
-			CookTimeMinutes = model.CookTimeMinutes ?? 0,
-			PrepTimeMinutes = model.PrepTimeMinutes ?? 0,
-			TotalTimeMinutes = model.TotalTimeMinutes ?? 0,
-			Categories = model.Categories ?? [],
-			Ingredients = model.Ingredients?.Select((x, index) => new Ingredient
-			{
-				Amount = x.Amount,
-				MeasurementType = x.MeasurementType,
-				Name = x.Name,
-			}).ToList() ?? [],
-			Instructions = model.Instructions?.Select(x => new Instruction
-			{
-				Description = x.Description,
-			}).ToList() ?? [],
-			IsPublished = model.IsPublished ?? false,
-			CreatedBy = User.Identity.Name,
-			CreatedAt = DateTime.UtcNow
+			Request = model,
+			User = User.Identity!.Name
 		};
-		recipeService.CreateRecipe(recipe);
 
-		return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, new GetRecipeResponse(recipe));
+		var response = await mediator.Send(command, cancellationToken);
+
+		return CreatedAtAction(nameof(GetRecipe), new { id = response.Id }, response);
 	}
 
 	[Authorize(Roles = "Admin")]

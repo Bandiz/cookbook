@@ -15,8 +15,8 @@ namespace Cookbook.API.Controllers;
 [ApiController]
 public class ImageController(IImageService imageService, ICategoryService categoryService) : ControllerBase
 {
-	const int MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-	static readonly IReadOnlyList<string> VALID_FILE_TYPES = new List<string>
+	const int MaxFileSize = 5 * 1024 * 1024; // 5MB
+	static readonly IReadOnlyList<string> ValidFileTypes = new List<string>
 	{
 		"image/jpeg",
 		"image/png",
@@ -39,12 +39,12 @@ public class ImageController(IImageService imageService, ICategoryService catego
 
 		foreach (var file in files)
 		{
-			if (file.Length > MAX_FILE_SIZE)
+			if (file.Length > MaxFileSize)
 			{
 				return BadRequest($"File {file.FileName} is too large");
 			}
 
-			if (!VALID_FILE_TYPES.Contains(file.ContentType))
+			if (!ValidFileTypes.Contains(file.ContentType))
 			{
 				return BadRequest($"Invalid file type for file {file.FileName}");
 			}

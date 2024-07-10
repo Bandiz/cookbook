@@ -66,6 +66,8 @@ public class Startup(IConfiguration configuration)
 
 		services.AddCookbookServices();
 
+		services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
+
 		var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
 		ConventionRegistry.Register("camelCase", conventionPack, t => true);
 	}
