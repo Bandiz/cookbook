@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Commands;
 using Cookbook.API.Commands.Recipe;
 using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
@@ -72,24 +73,23 @@ public class RecipeController(
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> CreateRecipe(
-		[FromBody] CreateRecipeRequest model,
+		[FromBody] CreateRecipeRequest request,
 		CancellationToken cancellationToken)
 	{
 		var validator = new CreateRecipeRequestValidator();
 
-		var result = validator.Validate(model);
+		var result = validator.Validate(request);
 
 		if (!result.IsValid)
 		{
 			return BadRequest(result.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
 		}
-		CreateRecipeCommand command = new()
-		{
-			Request = model,
-			User = User.Identity!.Name
-		};
 
-		var response = await mediator.Send(command, cancellationToken);
+		var response = await mediator.Send(new CreateRecipeCommand()
+		{
+			Request = request,
+			User = User.Identity!.Name
+		}, cancellationToken);
 
 		return CreatedAtAction(nameof(GetRecipe), new { id = response.Id }, response);
 	}
@@ -111,111 +111,24 @@ public class RecipeController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpPatch("{id:int}")]
-	public async Task<IActionResult> UpdateRecipe(int id, [FromBody] UpdateRecipeRequest model)
+	public async Task<IActionResult> UpdateRecipe(
+		[FromRoute] int id,
+		[FromBody] UpdateRecipeRequest request,
+		CancellationToken cancellationToken)
 	{
-		var recipe = recipeService.GetRecipe(id);
-		if (recipe == null)
+		var response = await mediator.Send(new UpdateRecipeCommand
 		{
-			return NotFound(id);
-		}
+			Id = id,
+			Request = request,
+			User = User.Identity.Name
+		}, cancellationToken);
 
-		var updated = false;
-
-		if (model.Id != recipe.Id && model.Id.HasValue)
+		return response switch
 		{
-			updated = true;
-			recipe.Id = model.Id.Value;
-		}
-
-		if (!string.IsNullOrEmpty(model.Title) && recipe.Title != model.Title)
-		{
-			updated = true;
-			recipe.Title = model.Title;
-		}
-
-		if (recipe.Description != model.Description)
-		{
-			updated = true;
-			recipe.Description = model.Description;
-		}
-
-		if (recipe.MainImage != model.MainImage)
-		{
-			if (!string.IsNullOrEmpty(model.MainImage))
-			{
-				if (!ObjectId.TryParse(model.MainImage, out var parsedId))
-				{
-					return BadRequest("MainImage is not a valid ObjectId");
-				}
-				var notFoundIds = await imageService.CheckExistingImages([parsedId]);
-
-				if (notFoundIds.Count > 0)
-				{
-					return BadRequest("MainImage does not exist");
-				}
-			}
-
-			updated = true;
-			recipe.MainImage = model.MainImage;
-		}
-
-		if (model.PrepTimeMinutes.HasValue)
-		{
-			updated = true;
-			recipe.PrepTimeMinutes = model.PrepTimeMinutes.Value;
-		}
-
-		if (model.CookTimeMinutes.HasValue)
-		{
-			updated = true;
-			recipe.CookTimeMinutes = model.CookTimeMinutes.Value;
-		}
-
-		if (model.TotalTimeMinutes.HasValue)
-		{
-			updated = true;
-			recipe.TotalTimeMinutes = model.TotalTimeMinutes.Value;
-		}
-
-		if (model.Categories != null)
-		{
-			updated = true;
-			recipe.Categories = model.Categories;
-		}
-
-		if (model.Ingredients != null)
-		{
-			updated = true;
-			recipe.Ingredients = model.Ingredients.Select((x, index) => new Ingredient
-			{
-				Amount = x.Amount,
-				MeasurementType = x.MeasurementType,
-				Name = x.Name,
-			}).ToList();
-		}
-
-		if (model.Instructions != null)
-		{
-			updated = true;
-			recipe.Instructions = model.Instructions.Select(x => new Instruction
-			{
-				Description = x.Description,
-			}).ToList();
-		}
-
-		if (model.IsPublished.HasValue && recipe.IsPublished != model.IsPublished)
-		{
-			updated = true;
-			recipe.IsPublished = model.IsPublished.Value;
-		}
-
-		if (updated)
-		{
-			recipe.UpdatedBy = User.Identity!.Name;
-			recipe.UpdatedAt = DateTime.UtcNow;
-			await recipeService.UpdateRecipe(recipe);
-		}
-
-		return Ok(new GetRecipeResponse(recipe));
+			SuccessResponse<GetRecipeResponse> success => Ok(success.Data),
+			NotFoundResponse notFound => NotFound(notFound.Message),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An unexpected error occurred.")
+		};
 	}
 }

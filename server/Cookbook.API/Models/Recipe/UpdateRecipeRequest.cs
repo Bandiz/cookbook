@@ -4,7 +4,6 @@ namespace Cookbook.API.Models.Recipe;
 
 #nullable enable
 public record UpdateRecipeRequest(
-	int? Id,
 	string? Title,
 	string? Description,
 	int? PrepTimeMinutes,
