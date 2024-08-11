@@ -84,9 +84,9 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 		await UpdateCategories(recipe, cancellationToken);
 	}
 
-	public void DeleteRecipe(int id)
+	public async Task DeleteRecipe(int id, CancellationToken cancellationToken = default)
 	{
-		_recipes.DeleteOne(x => x.Id == id);
+		await _recipes.DeleteOneAsync(x => x.Id == id, cancellationToken);
 	}
 
 	public void RemoveCategoryAll(string categoryName)

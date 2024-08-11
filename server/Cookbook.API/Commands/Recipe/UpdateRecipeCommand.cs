@@ -123,6 +123,6 @@ public class UpdateRecipeCommandHandler(
 			await recipeService.UpdateRecipe(recipe, cancellationToken);
 		}
 
-		return new SuccessResponse<GetRecipeResponse>(new GetRecipeResponse(recipe));
+		return new SuccessResponse<GetRecipeResponse>(new(recipe));
 	}
 }

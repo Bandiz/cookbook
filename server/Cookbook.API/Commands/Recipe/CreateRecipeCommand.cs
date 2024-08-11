@@ -9,15 +9,15 @@ using MediatR;
 
 namespace Cookbook.API.Commands.Recipe;
 
-public class CreateRecipeCommand : IRequest<GetRecipeResponse>
+public class CreateRecipeCommand : IRequest<CommandResponse>
 {
 	public CreateRecipeRequest Request { get; set; }
 	public string User { get; set; }
 }
 
-public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequestHandler<CreateRecipeCommand, GetRecipeResponse>
+public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequestHandler<CreateRecipeCommand, CommandResponse>
 {
-	public async Task<GetRecipeResponse> Handle(CreateRecipeCommand command, CancellationToken cancellationToken)
+	public async Task<CommandResponse> Handle(CreateRecipeCommand command, CancellationToken cancellationToken)
 	{
 		var request = command.Request;
 		var newRecipe = new Entities.Recipe
@@ -44,6 +44,6 @@ public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequest
 			CreatedAt = DateTime.UtcNow
 		};
 		var recipe = await recipeService.CreateRecipe(newRecipe, cancellationToken);
-		return new GetRecipeResponse(recipe);
+		return new SuccessResponse<GetRecipeResponse>(new(recipe));
 	}
 }

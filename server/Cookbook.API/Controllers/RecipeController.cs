@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Commands;
 using Cookbook.API.Commands.Recipe;
-using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
 using Cookbook.API.Validators.Recipe;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
 
@@ -82,7 +79,11 @@ public class RecipeController(
 
 		if (!result.IsValid)
 		{
-			return BadRequest(result.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+			return BadRequest(result.Errors.Select(x => new 
+			{ 
+				x.PropertyName, 
+				x.ErrorMessage 
+			}));
 		}
 
 		var response = await mediator.Send(new CreateRecipeCommand()
@@ -91,22 +92,33 @@ public class RecipeController(
 			User = User.Identity!.Name
 		}, cancellationToken);
 
-		return CreatedAtAction(nameof(GetRecipe), new { id = response.Id }, response);
+		return response switch
+		{
+			SuccessResponse<GetRecipeResponse> success => CreatedAtAction(
+				nameof(GetRecipe),
+				new { id = success.Data.Id },
+				success.Data),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 	[Authorize(Roles = "Admin")]
 	[HttpDelete("{id:int}")]
-	public IActionResult DeleteRecipe(int id)
+	public async Task<IActionResult> DeleteRecipe(
+		[FromRoute] int id,
+		CancellationToken cancellationToken)
 	{
-		var recipe = recipeService.GetRecipe(id);
-		if (recipe == null)
+		var response = await mediator.Send(new DeleteRecipeCommand
 		{
-			return NotFound(id);
-		}
+			Id = id,
+		}, cancellationToken);
 
-		recipeService.DeleteRecipe(id);
-
-		return Ok();
+		return response switch
+		{
+			SuccessResponse _ => Ok(),
+			NotFoundResponse notFound => NotFound(notFound.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -128,7 +140,7 @@ public class RecipeController(
 			SuccessResponse<GetRecipeResponse> success => Ok(success.Data),
 			NotFoundResponse notFound => NotFound(notFound.Message),
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
-			_ => StatusCode(500, "An unexpected error occurred.")
+			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}
 }

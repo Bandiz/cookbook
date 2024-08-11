@@ -9,6 +9,10 @@ public class SuccessResponse<T>(T data) : CommandResponse
 	public T Data { get; } = data;
 }
 
+public class SuccessResponse() : CommandResponse
+{
+}
+
 public class NotFoundResponse(string message) : CommandResponse
 {
 	public string Message { get; } = message;

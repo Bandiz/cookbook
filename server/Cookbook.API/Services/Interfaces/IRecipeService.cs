@@ -17,7 +17,7 @@ public interface IRecipeService
 
 	Task UpdateRecipe(Recipe recipe, CancellationToken cancellationToken = default);
 
-	void DeleteRecipe(int id);
+	Task DeleteRecipe(int id, CancellationToken cancellationToken = default);
 
 	void RemoveCategoryAll(string categoryName);
 }
