@@ -18,9 +18,9 @@ IRequestHandler<DeleteRecipeCommand, CommandResponse>
 		var recipe = recipeService.GetRecipe(command.Id);
 		if (recipe == null)
 		{
-			return new NotFoundResponse("Recipe not found");
+			return CommandResponse.NotFound("Recipe not found");
 		}
 		await recipeService.DeleteRecipe(command.Id, cancellationToken);
-		return new SuccessResponse();
+		return CommandResponse.Ok();
 	}
 }

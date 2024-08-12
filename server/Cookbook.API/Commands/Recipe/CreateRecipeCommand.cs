@@ -15,9 +15,12 @@ public class CreateRecipeCommand : IRequest<CommandResponse>
 	public string User { get; set; }
 }
 
-public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequestHandler<CreateRecipeCommand, CommandResponse>
+public class CreateRecipeCommandHandler(IRecipeService recipeService) :
+	IRequestHandler<CreateRecipeCommand, CommandResponse>
 {
-	public async Task<CommandResponse> Handle(CreateRecipeCommand command, CancellationToken cancellationToken)
+	public async Task<CommandResponse> Handle(
+		CreateRecipeCommand command,
+		CancellationToken cancellationToken)
 	{
 		var request = command.Request;
 		var newRecipe = new Entities.Recipe
@@ -44,6 +47,6 @@ public class CreateRecipeCommandHandler(IRecipeService recipeService) : IRequest
 			CreatedAt = DateTime.UtcNow
 		};
 		var recipe = await recipeService.CreateRecipe(newRecipe, cancellationToken);
-		return new SuccessResponse<GetRecipeResponse>(new(recipe));
+		return CommandResponse.Ok(new GetRecipeResponse(recipe));
 	}
 }

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Cookbook.API.Entities;
+using Cookbook.API.Commands;
+using Cookbook.API.Commands.Category;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace Cookbook.API.Controllers;
 
@@ -16,6 +18,7 @@ namespace Cookbook.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class CategoryController(
+	IMediator mediator,
 	ICategoryService categoryService,
 	IRecipeService recipeService,
 	IImageService imageService) : ControllerBase
@@ -81,51 +84,25 @@ public class CategoryController(
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> CreateCategory(
-		[FromBody] CreateCategoryRequest model)
+		[FromBody] CreateCategoryRequest request,
+		CancellationToken token)
 	{
-		var existingCategory = await categoryService.GetCategory(model.CategoryName);
-
-		if (existingCategory != null)
+		var response = await mediator.Send(new CreateCategoryCommand()
 		{
-			return BadRequest($"Category exists: {existingCategory.CategoryName}");
-		}
+			Request = request,
+			User = User.Identity.Name
+		});
 
-		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null && model.Images.Count > 0)
+		return response switch
 		{
-			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
-
-			var (parsedImageIds, failedParsedIds) = ParseImageIds(imagesToCheck);
-
-			if (failedParsedIds.Count != 0)
-			{
-				return BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
-			}
-
-			var missingIds = await imageService.CheckExistingImages(parsedImageIds);
-
-			if (missingIds.Count != 0)
-			{
-				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
-			}
-		}
-
-		var category = new Category()
-		{
-			CategoryName = model.CategoryName,
-			Visible = model.Visible,
-			MainImage = model.MainImage,
-			Images = model.Images?.Distinct().ToList() ?? [],
-			CreatedBy = User.Identity.Name,
-			CreatedAt = DateTime.UtcNow
+			SuccessResponse<CategoryResponse> success => CreatedAtAction(
+				nameof(GetCategory),
+				new { categoryName = success.Data.CategoryName },
+				success.Data
+			),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
 		};
-
-		categoryService.CreateCategory(category);
-
-		return CreatedAtAction(
-			nameof(GetCategory),
-			new { category.CategoryName },
-			new CategoryResponse(category)
-		);
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -179,7 +156,7 @@ public class CategoryController(
 		{
 			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
 
-			var (parsedImageIds, failedParsedIds) = ParseImageIds(imagesToCheck);
+			var (parsedImageIds, failedParsedIds) = imagesToCheck.ParseImageIds();
 
 			if (failedParsedIds.Count != 0)
 			{
@@ -216,24 +193,4 @@ public class CategoryController(
 		return Ok(new CategoryResponse(existingCategory));
 	}
 
-	private static (List<ObjectId>, List<string>) ParseImageIds(IEnumerable<string> imagesToCheck)
-	{
-		HashSet<ObjectId> parsedImageIds = [];
-		List<string> failedParsedIds = [];
-
-		var imagesIds = new List<string>(imagesToCheck)
-						.Where(x => !string.IsNullOrEmpty(x));
-
-		foreach (var imageId in imagesIds)
-		{
-			if (!ObjectId.TryParse(imageId, out var parsedId))
-			{
-				failedParsedIds.Add(imageId);
-				continue;
-			}
-			parsedImageIds.Add(parsedId);
-		}
-
-		return (parsedImageIds.ToList(), failedParsedIds);
-	}
 }

@@ -28,7 +28,7 @@ public class UpdateRecipeCommandHandler(
 		var recipe = recipeService.GetRecipe(command.Id);
 		if (recipe == null)
 		{
-			return new NotFoundResponse("Recipe not found");
+			return CommandResponse.NotFound("Recipe not found");
 		}
 		var model = command.Request;
 
@@ -52,13 +52,13 @@ public class UpdateRecipeCommandHandler(
 			{
 				if (!ObjectId.TryParse(model.MainImage, out var parsedId))
 				{
-					return new BadRequestResponse("MainImage is not a valid ObjectId");
+					return CommandResponse.BadRequest("MainImage is not a valid ObjectId");
 				}
 				var notFoundIds = await imageService.CheckExistingImages([parsedId]);
 
 				if (notFoundIds.Count > 0)
 				{
-					return new BadRequestResponse("MainImage does not exist");
+					return CommandResponse.BadRequest("MainImage does not exist");
 				}
 			}
 
@@ -123,6 +123,6 @@ public class UpdateRecipeCommandHandler(
 			await recipeService.UpdateRecipe(recipe, cancellationToken);
 		}
 
-		return new SuccessResponse<GetRecipeResponse>(new(recipe));
+		return CommandResponse.Ok(new GetRecipeResponse(recipe));
 	}
 }

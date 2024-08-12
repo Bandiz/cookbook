@@ -18,7 +18,6 @@ namespace Cookbook.API.Controllers;
 [ApiController]
 public class RecipeController(
 	IRecipeService recipeService,
-	IImageService imageService,
 	IMediator mediator) : ControllerBase
 {
 	[AllowAnonymous]
@@ -115,7 +114,7 @@ public class RecipeController(
 
 		return response switch
 		{
-			SuccessResponse _ => Ok(),
+			SuccessResponse => Ok(),
 			NotFoundResponse notFound => NotFound(notFound.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
