@@ -13,11 +13,15 @@ public interface IRecipeService
 
 	Task<List<Recipe>> GetAllRecipes(List<string> categories = null);
 
-	Task<Recipe> CreateRecipe(Recipe recipe, CancellationToken cancellationToken = default);
+	Task<Recipe> CreateRecipe(
+		Recipe recipe,
+		CancellationToken cancellationToken = default);
 
 	Task UpdateRecipe(Recipe recipe, CancellationToken cancellationToken = default);
 
 	Task DeleteRecipe(int id, CancellationToken cancellationToken = default);
 
-	void RemoveCategoryAll(string categoryName);
+	Task RemoveCategoryAll(
+		string categoryName,
+		CancellationToken cancellationToken = default);
 }

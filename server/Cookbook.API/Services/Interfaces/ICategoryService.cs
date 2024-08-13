@@ -15,7 +15,9 @@ public interface ICategoryService
 
 	Category CreateCategory(Category category);
 
-	void DeleteCategory(string categoryName);
+	Task DeleteCategory(
+		string categoryName,
+		CancellationToken cancellationToken = default);
 
 	Task<List<Category>> CreateCategories(
 		List<Category> categories,

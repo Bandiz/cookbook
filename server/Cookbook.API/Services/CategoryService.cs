@@ -40,9 +40,13 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 		return category;
 	}
 
-	public void DeleteCategory(string categoryName)
+	public async Task DeleteCategory(
+		string categoryName,
+		CancellationToken cancellationToken = default)
 	{
-		_categories.DeleteOne(x => x.CategoryName == categoryName);
+		await _categories.DeleteOneAsync(
+			x => x.CategoryName == categoryName,
+			cancellationToken: cancellationToken);
 	}
 
 	public async Task<List<Category>> CreateCategories(

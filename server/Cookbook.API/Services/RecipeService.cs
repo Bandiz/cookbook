@@ -9,7 +9,9 @@ using MongoDB.Driver;
 
 namespace Cookbook.API.Services;
 
-public class RecipeService(IDataAccess DataAccess, ICategoryService categoryService) : IRecipeService
+public class RecipeService(
+	IDataAccess DataAccess,
+	ICategoryService categoryService) : IRecipeService
 {
 	private readonly IMongoCollection<Counter> _counters = DataAccess.Counters;
 	private readonly IMongoCollection<Recipe> _recipes = DataAccess.Recipes;
@@ -35,7 +37,9 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 
 		if (categories != null && categories.Count > 0)
 		{
-			var categoryFilter = Builders<Recipe>.Filter.AnyIn(recipe => recipe.Categories, categories);
+			var categoryFilter = Builders<Recipe>.Filter.AnyIn(
+				recipe => recipe.Categories,
+				categories);
 			filter = Builders<Recipe>.Filter.And(filter, categoryFilter);
 		}
 
@@ -55,7 +59,9 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 
 		if (categories != null)
 		{
-			Builders<Recipe>.Filter.And(filter, Builders<Recipe>.Filter.AnyIn(recipe => recipe.Categories, categories));
+			Builders<Recipe>.Filter.And(
+				filter,
+				Builders<Recipe>.Filter.AnyIn(recipe => recipe.Categories, categories));
 		}
 
 		var query = await _recipes.FindAsync(filter, new()
@@ -66,7 +72,9 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 		return query.ToList();
 	}
 
-	public async Task<Recipe> CreateRecipe(Recipe recipe, CancellationToken cancellationToken = default)
+	public async Task<Recipe> CreateRecipe(
+		Recipe recipe,
+		CancellationToken cancellationToken = default)
 	{
 		var newId = GetNewRecipeId();
 		recipe.Id = newId;
@@ -78,25 +86,40 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 		return recipe;
 	}
 
-	public async Task UpdateRecipe(Recipe recipe, CancellationToken cancellationToken = default)
+	public async Task UpdateRecipe(
+		Recipe recipe,
+		CancellationToken cancellationToken = default)
 	{
-		await _recipes.ReplaceOneAsync(x => x.Id == recipe.Id, recipe, cancellationToken: cancellationToken);
+		await _recipes.ReplaceOneAsync(
+			x => x.Id == recipe.Id,
+			recipe,
+			cancellationToken: cancellationToken);
 		await UpdateCategories(recipe, cancellationToken);
 	}
 
-	public async Task DeleteRecipe(int id, CancellationToken cancellationToken = default)
+	public async Task DeleteRecipe(
+		int id,
+		CancellationToken cancellationToken = default)
 	{
 		await _recipes.DeleteOneAsync(x => x.Id == id, cancellationToken);
 	}
 
-	public void RemoveCategoryAll(string categoryName)
+	public async Task RemoveCategoryAll(
+		string categoryName,
+		CancellationToken cancellationToken = default)
 	{
-		var recipes = _recipes.Find(x => x.Categories.Contains(categoryName)).ToList();
+		var recipesCursor = await _recipes.FindAsync(
+			x => x.Categories.Contains(categoryName),
+			cancellationToken: cancellationToken);
+		var recipes = recipesCursor.ToList(cancellationToken);
 
 		foreach (var recipe in recipes)
 		{
 			recipe.Categories.Remove(categoryName);
-			_recipes.ReplaceOneAsync(x => x.Id == recipe.Id, recipe);
+			await _recipes.ReplaceOneAsync(
+				x => x.Id == recipe.Id,
+				recipe,
+				cancellationToken: cancellationToken);
 		}
 
 	}
@@ -109,7 +132,9 @@ public class RecipeService(IDataAccess DataAccess, ICategoryService categoryServ
 			.Sequence;
 	}
 
-	private async Task UpdateCategories(Recipe recipe, CancellationToken cancellationToken = default)
+	private async Task UpdateCategories(
+		Recipe recipe,
+		CancellationToken cancellationToken = default)
 	{
 		if (recipe.Categories.Count > 0)
 		{

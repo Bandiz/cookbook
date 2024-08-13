@@ -85,13 +85,13 @@ public class CategoryController(
 	[HttpPost]
 	public async Task<IActionResult> CreateCategory(
 		[FromBody] CreateCategoryRequest request,
-		CancellationToken token)
+		CancellationToken cancellationToken)
 	{
 		var response = await mediator.Send(new CreateCategoryCommand()
 		{
 			Request = request,
 			User = User.Identity.Name
-		});
+		}, cancellationToken);
 
 		return response switch
 		{
@@ -107,24 +107,22 @@ public class CategoryController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpDelete("{categoryName}")]
-	public IActionResult DeleteCategory(string categoryName)
+	public async Task<IActionResult> DeleteCategory(
+		[FromRoute] string categoryName,
+		CancellationToken cancellationToken)
 	{
-		if (string.IsNullOrEmpty(categoryName))
+		var response = await mediator.Send(new DeleteCategoryCommand()
 		{
-			return BadRequest("Category name required");
-		}
-		var existingCategory = categoryService.GetCategory(categoryName);
+			CategoryName = categoryName
+		}, cancellationToken);
 
-		if (existingCategory == null)
+		return response switch
 		{
-			return NotFound(categoryName);
-		}
-
-		// TODO: create admin warnings
-		recipeService.RemoveCategoryAll(categoryName);
-		categoryService.DeleteCategory(categoryName);
-
-		return Ok();
+			SuccessResponse => Ok(),
+			NotFoundResponse notFound => NotFound(notFound.Message),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 	[Authorize(Roles = "Admin")]
