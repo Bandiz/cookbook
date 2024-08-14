@@ -1,42 +1,35 @@
-﻿using Cookbook.API.Entities;
-using Cookbook.API.Extensions;
-using Cookbook.API.Models.User;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Commands;
+using Cookbook.API.Commands.User;
+using Cookbook.API.Models.User;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cookbook.API.Controllers;
 
 [Authorize(Roles = "Admin")]
 [Route("api/[controller]")]
 [ApiController]
-public class UserController(UserManager<CookbookUser> userManager) : ControllerBase
+public class UserController(IMediator mediator) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpPost]
 	public async Task<IActionResult> CreateUser(
-		[FromForm] CreateUserRequest model)
+		[FromForm] CreateUserRequest request,
+		CancellationToken cancellationToken)
 	{
-		if (!ModelState.IsValid)
+		var response = await mediator.Send(new CreateUserCommand
+		{ 
+			Request = request 
+		}, cancellationToken);
+
+		return response switch
 		{
-			return BadRequest(ModelState);
-		}
-
-		var user = await userManager.FindByEmailAsync(model.Email);
-
-		if (user != null)
-		{
-			return BadRequest("User already exists");
-		}
-
-		user = await userManager.CreateUserAsync(model.Email, model.UserName, model.Password, model.Name, model.LastName, $"{model.Name} {model.LastName}", false, string.Empty);
-
-		if (user == null)
-		{
-			return BadRequest("User could not be created");
-		}
-
-		return Ok("User created successfully!");
+			SuccessResponse<string> success => Ok(success.Data),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An error occurred while creating the user")
+		};
 	}
 }
