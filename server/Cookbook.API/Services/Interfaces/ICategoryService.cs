@@ -23,7 +23,9 @@ public interface ICategoryService
 		List<Category> categories,
 		CancellationToken cancellationToken = default);
 
-	Task UpdateCategory(Category category);
+	Task UpdateCategory(
+		Category category,
+		CancellationToken cancellationToken = default);
 
 	Task<Dictionary<string, List<string>>> GetCategoryImages();
 }

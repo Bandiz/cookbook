@@ -58,9 +58,14 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 		return categories;
 	}
 
-	public async Task UpdateCategory(Category category)
+	public async Task UpdateCategory(
+		Category category, 
+		CancellationToken cancellationToken = default)
 	{
-		await _categories.ReplaceOneAsync(x => x.CategoryName == category.CategoryName, category);
+		await _categories.ReplaceOneAsync(
+			x => x.CategoryName == category.CategoryName,
+			category,
+			cancellationToken: cancellationToken);
 	}
 
 	public async Task<bool> CheckIfExists(string categoryName)

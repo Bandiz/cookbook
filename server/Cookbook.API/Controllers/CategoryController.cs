@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Commands;
 using Cookbook.API.Commands.Category;
-using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
@@ -20,8 +17,7 @@ namespace Cookbook.API.Controllers;
 public class CategoryController(
 	IMediator mediator,
 	ICategoryService categoryService,
-	IRecipeService recipeService,
-	IImageService imageService) : ControllerBase
+	IRecipeService recipeService) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpGet]
@@ -128,67 +124,24 @@ public class CategoryController(
 	[Authorize(Roles = "Admin")]
 	[HttpPut("{categoryName}")]
 	public async Task<IActionResult> UpdateCategory(
-		string categoryName,
-		[FromBody] UpdateCategoryRequest model)
+		[FromRoute] string categoryName,
+		[FromBody] UpdateCategoryRequest request,
+		CancellationToken cancellationToken)
 	{
-		if (string.IsNullOrEmpty(categoryName))
+		var response = await mediator.Send(new UpdateCategoryCommand()
 		{
-			return BadRequest("Category name required");
-		}
-		var existingCategory = await categoryService.GetCategory(categoryName);
+			CategoryName = categoryName,
+			Request = request,
+			User = User.Identity.Name
+		}, cancellationToken);
 
-		if (existingCategory == null)
+		return response switch
 		{
-			return NotFound(categoryName);
-		}
-
-		var updated = false;
-
-		if (model.Visible.HasValue && existingCategory.Visible != model.Visible)
-		{
-			existingCategory.Visible = model.Visible.Value;
-			updated = true;
-		}
-
-		if (!string.IsNullOrEmpty(model.MainImage) || model.Images != null)
-		{
-			IEnumerable<string> imagesToCheck = [model.MainImage, .. model.Images ?? []];
-
-			var (parsedImageIds, failedParsedIds) = imagesToCheck.ParseImageIds();
-
-			if (failedParsedIds.Count != 0)
-			{
-				return BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
-			}
-
-			var missingIds = await imageService.CheckExistingImages(parsedImageIds);
-
-			if (missingIds.Count != 0)
-			{
-				return BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
-			}
-
-			if (existingCategory.MainImage != model.MainImage)
-			{
-				existingCategory.MainImage = model.MainImage;
-				updated = true;
-			}
-
-			if (model.Images != null)
-			{
-				existingCategory.Images = model.Images.Distinct().ToList();
-				updated = true;
-			}
-		}
-
-		if (updated)
-		{
-			existingCategory.UpdatedAt = DateTime.UtcNow;
-			existingCategory.UpdatedBy = User.Identity.Name;
-			await categoryService.UpdateCategory(existingCategory);
-		}
-
-		return Ok(new CategoryResponse(existingCategory));
+			SuccessResponse<CategoryResponse> success => Ok(success.Data),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			NotFoundResponse notFound => NotFound(notFound.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 }
