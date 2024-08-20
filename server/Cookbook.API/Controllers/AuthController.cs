@@ -17,17 +17,10 @@ namespace Cookbook.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController : ControllerBase
+public class AuthController(
+	AuthenticationSettings authenticationSettings,
+	UserManager<CookbookUser> userManager) : ControllerBase
 {
-	private readonly AuthenticationSettings authenticationSettings;
-	private readonly UserManager<CookbookUser> userManager;
-
-	public AuthController(AuthenticationSettings authenticationSettings, UserManager<CookbookUser> userManager)
-	{
-		this.authenticationSettings = authenticationSettings;
-		this.userManager = userManager;
-	}
-
 	[HttpPost("login/google")]
 	public async Task<IActionResult> GetTokenGoogle([FromQuery] string t)
 	{
@@ -38,9 +31,10 @@ public class AuthController : ControllerBase
 		GoogleJsonWebSignature.Payload googlePayload;
 		try
 		{
-			googlePayload = await GoogleJsonWebSignature.ValidateAsync(t, new GoogleJsonWebSignature.ValidationSettings()
+			googlePayload = await GoogleJsonWebSignature.ValidateAsync(t,
+				new GoogleJsonWebSignature.ValidationSettings()
 			{
-				Audience = new[] { authenticationSettings.Google.ClientId }
+				Audience = [authenticationSettings.Google.ClientId]
 			});
 		}
 		catch
@@ -125,12 +119,14 @@ public class AuthController : ControllerBase
 	{
 		var claims = new List<Claim>
 		{
-			new Claim(ClaimTypes.Name, user.UserName),
+			new(ClaimTypes.Name, user.UserName),
 		};
 
 		claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-		var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+		var claimsIdentity = new ClaimsIdentity(
+			claims,
+			CookieAuthenticationDefaults.AuthenticationScheme);
 
 		var authProperties = new AuthenticationProperties
 		{

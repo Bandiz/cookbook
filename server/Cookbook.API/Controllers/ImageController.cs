@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Commands;
+using Cookbook.API.Commands.Image;
 using Cookbook.API.Models.Image;
 using Cookbook.API.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,63 +17,31 @@ namespace Cookbook.API.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class ImageController(IImageService imageService, ICategoryService categoryService) : ControllerBase
+public class ImageController(
+	IImageService imageService,
+	ICategoryService categoryService,
+	IMediator mediator) : ControllerBase
 {
-	const int MaxFileSize = 5 * 1024 * 1024; // 5MB
-	static readonly IReadOnlyList<string> ValidFileTypes = new List<string>
-	{
-		"image/jpeg",
-		"image/png",
-		"image/gif"
-	}.AsReadOnly();
-
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	public async Task<IActionResult> UploadImages(
 		[FromForm] string categoryName,
-		[FromForm] List<IFormFile> files)
+		[FromForm] List<IFormFile> files,
+		CancellationToken cancellationToken)
 	{
-		if (files == null || files.Count == 0)
+		var response = await mediator.Send(new UploadImagesCommand
 		{
-			return BadRequest("No files uploaded");
-		}
+			User = User.Identity.Name,
+			CategoryName = categoryName,
+			Files = files
+		}, cancellationToken);
 
-		var imageIds = new List<string>(); 
-		var warnings = new List<string>();
-
-		foreach (var file in files)
+		return response switch
 		{
-			if (file.Length > MaxFileSize)
-			{
-				return BadRequest($"File {file.FileName} is too large");
-			}
-
-			if (!ValidFileTypes.Contains(file.ContentType))
-			{
-				return BadRequest($"Invalid file type for file {file.FileName}");
-			}
-
-			var imageId = await imageService.UploadImage(file.OpenReadStream(), file.FileName);
-			imageIds.Add(imageId);
-
-
-			if (!string.IsNullOrWhiteSpace(categoryName))
-			{
-				var category = await categoryService.GetCategory(categoryName);
-
-				if (category == null)
-				{
-					warnings.Add($"Category {categoryName} does not exist");
-				}
-				else
-				{
-					category.Images.Add(imageId);
-					await categoryService.UpdateCategory(category);
-				}
-			}
-		}
-
-		return Ok(new UploadImagesResponse(imageIds, warnings));
+			SuccessResponse<UploadImagesResponse> success => Ok(success.Data),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 	[AllowAnonymous]
@@ -78,7 +50,7 @@ public class ImageController(IImageService imageService, ICategoryService catego
 	{
 		if (!ObjectId.TryParse(id, out var imageId))
 		{
-			return BadRequest("Invalid imageId");
+			return NotFound();
 		}
 
 		var (imageStream, filename) = await imageService.GetImage(imageId);
@@ -92,7 +64,7 @@ public class ImageController(IImageService imageService, ICategoryService catego
 	{
 		if (!ObjectId.TryParse(id, out var imageId))
 		{
-			return BadRequest("Invalid imageId");
+			return NotFound();
 		}
 
 		var (imageStream, filename) = await imageService.GetImagePreview(imageId);

@@ -1,87 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Cookbook.API.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
-using SkiaSharp;
 
 namespace Cookbook.API.Services;
 
-public class ImageService(
-	IDataAccess dataAccess,
-	IHttpContextAccessor httpContextAccessor) : IImageService
+public class ImageService(IDataAccess dataAccess) : IImageService
 {
 	private readonly GridFSBucket _imageBucket = dataAccess.ImageBucket;
 	private readonly IMongoCollection<GridFSFileInfo> _files = dataAccess.Files;
-
-	public async Task<string> UploadImage(Stream fs, string filename)
-	{
-		var userName = httpContextAccessor.HttpContext.User.Identity.Name;
-		using var ms = new MemoryStream();
-		await fs.CopyToAsync(ms);
-		ms.Position = 0;
-		ms.Seek(0, SeekOrigin.Begin);
-		var result = await _imageBucket.UploadFromStreamAsync(filename, ms, new()
-		{
-			Metadata = new()
-			{
-				{ "createdBy", userName }
-			}
-		});
-
-		ms.Position = 0;
-		ms.Seek(0, SeekOrigin.Begin);
-
-		var format = Path.GetExtension(filename) switch
-		{
-			".jpg" => SKEncodedImageFormat.Jpeg,
-			".png" => SKEncodedImageFormat.Png,
-			".gif" => SKEncodedImageFormat.Gif,
-			_ => SKEncodedImageFormat.Png
-		};
-
-        using (var image = SKBitmap.Decode(ms))
-        {
-            double maxWidth = 200;
-            double maxHeight = 200;
-
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
-
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
-
-            var info = new SKImageInfo(newWidth, newHeight);
-            var newImage = image.Resize(info, SKFilterQuality.Low);
-
-            var previewMs = new MemoryStream();
-            using (var resizedImage = SKImage.FromBitmap(newImage))
-            {
-                var data = resizedImage.Encode(format, 30);
-                data.SaveTo(previewMs);
-            }
-
-			previewMs.Position = 0;
-			previewMs.Seek(0, SeekOrigin.Begin);
-
-			var previewImage = await _imageBucket.UploadFromStreamAsync($"preview-{filename}", previewMs, new()
-			{
-				Metadata = new()
-				{
-					{ "createdBy", userName },
-					{ "parentImage", result }
-				}
-			});
-		}
-
-		return result.ToString();
-	}
 
 	public async Task<(MemoryStream, string)> GetImage(ObjectId imageId)
 	{

@@ -7,8 +7,6 @@ namespace Cookbook.API.Services.Interfaces;
 
 public interface IImageService
 {
-	Task<string> UploadImage(Stream fs, string filename);
-
 	Task<(MemoryStream, string)> GetImage(ObjectId imageId);
 
 	Task<(MemoryStream, string)> GetImagePreview(ObjectId imageId);
