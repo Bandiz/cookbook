@@ -5,15 +5,13 @@ using MongoDB.Bson;
 
 namespace Cookbook.API.Services.Interfaces;
 
-public interface IImageService
+public interface IImageQueries
 {
 	Task<(MemoryStream, string)> GetImage(ObjectId imageId);
 
 	Task<(MemoryStream, string)> GetImagePreview(ObjectId imageId);
 
 	Task<string[]> GetImageIds();
-
-	Task DeleteImage(ObjectId imageId);
 
 	Task<List<string>> CheckExistingImages(List<ObjectId> imageIds);
 }

@@ -18,7 +18,7 @@ namespace Cookbook.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class ImageController(
-	IImageService imageService,
+	IImageQueries imageQueries,
 	ICategoryService categoryService,
 	IMediator mediator) : ControllerBase
 {
@@ -46,28 +46,28 @@ public class ImageController(
 
 	[AllowAnonymous]
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetImage(string id)
+	public async Task<IActionResult> GetImage([FromRoute] string id)
 	{
 		if (!ObjectId.TryParse(id, out var imageId))
 		{
 			return NotFound();
 		}
 
-		var (imageStream, filename) = await imageService.GetImage(imageId);
+		var (imageStream, filename) = await imageQueries.GetImage(imageId);
 
 		return File(imageStream.ToArray(), GetContentType(filename));
 	}
 
 	[AllowAnonymous]
 	[HttpGet("{id}/preview")]
-	public async Task<IActionResult> GetImagePreview(string id)
+	public async Task<IActionResult> GetImagePreview([FromRoute] string id)
 	{
 		if (!ObjectId.TryParse(id, out var imageId))
 		{
 			return NotFound();
 		}
 
-		var (imageStream, filename) = await imageService.GetImagePreview(imageId);
+		var (imageStream, filename) = await imageQueries.GetImagePreview(imageId);
 
 		return File(imageStream.ToArray(), GetContentType(filename));
 	}
@@ -77,7 +77,7 @@ public class ImageController(
 	[HttpGet("all")]
 	public async Task<IActionResult> GetImageIds()
 	{
-		var imageIds = await imageService.GetImageIds();
+		var imageIds = await imageQueries.GetImageIds();
 
 		return Ok(imageIds);
 	}
@@ -86,7 +86,7 @@ public class ImageController(
 	[HttpGet("byCategory")]
 	public async Task<IActionResult> GetImagesByCategory()
 	{
-		var imageIds = await imageService.GetImageIds();
+		var imageIds = await imageQueries.GetImageIds();
 		var categories = await categoryService.GetCategoryImages();
 
 		var results = imageIds.Aggregate(new
@@ -120,16 +120,21 @@ public class ImageController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpDelete("{id}")]
-	public async Task<IActionResult> DeleteImage(string id)
+	public async Task<IActionResult> DeleteImage(
+		[FromRoute] string id, 
+		CancellationToken cancellationToken)
 	{
-		if (!ObjectId.TryParse(id, out var imageId))
+		var result = await mediator.Send(new DeleteImageCommand
 		{
-			return BadRequest("Invalid imageId");
-		}
+			Id = id
+		}, cancellationToken);
 
-		await imageService.DeleteImage(imageId);
-
-		return Ok();
+		return result switch
+		{
+			SuccessResponse success => Ok(),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 	private static string GetContentType(string filename)

@@ -9,7 +9,7 @@ using MongoDB.Driver.GridFS;
 
 namespace Cookbook.API.Services;
 
-public class ImageService(IDataAccess dataAccess) : IImageService
+public class ImageQueries(IDataAccess dataAccess) : IImageQueries
 {
 	private readonly GridFSBucket _imageBucket = dataAccess.ImageBucket;
 	private readonly IMongoCollection<GridFSFileInfo> _files = dataAccess.Files;
@@ -60,18 +60,6 @@ public class ImageService(IDataAccess dataAccess) : IImageService
 		var missingIds = imageIds.Select(x => x.ToString()).Except(existingIdStrings).ToList();
 
 		return missingIds;
-	}
-
-	public async Task DeleteImage(ObjectId imageId)
-	{
-		var filter = Builders<GridFSFileInfo>.Filter.Eq("metadata.parentImage", imageId);
-		var fileInfo = (await _imageBucket.FindAsync(filter)).FirstOrDefault();
-
-		if (fileInfo != null)
-		{
-			await _imageBucket.DeleteAsync(fileInfo.Id);
-		}
-		await _imageBucket.DeleteAsync(imageId);
 	}
 
 	public async Task<(MemoryStream, string)> GetImagePreview(ObjectId imageId)

@@ -19,7 +19,7 @@ public class UpdateCategoryCommand : IRequest<CommandResponse>
 
 public class UpdateCategoryCommandHandler(
 	ICategoryService categoryService,
-	IImageService imageService) : 
+	IImageQueries imageQueries) : 
 	IRequestHandler<UpdateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -57,7 +57,7 @@ public class UpdateCategoryCommandHandler(
 				return CommandResponse.BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
 			}
 
-			var missingIds = await imageService.CheckExistingImages(parsedImageIds);
+			var missingIds = await imageQueries.CheckExistingImages(parsedImageIds);
 
 			if (missingIds.Count != 0)
 			{

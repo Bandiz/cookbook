@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Cookbook.API.Services;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
 

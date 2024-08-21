@@ -18,7 +18,7 @@ public class CreateCategoryCommand : IRequest<CommandResponse>
 
 public class CreateCategoryCommandHandler(
 	ICategoryService categoryService,
-	IImageService imageService) : 
+	IImageQueries imageQueries) : 
 	IRequestHandler<CreateCategoryCommand, CommandResponse>
 {
 
@@ -45,7 +45,7 @@ public class CreateCategoryCommandHandler(
 				return CommandResponse.BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
 			}
 
-			var missingIds = await imageService.CheckExistingImages(parsedImageIds);
+			var missingIds = await imageQueries.CheckExistingImages(parsedImageIds);
 
 			if (missingIds.Count != 0)
 			{

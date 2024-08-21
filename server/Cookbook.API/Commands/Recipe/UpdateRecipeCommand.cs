@@ -19,7 +19,7 @@ public class UpdateRecipeCommand : IRequest<CommandResponse>
 
 public class UpdateRecipeCommandHandler(
 	IRecipeService recipeService,
-	IImageService imageService) : IRequestHandler<UpdateRecipeCommand, CommandResponse>
+	IImageQueries imageQueries) : IRequestHandler<UpdateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		UpdateRecipeCommand command,
@@ -54,7 +54,7 @@ public class UpdateRecipeCommandHandler(
 				{
 					return CommandResponse.BadRequest("MainImage is not a valid ObjectId");
 				}
-				var notFoundIds = await imageService.CheckExistingImages([parsedId]);
+				var notFoundIds = await imageQueries.CheckExistingImages([parsedId]);
 
 				if (notFoundIds.Count > 0)
 				{
