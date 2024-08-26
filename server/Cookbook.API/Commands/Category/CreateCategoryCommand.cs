@@ -45,7 +45,7 @@ public class CreateCategoryCommandHandler(
 				return CommandResponse.BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
 			}
 
-			var missingIds = await imageQueries.CheckExistingImages(parsedImageIds);
+			var missingIds = await imageQueries.CheckExistingImages(parsedImageIds, cancellationToken);
 
 			if (missingIds.Count != 0)
 			{

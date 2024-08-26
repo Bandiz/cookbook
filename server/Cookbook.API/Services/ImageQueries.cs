@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Services.Interfaces;
 using MongoDB.Bson;
@@ -42,7 +43,9 @@ public class ImageQueries(IDataAccess dataAccess) : IImageQueries
 		return imageIds.Select(x => x.id).ToArray();
 	}
 
-	public async Task<List<string>> CheckExistingImages(List<ObjectId> imageIds)
+	public async Task<List<string>> CheckExistingImages(
+		List<ObjectId> imageIds,
+		CancellationToken cancellationToken = default)
 	{
 		var filter = Builders<GridFSFileInfo>.Filter.In("_id", imageIds);
 		var projection = Builders<GridFSFileInfo>.Projection.Include("_id");
@@ -50,10 +53,10 @@ public class ImageQueries(IDataAccess dataAccess) : IImageQueries
 		var cursor = await _files
 			.Find(filter)
 			.Project(projection)
-			.ToCursorAsync();
+			.ToCursorAsync(cancellationToken);
 
 		var existingIdStrings = cursor
-			.ToEnumerable()
+			.ToEnumerable(cancellationToken)
 			.Select(doc => doc["_id"].ToString())
 			.ToList();
 

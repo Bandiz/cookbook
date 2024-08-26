@@ -4,9 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Commands;
 using Cookbook.API.Commands.Recipe;
+using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
+using Cookbook.API.Models;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
 using Cookbook.API.Validators.Recipe;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -70,19 +74,14 @@ public class RecipeController(
 	[HttpPost]
 	public async Task<IActionResult> CreateRecipe(
 		[FromBody] CreateRecipeRequest request,
+		[FromServices] IValidator<CreateRecipeRequest> validator,
 		CancellationToken cancellationToken)
 	{
-		var validator = new CreateRecipeRequestValidator();
-
-		var result = validator.Validate(request);
+		var result = await validator.ValidateAsync(request, cancellationToken);
 
 		if (!result.IsValid)
 		{
-			return BadRequest(result.Errors.Select(x => new 
-			{ 
-				x.PropertyName, 
-				x.ErrorMessage 
-			}));
+			return BadRequest(result.ToValidationResponse());
 		}
 
 		var response = await mediator.Send(new CreateRecipeCommand()
@@ -93,10 +92,10 @@ public class RecipeController(
 
 		return response switch
 		{
-			SuccessResponse<GetRecipeResponse> success => CreatedAtAction(
+			SuccessResponse<Recipe> success => CreatedAtAction(
 				nameof(GetRecipe),
 				new { id = success.Data.Id },
-				success.Data),
+				new GetRecipeResponse(success.Data)),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}

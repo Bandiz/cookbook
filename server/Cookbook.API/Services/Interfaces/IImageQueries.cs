@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 
@@ -13,5 +14,7 @@ public interface IImageQueries
 
 	Task<string[]> GetImageIds();
 
-	Task<List<string>> CheckExistingImages(List<ObjectId> imageIds);
+	Task<List<string>> CheckExistingImages(
+		List<ObjectId> imageIds,
+		CancellationToken cancellationToken = default);
 }

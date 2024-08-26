@@ -131,7 +131,7 @@ public class ImageController(
 
 		return result switch
 		{
-			SuccessResponse success => Ok(),
+			SuccessResponse => Ok(),
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};

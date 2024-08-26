@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization.Conventions;
 using Cookbook.API.Extensions;
+using FluentValidation;
 
 namespace Cookbook.API;
 
@@ -67,6 +68,8 @@ public class Startup(IConfiguration configuration)
 		services.AddCookbookServices();
 
 		services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
+
+		services.AddValidatorsFromAssemblyContaining<Startup>();
 
 		var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
 		ConventionRegistry.Register("camelCase", conventionPack, t => true);
