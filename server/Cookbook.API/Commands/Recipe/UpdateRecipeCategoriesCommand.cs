@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Commands.Category;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
 using MongoDB.Driver;
@@ -12,7 +12,8 @@ public record UpdateRecipeCategoriesCommand(Entities.Recipe Recipe) :
 	IRequest<CommandResponse>;
 
 public class UpdateRecipeCategoriesCommandHandler(
-	IDataAccess dataAccess) : 
+	IDataAccess dataAccess,
+	IMediator mediator) : 
 	IRequestHandler<UpdateRecipeCategoriesCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -48,12 +49,18 @@ public class UpdateRecipeCategoriesCommandHandler(
 			return CommandResponse.Ok();
 		}
 
-		await categoriesCollection.InsertManyAsync(notAddedCategories.Select(x => new Entities.Category()
+		foreach (var newCategory in notAddedCategories)
 		{
-			CategoryName = x,
-			CreatedBy = recipe.UpdatedBy ?? recipe.CreatedBy,
-			CreatedAt = DateTime.UtcNow
-		}), new(), cancellationToken);
+			var newCategoryCommand = new CreateCategoryCommand
+			{
+				CategoryName = newCategory,
+				MainImage = recipe.MainImage,
+				User = recipe.UpdatedBy ?? recipe.CreatedBy,
+				Visible = false
+			};
+
+			await mediator.Send(newCategoryCommand, cancellationToken);
+		}
 
 		return CommandResponse.Ok();
 	}

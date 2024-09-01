@@ -3,8 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Commands;
 using Cookbook.API.Commands.Category;
+using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
+using Cookbook.API.Validators.Category;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -81,20 +85,31 @@ public class CategoryController(
 	[HttpPost]
 	public async Task<IActionResult> CreateCategory(
 		[FromBody] CreateCategoryRequest request,
+		[FromServices] IValidator<CreateCategoryRequest> validator,
 		CancellationToken cancellationToken)
 	{
+		var validatorResult = await validator.ValidateAsync(request, cancellationToken);
+
+		if (!validatorResult.IsValid) 
+		{
+			return BadRequest(validatorResult.ToValidationResponse());
+		}
+
 		var response = await mediator.Send(new CreateCategoryCommand()
 		{
-			Request = request,
+			CategoryName = request.CategoryName,
+			MainImage = request.MainImage,
+			Visible = request.Visible,
+			Images = request.Images,
 			User = User.Identity.Name
 		}, cancellationToken);
 
 		return response switch
 		{
-			SuccessResponse<CategoryResponse> success => CreatedAtAction(
+			SuccessResponse<Category> success => CreatedAtAction(
 				nameof(GetCategory),
 				new { categoryName = success.Data.CategoryName },
-				success.Data
+				new CategoryResponse(success.Data)
 			),
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An unexpected error occurred")

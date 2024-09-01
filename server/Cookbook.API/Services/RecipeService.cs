@@ -72,20 +72,6 @@ public class RecipeService(
 		return query.ToList();
 	}
 
-	public async Task<Recipe> CreateRecipe(
-		Recipe recipe,
-		CancellationToken cancellationToken = default)
-	{
-		var newId = GetNewRecipeId();
-		recipe.Id = newId;
-
-		await _recipes.InsertOneAsync(recipe, new(), cancellationToken);
-
-		await UpdateCategories(recipe, cancellationToken);
-
-		return recipe;
-	}
-
 	public async Task UpdateRecipe(
 		Recipe recipe,
 		CancellationToken cancellationToken = default)

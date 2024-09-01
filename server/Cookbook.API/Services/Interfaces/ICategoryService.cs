@@ -13,8 +13,6 @@ public interface ICategoryService
 
 	List<Category> GetCategories(bool visible = true);
 
-	Category CreateCategory(Category category);
-
 	Task DeleteCategory(
 		string categoryName,
 		CancellationToken cancellationToken = default);

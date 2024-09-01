@@ -28,7 +28,9 @@ public class ImageValidator : AbstractValidator<string>
 	private async Task<bool> ImageExists(string imageId, CancellationToken cancellationToken)
 	{
 		var objectId = ObjectId.Parse(imageId);
-		var missingIds = await _imageQueries.CheckExistingImages([objectId]);
+		var missingIds = await _imageQueries.CheckExistingImages(
+			[objectId],
+			cancellationToken);
 		return missingIds.Count == 0;
 	}
 }
