@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,17 +71,6 @@ public class RecipeService(
 		return query.ToList();
 	}
 
-	public async Task UpdateRecipe(
-		Recipe recipe,
-		CancellationToken cancellationToken = default)
-	{
-		await _recipes.ReplaceOneAsync(
-			x => x.Id == recipe.Id,
-			recipe,
-			cancellationToken: cancellationToken);
-		await UpdateCategories(recipe, cancellationToken);
-	}
-
 	public async Task DeleteRecipe(
 		int id,
 		CancellationToken cancellationToken = default)
@@ -107,37 +95,4 @@ public class RecipeService(
 				recipe,
 				cancellationToken: cancellationToken);
 		}
-
 	}
-
-	private int GetNewRecipeId()
-	{
-		var update = Builders<Counter>.Update.Inc(x => x.Sequence, 1);
-		return _counters
-			.FindOneAndUpdate(x => x.Id == nameof(Recipe).ToLower(), update)
-			.Sequence;
-	}
-
-	private async Task UpdateCategories(
-		Recipe recipe,
-		CancellationToken cancellationToken = default)
-	{
-		if (recipe.Categories.Count > 0)
-		{
-			var categories = categoryService.GetCategories().Select(x => x.CategoryName).ToList();
-			var notAddedCategories = recipe.Categories.Where(x => !categories.Contains(x)).ToList();
-
-			if (notAddedCategories.Count == 0)
-			{
-				return;
-			}
-
-			await categoryService.CreateCategories(notAddedCategories.Select(x => new Category()
-			{
-				CategoryName = x,
-				CreatedBy = recipe.UpdatedBy ?? recipe.CreatedBy,
-				CreatedAt = DateTime.UtcNow
-			}).ToList(), cancellationToken);
-		}
-	}
-}

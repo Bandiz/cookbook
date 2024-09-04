@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Cookbook.API.Validators.Recipe;
 
-public class IngredientRequestValidator : AbstractValidator<CreateIngredientRequest>
+public class IngredientValidator : AbstractValidator<IngredientRequest>
 {
-	public IngredientRequestValidator()
+	public IngredientValidator()
 	{
 		RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
 		RuleFor(x => x.Amount).GreaterThan(0);

@@ -124,8 +124,16 @@ public class RecipeController(
 	public async Task<IActionResult> UpdateRecipe(
 		[FromRoute] int id,
 		[FromBody] UpdateRecipeRequest request,
+		[FromServices] IValidator<UpdateRecipeRequest> validator,
 		CancellationToken cancellationToken)
 	{
+		var result = await validator.ValidateAsync(request, cancellationToken);
+
+		if (!result.IsValid)
+		{
+			return BadRequest(result.ToValidationResponse());
+		}
+
 		var response = await mediator.Send(new UpdateRecipeCommand
 		{
 			Id = id,
@@ -135,9 +143,8 @@ public class RecipeController(
 
 		return response switch
 		{
-			SuccessResponse<GetRecipeResponse> success => Ok(success.Data),
+			SuccessResponse<Recipe> success => Ok(new GetRecipeResponse(success.Data)),
 			NotFoundResponse notFound => NotFound(notFound.Message),
-			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}

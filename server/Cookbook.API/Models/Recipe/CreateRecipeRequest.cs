@@ -10,7 +10,7 @@ public record CreateRecipeRequest(
 	int? TotalTimeMinutes,
 	string MainImage,
 	List<string> Categories,
-	List<CreateInstructionRequest> Instructions,
-	List<CreateIngredientRequest> Ingredients,
+	List<InstructionRequest> Instructions,
+	List<IngredientRequest> Ingredients,
 	bool? IsPublished
 	);

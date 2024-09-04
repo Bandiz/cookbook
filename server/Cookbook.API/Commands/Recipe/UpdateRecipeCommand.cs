@@ -3,10 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Entities;
+using Cookbook.API.Extensions;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
-using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Cookbook.API.Commands.Recipe;
 
@@ -18,8 +19,10 @@ public class UpdateRecipeCommand : IRequest<CommandResponse>
 }
 
 public class UpdateRecipeCommandHandler(
-	IRecipeService recipeService,
-	IImageQueries imageQueries) : IRequestHandler<UpdateRecipeCommand, CommandResponse>
+	IDataAccess dataAccess,
+	IMediator mediator,
+	IRecipeService recipeService) 
+	: IRequestHandler<UpdateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		UpdateRecipeCommand command,
@@ -48,37 +51,23 @@ public class UpdateRecipeCommandHandler(
 
 		if (recipe.MainImage != model.MainImage)
 		{
-			if (!string.IsNullOrEmpty(model.MainImage))
-			{
-				if (!ObjectId.TryParse(model.MainImage, out var parsedId))
-				{
-					return CommandResponse.BadRequest("MainImage is not a valid ObjectId");
-				}
-				var notFoundIds = await imageQueries.CheckExistingImages([parsedId]);
-
-				if (notFoundIds.Count > 0)
-				{
-					return CommandResponse.BadRequest("MainImage does not exist");
-				}
-			}
-
 			updated = true;
 			recipe.MainImage = model.MainImage;
 		}
 
-		if (model.PrepTimeMinutes.HasValue)
+		if (model.PrepTimeMinutes.HasValue && model.PrepTimeMinutes != recipe.PrepTimeMinutes)
 		{
 			updated = true;
 			recipe.PrepTimeMinutes = model.PrepTimeMinutes.Value;
 		}
 
-		if (model.CookTimeMinutes.HasValue)
+		if (model.CookTimeMinutes.HasValue && model.CookTimeMinutes != recipe.CookTimeMinutes)
 		{
 			updated = true;
 			recipe.CookTimeMinutes = model.CookTimeMinutes.Value;
 		}
 
-		if (model.TotalTimeMinutes.HasValue)
+		if (model.TotalTimeMinutes.HasValue && model.TotalTimeMinutes != recipe.TotalTimeMinutes)
 		{
 			updated = true;
 			recipe.TotalTimeMinutes = model.TotalTimeMinutes.Value;
@@ -87,7 +76,10 @@ public class UpdateRecipeCommandHandler(
 		if (model.Categories != null)
 		{
 			updated = true;
-			recipe.Categories = model.Categories;
+			recipe.Categories = model.Categories.ConvertAll(x => x
+				.ToLower()
+				.Trim()
+				.CapitalizeFirstLetter());
 		}
 
 		if (model.Ingredients != null)
@@ -120,9 +112,19 @@ public class UpdateRecipeCommandHandler(
 		{
 			recipe.UpdatedBy = command.User;
 			recipe.UpdatedAt = DateTime.UtcNow;
-			await recipeService.UpdateRecipe(recipe, cancellationToken);
+
+			var recipesCollection = dataAccess.Recipes;
+
+			await recipesCollection.ReplaceOneAsync(
+				Builders<Entities.Recipe>.Filter.Where(x => x.Id == recipe.Id),
+				recipe,
+				cancellationToken: cancellationToken);
+
+			await mediator.Send(
+				new UpdateRecipeCategoriesCommand(recipe),
+				cancellationToken);
 		}
 
-		return CommandResponse.Ok(new GetRecipeResponse(recipe));
+		return CommandResponse.Ok(recipe);
 	}
 }

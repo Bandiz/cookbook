@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Cookbook.API.Validators.Recipe;
 
-public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeRequest>
+public class UpdateRecipeRequestValidator : AbstractValidator<UpdateRecipeRequest>
 {
-	public CreateRecipeRequestValidator(
+	public UpdateRecipeRequestValidator(
 		ImageValidator imageValidator,
 		IngredientValidator ingredientValidator,
 		InstructionValidator instructionValidator)
@@ -19,6 +19,5 @@ public class CreateRecipeRequestValidator : AbstractValidator<CreateRecipeReques
 		RuleForEach(x => x.Categories).NotEmpty().MaximumLength(50);
 		RuleForEach(x => x.Ingredients).SetValidator(ingredientValidator);
 		RuleForEach(x => x.Instructions).SetValidator(instructionValidator);
-		RuleFor(x => x.IsPublished).NotNull();
 	}
 }

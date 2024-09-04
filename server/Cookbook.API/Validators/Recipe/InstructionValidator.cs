@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Cookbook.API.Validators.Recipe;
 
-public class InstructionRequestValidator : AbstractValidator<CreateInstructionRequest>
+public class InstructionValidator : AbstractValidator<InstructionRequest>
 {
-	public InstructionRequestValidator()
+	public InstructionValidator()
 	{
 		RuleFor(x => x.Description).NotEmpty().MaximumLength(500);
 	}
