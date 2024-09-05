@@ -21,14 +21,14 @@ namespace Cookbook.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RecipeController(
-	IRecipeService recipeService,
+	IRecipeQueries recipeQueries,
 	IMediator mediator) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpGet("{id:int}")]
 	public IActionResult GetRecipe(int id)
 	{
-		var recipe = recipeService.GetRecipe(id);
+		var recipe = recipeQueries.GetRecipe(id);
 
 		if (recipe == null)
 		{
@@ -44,7 +44,7 @@ public class RecipeController(
 		[FromQuery] List<string> categories,
 		int count)
 	{
-		var recipes = recipeService.GetRecipes(searchText, count, categories);
+		var recipes = recipeQueries.GetRecipes(searchText, count, categories);
 		return Ok(recipes.Select(recipe => new GetRecipesResponse(
 			recipe.Id,
 			recipe.Title,
@@ -57,7 +57,7 @@ public class RecipeController(
 	[HttpGet("list")]
 	public async Task<IActionResult> GetRecipesList()
 	{
-		var recipes = await recipeService.GetAllRecipes();
+		var recipes = await recipeQueries.GetAllRecipes();
 		return Ok(recipes.Select(recipe => new GetRecipesListResponse(
 			recipe.Id,
 			recipe.Title,

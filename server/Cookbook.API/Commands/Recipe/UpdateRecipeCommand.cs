@@ -21,14 +21,14 @@ public class UpdateRecipeCommand : IRequest<CommandResponse>
 public class UpdateRecipeCommandHandler(
 	IDataAccess dataAccess,
 	IMediator mediator,
-	IRecipeService recipeService) 
+	IRecipeQueries recipeQueries) 
 	: IRequestHandler<UpdateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		UpdateRecipeCommand command,
 		CancellationToken cancellationToken)
 	{
-		var recipe = recipeService.GetRecipe(command.Id);
+		var recipe = recipeQueries.GetRecipe(command.Id);
 		if (recipe == null)
 		{
 			return CommandResponse.NotFound("Recipe not found");
@@ -116,7 +116,7 @@ public class UpdateRecipeCommandHandler(
 			var recipesCollection = dataAccess.Recipes;
 
 			await recipesCollection.ReplaceOneAsync(
-				Builders<Entities.Recipe>.Filter.Where(x => x.Id == recipe.Id),
+				x => x.Id == recipe.Id,
 				recipe,
 				cancellationToken: cancellationToken);
 

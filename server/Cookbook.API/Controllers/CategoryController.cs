@@ -21,7 +21,7 @@ namespace Cookbook.API.Controllers;
 public class CategoryController(
 	IMediator mediator,
 	ICategoryService categoryService,
-	IRecipeService recipeService) : ControllerBase
+	IRecipeQueries recipeQueries) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpGet]
@@ -67,7 +67,7 @@ public class CategoryController(
 		{
 			return NotFound(categoryName);
 		}
-		var recipes = await recipeService.GetAllRecipes([categoryName]);
+		var recipes = await recipeQueries.GetAllRecipes([categoryName]);
 
 		return Ok(
 			new CategoryRecipesResponse(recipes.Select(x =>
