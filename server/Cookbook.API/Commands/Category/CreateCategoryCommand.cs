@@ -19,15 +19,14 @@ public class CreateCategoryCommand : IRequest<CommandResponse>
 
 public class CreateCategoryCommandHandler(
 	IDataAccess dataAccess,
-	ICategoryService categoryService) : 
+	ICategoryQueries categoryQueries) : 
 	IRequestHandler<CreateCategoryCommand, CommandResponse>
 {
-
 	public async Task<CommandResponse> Handle(
 		CreateCategoryCommand command,
 		CancellationToken cancellationToken)
 	{
-		var existingCategory = await categoryService.GetCategory(command.CategoryName);
+		var existingCategory = await categoryQueries.GetCategory(command.CategoryName);
 
 		if (existingCategory != null)
 		{

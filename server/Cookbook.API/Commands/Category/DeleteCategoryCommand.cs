@@ -13,7 +13,7 @@ public class DeleteCategoryCommand : IRequest<CommandResponse>
 
 public class DeleteCategoryCommandHandler(
 	IDataAccess dataAccess,
-	ICategoryService categoryService) : 
+	ICategoryQueries categoryQueries) : 
 	IRequestHandler<DeleteCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -26,7 +26,7 @@ public class DeleteCategoryCommandHandler(
 		{
 			return CommandResponse.BadRequest("Category name required");
 		}
-		var existingCategory = categoryService.GetCategory(categoryName);
+		var existingCategory = categoryQueries.GetCategory(categoryName);
 
 		if (existingCategory == null)
 		{

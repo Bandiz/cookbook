@@ -12,9 +12,8 @@ public class DeleteRecipeCommand : IRequest<CommandResponse>
 }
 
 public class DeleteRecipeCommandHandler(
-	IRecipeQueries recipeQueries, 
-	IDataAccess dataAccess) : 
-IRequestHandler<DeleteRecipeCommand, CommandResponse>
+	IRecipeQueries recipeQueries,
+	IDataAccess dataAccess) : IRequestHandler<DeleteRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken)
 	{

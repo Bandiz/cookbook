@@ -19,7 +19,7 @@ namespace Cookbook.API.Controllers;
 [ApiController]
 public class ImageController(
 	IImageQueries imageQueries,
-	ICategoryService categoryService,
+	ICategoryQueries categoryQueries,
 	IMediator mediator) : ControllerBase
 {
 	[Authorize(Roles = "Admin")]
@@ -87,7 +87,7 @@ public class ImageController(
 	public async Task<IActionResult> GetImagesByCategory()
 	{
 		var imageIds = await imageQueries.GetImageIds();
-		var categories = await categoryService.GetCategoryImages();
+		var categories = await categoryQueries.GetCategoryImages();
 
 		var results = imageIds.Aggregate(new
 		{

@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace Cookbook.API.Services;
 
-public class CategoryService(IDataAccess dataAccess) : ICategoryService
+public class CategoryQueries(IDataAccess dataAccess) : ICategoryQueries
 {
 	private readonly IMongoCollection<Category> _categories = dataAccess.Categories;
 
@@ -31,22 +31,6 @@ public class CategoryService(IDataAccess dataAccess) : ICategoryService
 		return _categories
 			.Find(visible ? filter.Where(x => x.Visible) : filter.Empty)
 			.ToList();
-	}
-
-	public Category CreateCategory(Category category)
-	{
-		_categories.InsertOne(category);
-
-		return category;
-	}
-
-	public async Task<List<Category>> CreateCategories(
-		List<Category> categories,
-		CancellationToken cancellationToken = default)
-	{
-		await _categories.InsertManyAsync(categories, new(), cancellationToken);
-
-		return categories;
 	}
 
 	public async Task UpdateCategory(

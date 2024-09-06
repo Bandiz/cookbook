@@ -34,7 +34,7 @@ public static class CookbookServicesExtensions
 	public static void AddCookbookServices(this IServiceCollection services)
 	{
 		services.AddSingleton<IDataAccess, DataAccess>();
-		services.AddSingleton<ICategoryService, CategoryService>();
+		services.AddSingleton<ICategoryQueries, CategoryQueries>();
 		services.AddSingleton<IRecipeQueries, RecipeQueries>();
 		services.AddSingleton<IImageQueries, ImageQueries>();
 	}

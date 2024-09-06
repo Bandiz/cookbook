@@ -7,7 +7,6 @@ using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
-using Cookbook.API.Validators.Category;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,14 +19,14 @@ namespace Cookbook.API.Controllers;
 [ApiController]
 public class CategoryController(
 	IMediator mediator,
-	ICategoryService categoryService,
+	ICategoryQueries categoryQueries,
 	IRecipeQueries recipeQueries) : ControllerBase
 {
 	[AllowAnonymous]
 	[HttpGet]
 	public IActionResult GetCategories()
 	{
-		var categories = categoryService
+		var categories = categoryQueries
 			.GetCategories()
 			.Select(x => x.CategoryName);
 		return Ok(categories);
@@ -37,7 +36,7 @@ public class CategoryController(
 	[HttpGet("{categoryName}")]
 	public async Task<IActionResult> GetCategory(string categoryName)
 	{
-		var category = await categoryService.GetCategory(categoryName);
+		var category = await categoryQueries.GetCategory(categoryName);
 
 		if (category == null)
 		{
@@ -51,7 +50,7 @@ public class CategoryController(
 	[HttpGet("list")]
 	public IActionResult GetCategoriesList()
 	{
-		var categories = categoryService
+		var categories = categoryQueries
 			.GetCategories(false)
 			.Select(x => new CategoryResponse(x));
 		return Ok(categories);
@@ -61,7 +60,7 @@ public class CategoryController(
 	[HttpGet("{categoryName}/recipes")]
 	public async Task<IActionResult> GetCategoryDetails(string categoryName)
 	{
-		var category = categoryService.GetCategory(categoryName);
+		var category = categoryQueries.GetCategory(categoryName);
 
 		if (category == null)
 		{

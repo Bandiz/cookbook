@@ -7,6 +7,7 @@ using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
+using MongoDB.Driver;
 
 namespace Cookbook.API.Commands.Category;
 
@@ -18,7 +19,8 @@ public class UpdateCategoryCommand : IRequest<CommandResponse>
 }
 
 public class UpdateCategoryCommandHandler(
-	ICategoryService categoryService,
+	IDataAccess dataAccess,
+	ICategoryQueries categoryQueries,
 	IImageQueries imageQueries) : 
 	IRequestHandler<UpdateCategoryCommand, CommandResponse>
 {
@@ -33,7 +35,7 @@ public class UpdateCategoryCommandHandler(
 		{
 			return CommandResponse.BadRequest("Category name required");
 		}
-		var existingCategory = await categoryService.GetCategory(categoryName);
+		var existingCategory = await categoryQueries.GetCategory(categoryName);
 		if (existingCategory == null)
 		{
 			return CommandResponse.NotFound(categoryName);
@@ -81,7 +83,11 @@ public class UpdateCategoryCommandHandler(
 		{
 			existingCategory.UpdatedAt = DateTime.UtcNow;
 			existingCategory.UpdatedBy = command.User;
-			await categoryService.UpdateCategory(existingCategory, cancellationToken);
+
+			await dataAccess.Categories.ReplaceOneAsync(
+				x => x.CategoryName == existingCategory.CategoryName,
+				existingCategory,
+				cancellationToken: cancellationToken);
 		}
 
 		return CommandResponse.Ok(new CategoryResponse(existingCategory));

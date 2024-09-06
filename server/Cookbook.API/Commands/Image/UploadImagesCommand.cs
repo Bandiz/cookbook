@@ -8,6 +8,7 @@ using Cookbook.API.Models.Image;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Driver;
 using SkiaSharp;
 
 namespace Cookbook.API.Commands.Image;
@@ -21,7 +22,7 @@ public class UploadImagesCommand : IRequest<CommandResponse>
 
 public class UploadImagesCommandHandler(
 	IDataAccess dataAccess,
-	ICategoryService categoryService) : 
+	ICategoryQueries categoryQueries) : 
 	IRequestHandler<UploadImagesCommand, CommandResponse>
 {
 	const int MaxFileSize = 5 * 1024 * 1024; // 5MB
@@ -69,7 +70,7 @@ public class UploadImagesCommandHandler(
 
 			if (!string.IsNullOrWhiteSpace(categoryName))
 			{
-				var category = await categoryService.GetCategory(categoryName);
+				var category = await categoryQueries.GetCategory(categoryName);
 
 				if (category == null)
 				{
@@ -78,7 +79,13 @@ public class UploadImagesCommandHandler(
 				else
 				{
 					category.Images.Add(imageId);
-					await categoryService.UpdateCategory(category, cancellationToken);
+					category.UpdatedAt = DateTime.UtcNow;
+					category.UpdatedBy = command.User;
+
+					await dataAccess.Categories.ReplaceOneAsync(
+						x => x.CategoryName == category.CategoryName,
+						category, 
+						cancellationToken: cancellationToken);
 				}
 			}
 		}
