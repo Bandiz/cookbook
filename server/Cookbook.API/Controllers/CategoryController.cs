@@ -84,22 +84,11 @@ public class CategoryController(
 	[HttpPost]
 	public async Task<IActionResult> CreateCategory(
 		[FromBody] CreateCategoryRequest request,
-		[FromServices] IValidator<CreateCategoryRequest> validator,
 		CancellationToken cancellationToken)
 	{
-		var validatorResult = await validator.ValidateAsync(request, cancellationToken);
-
-		if (!validatorResult.IsValid) 
-		{
-			return BadRequest(validatorResult.ToValidationResponse());
-		}
-
 		var response = await mediator.Send(new CreateCategoryCommand()
 		{
-			CategoryName = request.CategoryName,
-			MainImage = request.MainImage,
-			Visible = request.Visible,
-			Images = request.Images,
+			Request = request,
 			User = User.Identity.Name
 		}, cancellationToken);
 
@@ -110,6 +99,8 @@ public class CategoryController(
 				new { categoryName = success.Data.CategoryName },
 				new CategoryResponse(success.Data)
 			),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse.Result),
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
@@ -151,8 +142,7 @@ public class CategoryController(
 
 		return response switch
 		{
-			SuccessResponse<CategoryResponse> success => Ok(success.Data),
-			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			SuccessResponse<Category> success => Ok(new CategoryResponse(success.Data)),
 			NotFoundResponse notFound => NotFound(notFound.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};

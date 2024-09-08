@@ -6,6 +6,7 @@ using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
+using FluentValidation;
 using MediatR;
 using MongoDB.Driver;
 
@@ -21,7 +22,8 @@ public class UpdateRecipeCommand : IRequest<CommandResponse>
 public class UpdateRecipeCommandHandler(
 	IDataAccess dataAccess,
 	IMediator mediator,
-	IRecipeQueries recipeQueries) 
+	IRecipeQueries recipeQueries,
+	IValidator<UpdateRecipeRequest> validator) 
 	: IRequestHandler<UpdateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -33,8 +35,15 @@ public class UpdateRecipeCommandHandler(
 		{
 			return CommandResponse.NotFound("Recipe not found");
 		}
-		var model = command.Request;
 
+		var result = await validator.ValidateAsync(command.Request, cancellationToken);
+
+		if (!result.IsValid)
+		{
+			return CommandResponse.Invalid(result);
+		}
+		
+		var model = command.Request;
 		var updated = false;
 
 		if (!string.IsNullOrEmpty(model.Title) && recipe.Title != model.Title)

@@ -53,12 +53,10 @@ public class UpdateRecipeCategoriesCommandHandler(
 		{
 			var newCategoryCommand = new CreateCategoryCommand
 			{
-				CategoryName = newCategory,
-				MainImage = recipe.MainImage,
+				Request = new(newCategory, false, recipe.MainImage, []),
 				User = recipe.UpdatedBy ?? recipe.CreatedBy,
-				Visible = false
 			};
-
+			// TODO: add error aggregation
 			await mediator.Send(newCategoryCommand, cancellationToken);
 		}
 

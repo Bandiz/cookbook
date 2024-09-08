@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
+using FluentValidation;
 using MediatR;
 using MongoDB.Driver;
 
@@ -21,7 +19,7 @@ public class UpdateCategoryCommand : IRequest<CommandResponse>
 public class UpdateCategoryCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-	IImageQueries imageQueries) : 
+	IValidator<UpdateCategoryRequest> validator) : 
 	IRequestHandler<UpdateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -31,65 +29,49 @@ public class UpdateCategoryCommandHandler(
 		var categoryName = command.CategoryName;
 		var request = command.Request;
 
-		if (string.IsNullOrEmpty(categoryName))
+		var result = await validator.ValidateAsync(request, cancellationToken);
+
+		if (!result.IsValid)
 		{
-			return CommandResponse.BadRequest("Category name required");
+			return CommandResponse.Invalid(result);
 		}
-		var existingCategory = await categoryQueries.GetCategory(categoryName);
-		if (existingCategory == null)
+		
+		var category = await categoryQueries.GetCategory(categoryName);
+		if (category == null)
 		{
 			return CommandResponse.NotFound(categoryName);
 		}
 		var updated = false;
 
-		if (request.Visible.HasValue && existingCategory.Visible != request.Visible)
+		if (request.Visible.HasValue && category.Visible != request.Visible)
 		{
-			existingCategory.Visible = request.Visible.Value;
+			category.Visible = request.Visible.Value;
 			updated = true;
 		}
 
-		if (!string.IsNullOrEmpty(request.MainImage) || request.Images != null)
+		if (category.MainImage != request.MainImage)
 		{
-			IEnumerable<string> imagesToCheck = [request.MainImage, .. request.Images ?? []];
+			updated = true;
+			category.MainImage = request.MainImage;
+		}
 
-			var (parsedImageIds, failedParsedIds) = imagesToCheck.ParseImageIds();
-
-			if (failedParsedIds.Count != 0)
-			{
-				return CommandResponse.BadRequest($"Image id's are incorrect [{string.Join(", ", failedParsedIds)}]");
-			}
-
-			var missingIds = await imageQueries.CheckExistingImages(parsedImageIds);
-
-			if (missingIds.Count != 0)
-			{
-				return CommandResponse.BadRequest($"Image id's that do not exist [{string.Join(", ", missingIds)}]");
-			}
-
-			if (existingCategory.MainImage != request.MainImage)
-			{
-				existingCategory.MainImage = request.MainImage;
-				updated = true;
-			}
-
-			if (request.Images != null)
-			{
-				existingCategory.Images = request.Images.Distinct().ToList();
-				updated = true;
-			}
+		if (request.Images != null)
+		{
+			updated = true;
+			category.Images = request.Images;
 		}
 
 		if (updated)
 		{
-			existingCategory.UpdatedAt = DateTime.UtcNow;
-			existingCategory.UpdatedBy = command.User;
+			category.UpdatedAt = DateTime.UtcNow;
+			category.UpdatedBy = command.User;
 
 			await dataAccess.Categories.ReplaceOneAsync(
-				x => x.CategoryName == existingCategory.CategoryName,
-				existingCategory,
+				x => x.CategoryName == category.CategoryName,
+				category,
 				cancellationToken: cancellationToken);
 		}
 
-		return CommandResponse.Ok(new CategoryResponse(existingCategory));
+		return CommandResponse.Ok(category);
 	}
 }

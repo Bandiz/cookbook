@@ -1,32 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
+using FluentValidation;
 using MediatR;
 
 namespace Cookbook.API.Commands.Category;
 
 public class CreateCategoryCommand : IRequest<CommandResponse>
 {
-	public string CategoryName { get; set; }
-	public bool Visible { get; set; }
-	public string MainImage { get; set; }
-	public List<string> Images { get; set; }
+	public CreateCategoryRequest Request { get; set; }
 	public string User { get; set; }
 }
 
 public class CreateCategoryCommandHandler(
 	IDataAccess dataAccess,
-	ICategoryQueries categoryQueries) : 
+	ICategoryQueries categoryQueries,
+	IValidator<CreateCategoryRequest> validator) : 
 	IRequestHandler<CreateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		CreateCategoryCommand command,
 		CancellationToken cancellationToken)
 	{
-		var existingCategory = await categoryQueries.GetCategory(command.CategoryName);
+		var request = command.Request;
+		var validatorResult = await validator.ValidateAsync(request, cancellationToken);
+
+		if (!validatorResult.IsValid)
+		{
+			return CommandResponse.Invalid(validatorResult);
+		}
+
+		var existingCategory = await categoryQueries.GetCategory(request.CategoryName);
 
 		if (existingCategory != null)
 		{
@@ -35,10 +42,10 @@ public class CreateCategoryCommandHandler(
 
 		var category = new Entities.Category()
 		{
-			CategoryName = command.CategoryName,
-			Visible = command.Visible,
-			MainImage = command.MainImage,
-			Images = command.Images?.Distinct().ToList() ?? [],
+			CategoryName = request.CategoryName,
+			Visible = request.Visible,
+			MainImage = request.MainImage,
+			Images = request.Images?.Distinct().ToList() ?? [],
 			CreatedBy = command.User,
 			CreatedAt = DateTime.UtcNow
 		};

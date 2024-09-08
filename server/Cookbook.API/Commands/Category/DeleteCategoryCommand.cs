@@ -21,14 +21,9 @@ public class DeleteCategoryCommandHandler(
 		CancellationToken cancellationToken)
 	{
 		var categoryName = request.CategoryName;
+		var category = categoryQueries.GetCategory(categoryName);
 
-		if (string.IsNullOrEmpty(categoryName))
-		{
-			return CommandResponse.BadRequest("Category name required");
-		}
-		var existingCategory = categoryQueries.GetCategory(categoryName);
-
-		if (existingCategory == null)
+		if (category == null)
 		{
 			return CommandResponse.NotFound(categoryName);
 		}

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
+using FluentValidation;
 using MediatR;
 using MongoDB.Driver;
 
@@ -16,13 +17,23 @@ public class CreateRecipeCommand : IRequest<CommandResponse>
 	public string User { get; set; }
 }
 
-public class CreateRecipeCommandHandler(IDataAccess dataAccess, IMediator mediator) :
+public class CreateRecipeCommandHandler(
+	IDataAccess dataAccess, 
+	IMediator mediator,
+	IValidator<CreateRecipeRequest> validator) :
 	IRequestHandler<CreateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		CreateRecipeCommand command,
 		CancellationToken cancellationToken)
 	{
+		var result = await validator.ValidateAsync(command.Request, cancellationToken);
+
+		if (!result.IsValid)
+		{
+			return CommandResponse.Invalid(result);
+		}
+
 		var recipeCollection = dataAccess.Recipes;
 		var request = command.Request;
 		var newRecipe = new Entities.Recipe
@@ -64,7 +75,11 @@ public class CreateRecipeCommandHandler(IDataAccess dataAccess, IMediator mediat
 		var counters = dataAccess.Counters;
 		var update = Builders<Counter>.Update.Inc(x => x.Sequence, 1);
 		return counters
-			.FindOneAndUpdate(x => x.Id == nameof(Recipe).ToLower(), update)
+			.FindOneAndUpdate(
+				x => x.Id.Equals(
+					nameof(Recipe), 
+					StringComparison.CurrentCultureIgnoreCase), 
+				update)
 			.Sequence;
 	}
 }

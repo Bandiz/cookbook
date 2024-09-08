@@ -8,7 +8,6 @@ using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,16 +71,8 @@ public class RecipeController(
 	[HttpPost]
 	public async Task<IActionResult> CreateRecipe(
 		[FromBody] CreateRecipeRequest request,
-		[FromServices] IValidator<CreateRecipeRequest> validator,
 		CancellationToken cancellationToken)
 	{
-		var result = await validator.ValidateAsync(request, cancellationToken);
-
-		if (!result.IsValid)
-		{
-			return BadRequest(result.ToValidationResponse());
-		}
-
 		var response = await mediator.Send(new CreateRecipeCommand()
 		{
 			Request = request,
@@ -94,6 +85,10 @@ public class RecipeController(
 				nameof(GetRecipe),
 				new { id = success.Data.Id },
 				new GetRecipeResponse(success.Data)),
+			ValidationResponse invalidResponse => BadRequest(
+				invalidResponse
+					.Result
+					.ToValidationResponse()),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}
@@ -122,16 +117,8 @@ public class RecipeController(
 	public async Task<IActionResult> UpdateRecipe(
 		[FromRoute] int id,
 		[FromBody] UpdateRecipeRequest request,
-		[FromServices] IValidator<UpdateRecipeRequest> validator,
 		CancellationToken cancellationToken)
 	{
-		var result = await validator.ValidateAsync(request, cancellationToken);
-
-		if (!result.IsValid)
-		{
-			return BadRequest(result.ToValidationResponse());
-		}
-
 		var response = await mediator.Send(new UpdateRecipeCommand
 		{
 			Id = id,
@@ -142,6 +129,10 @@ public class RecipeController(
 		return response switch
 		{
 			SuccessResponse<Recipe> success => Ok(new GetRecipeResponse(success.Data)),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+					.Result
+					.ToValidationResponse()),
 			NotFoundResponse notFound => NotFound(notFound.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
