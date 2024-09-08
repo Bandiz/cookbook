@@ -17,8 +17,8 @@ public class ImagesValidator : AbstractValidator<List<string>>
 
 		RuleFor(imageIds => imageIds)
 			.Cascade(CascadeMode.Stop)
-			.Must(BeAValidObjectId).WithMessage("Invalid image ID format.")
-			.MustAsync(ImagesExists).WithMessage("Image does not exist.");
+			.Must(BeAValidObjectId).WithMessage("Invalid image ID format")
+			.MustAsync(ImagesExists).WithMessage("Image does not exist");
 	}
 
 	private static bool BeAValidObjectId(List<string> imageIds)

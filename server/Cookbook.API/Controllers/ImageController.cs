@@ -124,10 +124,7 @@ public class ImageController(
 		[FromRoute] string id, 
 		CancellationToken cancellationToken)
 	{
-		var result = await mediator.Send(new DeleteImageCommand
-		{
-			Id = id
-		}, cancellationToken);
+		var result = await mediator.Send(new DeleteImageCommand(id), cancellationToken);
 
 		return result switch
 		{
