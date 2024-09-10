@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Cookbook.API.Models.Image;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
+using Cookbook.API.Validators.Image;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
@@ -23,7 +22,7 @@ public class UploadImagesCommand : IRequest<CommandResponse>
 public class UploadImagesCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-	IValidator<UploadImagesCommand> validator) : 
+	UploadImagesCommandValidator validator) : 
 	IRequestHandler<UploadImagesCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(

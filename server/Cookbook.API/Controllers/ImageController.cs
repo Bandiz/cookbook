@@ -45,8 +45,8 @@ public class ImageController(
 					success.Data.Item2)),
 			ValidationResponse validationResponse => BadRequest(
 				validationResponse
-				.Result
-				.ToValidationResponse()),
+					.Result
+					.ToValidationResponse()),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}
@@ -136,6 +136,10 @@ public class ImageController(
 		return result switch
 		{
 			SuccessResponse => Ok(),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+					.Result
+					.ToValidationResponse()),
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};

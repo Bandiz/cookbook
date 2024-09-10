@@ -7,7 +7,6 @@ using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -100,7 +99,9 @@ public class CategoryController(
 				new CategoryResponse(success.Data)
 			),
 			ValidationResponse validationResponse => BadRequest(
-				validationResponse.Result),
+				validationResponse
+					.Result
+					.ToValidationResponse()),
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
@@ -121,7 +122,10 @@ public class CategoryController(
 		{
 			SuccessResponse => Ok(),
 			NotFoundResponse notFound => NotFound(notFound.Message),
-			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+					.Result
+					.ToValidationResponse()),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}
@@ -143,6 +147,10 @@ public class CategoryController(
 		return response switch
 		{
 			SuccessResponse<Category> success => Ok(new CategoryResponse(success.Data)),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+					.Result
+					.ToValidationResponse()),
 			NotFoundResponse notFound => NotFound(notFound.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};

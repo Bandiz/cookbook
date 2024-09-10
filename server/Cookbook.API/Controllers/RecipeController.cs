@@ -85,8 +85,8 @@ public class RecipeController(
 				nameof(GetRecipe),
 				new { id = success.Data.Id },
 				new GetRecipeResponse(success.Data)),
-			ValidationResponse invalidResponse => BadRequest(
-				invalidResponse
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
 					.Result
 					.ToValidationResponse()),
 			_ => StatusCode(500, "An unexpected error occurred")
@@ -99,14 +99,17 @@ public class RecipeController(
 		[FromRoute] int id,
 		CancellationToken cancellationToken)
 	{
-		var response = await mediator.Send(new DeleteRecipeCommand
-		{
-			Id = id,
-		}, cancellationToken);
+		var response = await mediator.Send(
+			new DeleteRecipeCommand(id),
+			cancellationToken);
 
 		return response switch
 		{
 			SuccessResponse => Ok(),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+					.Result
+					.ToValidationResponse()),
 			NotFoundResponse notFound => NotFound(notFound.Message),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};

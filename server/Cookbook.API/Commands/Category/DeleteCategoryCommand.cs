@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Services.Interfaces;
+using Cookbook.API.Validators.Category;
 using MediatR;
 using MongoDB.Driver;
 
@@ -13,13 +14,21 @@ public class DeleteCategoryCommand : IRequest<CommandResponse>
 
 public class DeleteCategoryCommandHandler(
 	IDataAccess dataAccess,
-	ICategoryQueries categoryQueries) : 
+	ICategoryQueries categoryQueries,
+	DeleteCategoryCommandValidator validator) : 
 	IRequestHandler<DeleteCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		DeleteCategoryCommand request, 
 		CancellationToken cancellationToken)
 	{
+		var result = await validator.ValidateAsync(request, cancellationToken);
+
+		if (!result.IsValid)
+		{
+			return CommandResponse.Invalid(result);
+		}
+
 		var categoryName = request.CategoryName;
 		var category = categoryQueries.GetCategory(categoryName);
 

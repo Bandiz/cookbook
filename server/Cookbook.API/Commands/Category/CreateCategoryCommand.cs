@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
+using Cookbook.API.Validators.Category;
 using MediatR;
 
 namespace Cookbook.API.Commands.Category;
@@ -18,21 +18,21 @@ public class CreateCategoryCommand : IRequest<CommandResponse>
 public class CreateCategoryCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-	IValidator<CreateCategoryRequest> validator) : 
+	CreateCategoryCommandValidator validator) : 
 	IRequestHandler<CreateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		CreateCategoryCommand command,
 		CancellationToken cancellationToken)
 	{
-		var request = command.Request;
-		var validatorResult = await validator.ValidateAsync(request, cancellationToken);
+		var validatorResult = await validator.ValidateAsync(command, cancellationToken);
 
 		if (!validatorResult.IsValid)
 		{
 			return CommandResponse.Invalid(validatorResult);
 		}
 
+		var request = command.Request;
 		var existingCategory = await categoryQueries.GetCategory(request.CategoryName);
 
 		if (existingCategory != null)

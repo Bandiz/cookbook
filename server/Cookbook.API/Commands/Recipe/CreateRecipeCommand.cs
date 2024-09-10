@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cookbook.API.Entities;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
+using Cookbook.API.Validators.Recipe;
 using MediatR;
 using MongoDB.Driver;
 
@@ -20,14 +20,14 @@ public class CreateRecipeCommand : IRequest<CommandResponse>
 public class CreateRecipeCommandHandler(
 	IDataAccess dataAccess, 
 	IMediator mediator,
-	IValidator<CreateRecipeRequest> validator) :
+	CreateRecipeCommandValidator validator) :
 	IRequestHandler<CreateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		CreateRecipeCommand command,
 		CancellationToken cancellationToken)
 	{
-		var result = await validator.ValidateAsync(command.Request, cancellationToken);
+		var result = await validator.ValidateAsync(command, cancellationToken);
 
 		if (!result.IsValid)
 		{

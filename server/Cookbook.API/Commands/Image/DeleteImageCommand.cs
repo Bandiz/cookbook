@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Services.Interfaces;
-using Cookbook.API.Validators.Recipe;
+using Cookbook.API.Validators.Image;
 using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,21 +13,21 @@ public record DeleteImageCommand(string Id) : IRequest<CommandResponse>;
 
 public class DeleteImageCommandHandler(
 	IDataAccess dataAccess,
-	DeleteImageRequestValidator validator) : 
+	DeleteImageCommandValidator validator) : 
 	IRequestHandler<DeleteImageCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		DeleteImageCommand command,
 		CancellationToken cancellationToken)
 	{
-		var id = command.Id;
-		var result = validator.Validate(id);
+		var result = validator.Validate(command);
 
 		if (!result.IsValid)
 		{
 			return CommandResponse.Invalid(result);
 		}
-		var imageId = ObjectId.Parse(id);
+
+		var imageId = ObjectId.Parse(command.Id);
 		var _imageBucket = dataAccess.ImageBucket;
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("metadata.parentImage", imageId);
 		var fileCursor = await _imageBucket.FindAsync(

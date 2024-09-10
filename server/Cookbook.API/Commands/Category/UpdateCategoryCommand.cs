@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Models.Category;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
+using Cookbook.API.Validators.Category;
 using MediatR;
 using MongoDB.Driver;
 
@@ -19,23 +19,22 @@ public class UpdateCategoryCommand : IRequest<CommandResponse>
 public class UpdateCategoryCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-	IValidator<UpdateCategoryRequest> validator) : 
+    UpdateCategoryCommandValidator validator) : 
 	IRequestHandler<UpdateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		UpdateCategoryCommand command, 
 		CancellationToken cancellationToken)
 	{
-		var categoryName = command.CategoryName;
-		var request = command.Request;
-
-		var result = await validator.ValidateAsync(request, cancellationToken);
+		var result = await validator.ValidateAsync(command, cancellationToken);
 
 		if (!result.IsValid)
 		{
 			return CommandResponse.Invalid(result);
 		}
 		
+		var categoryName = command.CategoryName;
+		var request = command.Request;
 		var category = await categoryQueries.GetCategory(categoryName);
 		if (category == null)
 		{

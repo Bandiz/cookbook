@@ -6,7 +6,7 @@ using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Recipe;
 using Cookbook.API.Services.Interfaces;
-using FluentValidation;
+using Cookbook.API.Validators.Recipe;
 using MediatR;
 using MongoDB.Driver;
 
@@ -23,78 +23,78 @@ public class UpdateRecipeCommandHandler(
 	IDataAccess dataAccess,
 	IMediator mediator,
 	IRecipeQueries recipeQueries,
-	IValidator<UpdateRecipeRequest> validator) 
+	UpdateRecipeCommandValidator validator) 
 	: IRequestHandler<UpdateRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
 		UpdateRecipeCommand command,
 		CancellationToken cancellationToken)
 	{
-		var recipe = recipeQueries.GetRecipe(command.Id);
-		if (recipe == null)
-		{
-			return CommandResponse.NotFound("Recipe not found");
-		}
-
-		var result = await validator.ValidateAsync(command.Request, cancellationToken);
+		var result = await validator.ValidateAsync(command, cancellationToken);
 
 		if (!result.IsValid)
 		{
 			return CommandResponse.Invalid(result);
 		}
+
+		var recipe = recipeQueries.GetRecipe(command.Id);
+		if (recipe == null)
+		{
+			return CommandResponse.NotFound("Recipe not found");
+		}
 		
-		var model = command.Request;
+		var request = command.Request;
 		var updated = false;
 
-		if (!string.IsNullOrEmpty(model.Title) && recipe.Title != model.Title)
+		if (!string.IsNullOrEmpty(request.Title) && recipe.Title != request.Title)
 		{
 			updated = true;
-			recipe.Title = model.Title;
+			recipe.Title = request.Title;
 		}
 
-		if (recipe.Description != model.Description)
+		if (recipe.Description != request.Description)
 		{
 			updated = true;
-			recipe.Description = model.Description;
+			recipe.Description = request.Description;
 		}
 
-		if (recipe.MainImage != model.MainImage)
+		if (recipe.MainImage != request.MainImage)
 		{
 			updated = true;
-			recipe.MainImage = model.MainImage;
+			recipe.MainImage = request.MainImage;
 		}
 
-		if (model.PrepTimeMinutes.HasValue && model.PrepTimeMinutes != recipe.PrepTimeMinutes)
+		if (request.PrepTimeMinutes.HasValue && request.PrepTimeMinutes != recipe.PrepTimeMinutes)
 		{
 			updated = true;
-			recipe.PrepTimeMinutes = model.PrepTimeMinutes.Value;
+			recipe.PrepTimeMinutes = request.PrepTimeMinutes.Value;
 		}
 
-		if (model.CookTimeMinutes.HasValue && model.CookTimeMinutes != recipe.CookTimeMinutes)
+		if (request.CookTimeMinutes.HasValue && request.CookTimeMinutes != recipe.CookTimeMinutes)
 		{
 			updated = true;
-			recipe.CookTimeMinutes = model.CookTimeMinutes.Value;
+			recipe.CookTimeMinutes = request.CookTimeMinutes.Value;
 		}
 
-		if (model.TotalTimeMinutes.HasValue && model.TotalTimeMinutes != recipe.TotalTimeMinutes)
+		if (request.TotalTimeMinutes.HasValue && request.TotalTimeMinutes != recipe.TotalTimeMinutes)
 		{
 			updated = true;
-			recipe.TotalTimeMinutes = model.TotalTimeMinutes.Value;
+			recipe.TotalTimeMinutes = request.TotalTimeMinutes.Value;
 		}
 
-		if (model.Categories != null)
+		if (request.Categories != null)
 		{
 			updated = true;
-			recipe.Categories = model.Categories.ConvertAll(x => x
+			recipe.Categories = request.Categories.ConvertAll(x => x
 				.ToLower()
 				.Trim()
 				.CapitalizeFirstLetter());
 		}
 
-		if (model.Ingredients != null)
+		if (request.Ingredients != null)
 		{
 			updated = true;
-			recipe.Ingredients = model.Ingredients.Select((x, index) => new Ingredient
+			recipe.Ingredients = request.Ingredients.Select((x, index) => new Ingredient
 			{
 				Amount = x.Amount,
 				MeasurementType = x.MeasurementType,
@@ -102,19 +102,19 @@ public class UpdateRecipeCommandHandler(
 			}).ToList();
 		}
 
-		if (model.Instructions != null)
+		if (request.Instructions != null)
 		{
 			updated = true;
-			recipe.Instructions = model.Instructions.Select(x => new Instruction
+			recipe.Instructions = request.Instructions.Select(x => new Instruction
 			{
 				Description = x.Description,
 			}).ToList();
 		}
 
-		if (model.IsPublished.HasValue && recipe.IsPublished != model.IsPublished)
+		if (request.IsPublished.HasValue && recipe.IsPublished != request.IsPublished)
 		{
 			updated = true;
-			recipe.IsPublished = model.IsPublished.Value;
+			recipe.IsPublished = request.IsPublished.Value;
 		}
 
 		if (updated)
