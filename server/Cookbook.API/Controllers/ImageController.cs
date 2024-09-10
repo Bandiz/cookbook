@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Commands;
 using Cookbook.API.Commands.Image;
+using Cookbook.API.Extensions;
 using Cookbook.API.Models.Image;
 using Cookbook.API.Services.Interfaces;
 using MediatR;
@@ -38,8 +39,14 @@ public class ImageController(
 
 		return response switch
 		{
-			SuccessResponse<UploadImagesResponse> success => Ok(success.Data),
-			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			SuccessResponse<(List<string>, List<string>)> success => Ok(
+				new UploadImagesResponse(
+					success.Data.Item1, 
+					success.Data.Item2)),
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+				.Result
+				.ToValidationResponse()),
 			_ => StatusCode(500, "An unexpected error occurred")
 		};
 	}

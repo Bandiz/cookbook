@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Models.Image;
 using Cookbook.API.Services.Interfaces;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
@@ -22,44 +22,28 @@ public class UploadImagesCommand : IRequest<CommandResponse>
 
 public class UploadImagesCommandHandler(
 	IDataAccess dataAccess,
-	ICategoryQueries categoryQueries) : 
+	ICategoryQueries categoryQueries,
+	IValidator<UploadImagesCommand> validator) : 
 	IRequestHandler<UploadImagesCommand, CommandResponse>
 {
-	const int MaxFileSize = 5 * 1024 * 1024; // 5MB
-	static readonly IReadOnlyList<string> ValidFileTypes = new List<string>
-	{
-		"image/jpeg",
-		"image/png",
-		"image/gif"
-	}.AsReadOnly();
-
 	public async Task<CommandResponse> Handle(
 		UploadImagesCommand command,
 		CancellationToken cancellationToken)
 	{
-		var files = command.Files;
+		var result = await validator.ValidateAsync(command, cancellationToken);
 
-		if (files == null || files.Count == 0)
+		if (!result.IsValid)
 		{
-			return CommandResponse.BadRequest("No files uploaded");
+			return CommandResponse.Invalid(result);
 		}
 
+		var files = command.Files;
 		var imageIds = new List<string>();
 		var warnings = new HashSet<string>();
 		var categoryName = command.CategoryName;
 
 		foreach (var file in files)
 		{
-			if (file.Length > MaxFileSize)
-			{
-				return CommandResponse.BadRequest("File is too large");
-			}
-
-			if (!ValidFileTypes.Contains(file.ContentType))
-			{
-				return CommandResponse.BadRequest("Invalid file type");
-			}
-
 			var imageId = await UploadImage(
 				file.OpenReadStream(),
 				file.FileName,
@@ -90,7 +74,8 @@ public class UploadImagesCommandHandler(
 			}
 		}
 
-		return CommandResponse.Ok(new UploadImagesResponse(imageIds, [.. warnings]));
+		return CommandResponse.Ok<(List<string>, List<string>)>(
+			(imageIds, [.. warnings]));
 	}
 
 	private async Task<string> UploadImage(
