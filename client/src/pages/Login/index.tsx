@@ -179,7 +179,7 @@ export default function Login() {
                             }}
                         >
                             <GoogleLogin
-                                clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
+                                clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}
                                 onSuccess={handleOnSuccess}
                                 onFailure={handleOnFailure}
                                 buttonText="Login with Google"
