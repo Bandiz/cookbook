@@ -53,10 +53,10 @@
 - [ ] change password?
 
 # initialize database
-- [ ] setup collections script
+- [x] setup collections script
 
 # structured error messages
-- [ ] return validated model, no excess information (like ModelState - traceid)
+- [x] return validated model, no excess information (like ModelState - traceid)
 
 # admin warnings
 - [ ] warnings/notifications about incomplete data (e.g. missing main image)

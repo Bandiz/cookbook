@@ -1,10 +1,13 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Cookbook.API.Commands;
 using Cookbook.API.Commands.User;
+using Cookbook.API.Entities;
 using Cookbook.API.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cookbook.API.Controllers;
@@ -31,5 +34,21 @@ public class UserController(IMediator mediator) : ControllerBase
 			BadRequestResponse badRequest => BadRequest(badRequest.Message),
 			_ => StatusCode(500, "An error occurred while creating the user")
 		};
+	}
+
+	[Authorize(Roles = "Admin")]
+	[HttpGet("all")]
+	public IActionResult GetUsers(
+		[FromServices] UserManager<CookbookUser> userManager)
+	{
+		return Ok(new GetUsersResponse([.. userManager.Users.Select(x => new GetUserResponse(
+			x.Name,
+			x.LastName,
+			x.Roles,
+			x.UserName,
+			x.Email,
+			x.LockoutEnd,
+			x.LockoutEnabled,
+			x.AccessFailedCount))]));
 	}
 }
