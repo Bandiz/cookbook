@@ -1,5 +1,5 @@
 import { Button, Popconfirm } from 'antd';
-import { useRemoveFromCategoryMutation } from '../../../api/recipes';
+import { useRemoveFromCategoryMutation } from '../../../api/recipe';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 interface RemoveRecipeActionProps {

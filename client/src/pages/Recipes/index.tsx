@@ -1,6 +1,6 @@
 import { Alert, Card, Col, Layout, MenuProps, Row, Skeleton, Space, Spin, Tag } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import { useRecipes } from '../../api/recipes';
+import { useRecipes } from '../../api/recipe';
 import { RECIPE, replaceRouteParams } from '../../constants/routes';
 import { SiderMenu } from '../../components/Shared/Sider/SiderMenu';
 import { useNavigate } from 'react-router-dom';

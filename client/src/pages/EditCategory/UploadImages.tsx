@@ -3,9 +3,9 @@ import { Button, Image, Space, Upload } from 'antd';
 import { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { CategoryKey } from '../../api/apiQueryKeys';
-import { useUpdateCategoryMutation } from '../../api/categories';
+import { useUpdateCategoryMutation } from '../../api/category';
 import { Category } from '../../types';
-import { UploadImageResponse } from '../../api/images/types';
+import { UploadImageResponse } from '../../api/image/types';
 
 interface UploadImagesProps {
     category: Category;

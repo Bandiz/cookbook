@@ -41,14 +41,15 @@ public class UserController(IMediator mediator) : ControllerBase
 	public IActionResult GetUsers(
 		[FromServices] UserManager<CookbookUser> userManager)
 	{
-		return Ok(new GetUsersResponse([.. userManager.Users.Select(x => new GetUserResponse(
-			x.Name,
-			x.LastName,
-			x.Roles,
-			x.UserName,
-			x.Email,
-			x.LockoutEnd,
-			x.LockoutEnabled,
-			x.AccessFailedCount))]));
+		return Ok(new GetUsersResponse([.. userManager.Users.Select(x => 
+			new GetUserResponse(
+				x.Name,
+				x.LastName,
+				x.Roles,
+				x.UserName,
+				x.Email,
+				x.LockoutEnd,
+				x.LockoutEnabled,
+				x.AccessFailedCount))]));
 	}
 }

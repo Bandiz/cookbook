@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { useRecipe } from '../../api/recipes';
+import { useRecipe } from '../../api/recipe';
 import { RECIPES } from '../../constants/routes';
 import { Breadcrumb, Card, Layout, Image, Row, Col, Typography, Space, Tag } from 'antd';
 

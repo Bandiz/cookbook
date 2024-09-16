@@ -1,6 +1,6 @@
 import type { TableProps } from 'antd';
 import { Alert, Space, Spin, Table } from 'antd';
-import { useCategoryRecipes } from '../../../api/categories';
+import { useCategoryRecipes } from '../../../api/category';
 import { Category, CategoryRecipe } from '../../../types';
 import { RemoveRecipeAction } from './RemoveRecipeAction';
 import { displayDate } from '../utils';

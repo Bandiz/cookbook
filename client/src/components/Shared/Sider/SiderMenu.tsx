@@ -1,6 +1,6 @@
 import { Menu } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { useCategoryNameList } from '../../../api/categories';
+import { useCategoryNameList } from '../../../api/category';
 import { MenuInfo } from 'rc-menu/lib/interface';
 
 interface SiderMenuProps {

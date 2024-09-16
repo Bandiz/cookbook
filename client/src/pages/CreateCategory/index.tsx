@@ -22,7 +22,7 @@ import { ADMIN } from '../../constants/routes';
 import { Category } from '../../types';
 import { PictureOutlined, SaveOutlined } from '@ant-design/icons';
 import { ImageDrawer } from '../../components/Shared/imageDrawer';
-import { useCreateCategoryMutation } from '../../api/categories';
+import { useCreateCategoryMutation } from '../../api/category';
 
 export default function CreateCategory() {
     const [form] = Form.useForm<Category>();

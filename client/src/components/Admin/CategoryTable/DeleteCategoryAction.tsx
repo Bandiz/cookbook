@@ -1,5 +1,5 @@
 import { Button, Popconfirm } from 'antd';
-import { useDeleteCategoryMutation } from '../../../api/categories';
+import { useDeleteCategoryMutation } from '../../../api/category';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 interface DeleteCategoryActionProps {

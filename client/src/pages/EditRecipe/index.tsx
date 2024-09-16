@@ -17,8 +17,8 @@ import {
     FloatButton,
 } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { useRecipe, useUpdateRecipeMutation } from '../../api/recipes';
-import { useCategoryList } from '../../api/categories';
+import { useRecipe, useUpdateRecipeMutation } from '../../api/recipe';
+import { useCategoryList } from '../../api/category';
 import { ADMIN } from '../../constants/routes';
 import { MinusCircleOutlined, PictureOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';

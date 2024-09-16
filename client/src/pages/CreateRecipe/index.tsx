@@ -14,8 +14,8 @@ import {
     Image,
     FloatButton,
 } from 'antd';
-import { useCategoryList } from '../../api/categories';
-import useCreateRecipeMutation from '../../api/recipes/useCreateRecipeMutation';
+import { useCategoryList } from '../../api/category';
+import useCreateRecipeMutation from '../../api/recipe/useCreateRecipeMutation';
 import { Recipe } from '../../types';
 import { useEffect, useState } from 'react';
 import { ImageDrawer } from '../../components/Shared/imageDrawer';

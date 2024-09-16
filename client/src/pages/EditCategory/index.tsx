@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useCategory, useUpdateCategoryMutation } from '../../api/categories';
+import { useCategory, useUpdateCategoryMutation } from '../../api/category';
 import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
 import { ADMIN } from '../../constants/routes';
 import UploadImages from './UploadImages';
