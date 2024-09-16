@@ -37,7 +37,7 @@ public class UserController(IMediator mediator) : ControllerBase
 	}
 
 	[Authorize(Roles = "Admin")]
-	[HttpGet("all")]
+	[HttpGet]
 	public IActionResult GetUsers(
 		[FromServices] UserManager<CookbookUser> userManager)
 	{

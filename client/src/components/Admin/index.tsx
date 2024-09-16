@@ -4,12 +4,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import CategoryTable from './CategoryTable';
 import RecipesTable from './RecipesTable';
+import UserTable from './userTable';
 
 const items: TabsProps['items'] = [
     {
         key: '1',
         label: 'Users',
-        disabled: true,
+        children: <UserTable />,
     },
     {
         key: '2',

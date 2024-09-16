@@ -40,7 +40,7 @@ const columns: TableColumnsType<Category> = [
     },
 ];
 
-export default function CategoriesTable() {
+export default function CategoryTable() {
     const { data: categories, isLoading, isError } = useCategoryList();
     const navigate = useNavigate();
 
