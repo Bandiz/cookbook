@@ -3,12 +3,13 @@ export interface GetUserListResponse {
 }
 
 export interface UserResponse {
+    id: string;
     name: string;
     lastName: string;
     roles: Array<string>;
     userName: string;
     email: string;
-    lockoutEnd: string;
+    lockoutEnd?: string | null;
     lockoutEnabled: boolean;
     accessFailedCount: number;
 }

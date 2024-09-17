@@ -43,6 +43,7 @@ public class UserController(IMediator mediator) : ControllerBase
 	{
 		return Ok(new GetUsersResponse([.. userManager.Users.Select(x => 
 			new GetUserResponse(
+				x.Id.ToString(),
 				x.Name,
 				x.LastName,
 				x.Roles,

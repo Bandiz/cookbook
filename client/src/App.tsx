@@ -7,6 +7,7 @@ import CreateCategory from './pages/CreateCategory';
 import EditCategory from './pages/EditCategory';
 import EditRecipe from './pages/EditRecipe';
 import Recipes from './pages/Recipes';
+import EditUser from './pages/editUser';
 
 const Home = lazy(() => import('./pages/Home'));
 const Recipe = lazy(() => import('./pages/Recipe'));
@@ -36,6 +37,9 @@ function App() {
                             </Route>
                             <Route path={ROUTES.CREATE_CATEGORY} element={<RouteGuard />}>
                                 <Route index element={<CreateCategory />} />
+                            </Route>
+                            <Route path={ROUTES.EDIT_USER} element={<RouteGuard />}>
+                                <Route index element={<EditUser />} />
                             </Route>
                             <Route path={ROUTES.ADMIN} element={<RouteGuard />}>
                                 <Route index element={<Admin />} />

@@ -1,28 +1,14 @@
-import {
-    Breadcrumb,
-    Card,
-    Checkbox,
-    Col,
-    Divider,
-    Empty,
-    Image,
-    Layout,
-    Row,
-    Spin,
-    Typography
-} from 'antd';
+import { Breadcrumb, Card, Col, Divider, Layout, Row, Spin, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { useCategory, useUpdateCategoryMutation } from '../../api/category';
-import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
+import { UserResponse } from '../../api/user/types';
 import { ADMIN } from '../../constants/routes';
-import UploadImages from './UploadImages';
 
-export default function EditCategory() {
-    const { category: categoryName } = useParams<{ category: string }>();
-    const { data: category, isLoading } = useCategory(categoryName ?? '');
-    const { mutate: updateCategory } = useUpdateCategoryMutation();
+export default function EditUser() {
+    const { id } = useParams<{ id: string }>();
+    const { data: user, isLoading } = useUser(id ?? '');
+    const { mutate: updateUser } = useUpdateUserMutation();
 
-    if (!category || isLoading) {
+    if (!user || isLoading) {
         return <Spin size="large" />;
     }
 
@@ -43,14 +29,14 @@ export default function EditCategory() {
                             title: (
                                 <Link
                                     className="ant-typography css-dev-only-do-not-override-mzwlov"
-                                    to={ADMIN + '?activeTab=2'}
+                                    to={ADMIN + '?activeTab=1'}
                                 >
                                     Categories
                                 </Link>
                             ),
                         },
                         {
-                            title: `Edit ${categoryName}`,
+                            title: `Edit ${user.userName}`,
                         },
                     ]}
                 />
@@ -58,7 +44,7 @@ export default function EditCategory() {
                     <Row>
                         <Col span={24}>
                             <Divider>
-                                <Typography.Title level={3}>Main image & visibility</Typography.Title>
+                                <Typography.Title level={3}>Information</Typography.Title>
                             </Divider>
                             <Row gutter={[20, 20]}>
                                 <Col
@@ -69,31 +55,21 @@ export default function EditCategory() {
                                         justifyContent: 'right',
                                     }}
                                 >
-                                    {!category.mainImage && <Empty description="No main image" />}
-                                    {category.mainImage && (
-                                        <Image
-                                            preview={false}
-                                            src={`/api/image/${category.mainImage}`}
-                                            style={{
-                                                maxWidth: 400,
-                                                ...(!category.visible && { filter: 'grayscale(100%)' }),
-                                            }}
-                                        />
-                                    )}
+                                    <Typography.Text>Username: {user.userName}</Typography.Text>
                                 </Col>
-                                <Col md={12} sm={24}>
+                                {/* <Col md={12} sm={24}>
                                     <Checkbox
-                                        checked={category.visible}
+                                        checked={user.visible}
                                         onChange={(event) => {
-                                            updateCategory({
-                                                categoryName: category.categoryName,
+                                            updateUser({
+                                                categoryName: user.categoryName,
                                                 visible: event.target.checked,
                                             });
                                         }}
                                     >
                                         Is visible
                                     </Checkbox>
-                                </Col>
+                                </Col> */}
                             </Row>
                         </Col>
                     </Row>
@@ -102,7 +78,6 @@ export default function EditCategory() {
                             <Divider>
                                 <Typography.Title level={3}>Images</Typography.Title>
                             </Divider>
-                            <UploadImages category={category} />
                         </Col>
                     </Row>
                     <Row>
@@ -110,11 +85,31 @@ export default function EditCategory() {
                             <Divider>
                                 <Typography.Title level={3}>Recipes</Typography.Title>
                             </Divider>
-                            <ExpandedRecipeTable category={category} />
+                            {/* <ExpandedRecipeTa`ble category={user} /> */}
                         </Col>
                     </Row>
                 </Card>
             </Layout.Content>
         </Layout>
     );
+}
+function useUser(arg0: string): { data: UserResponse; isLoading: boolean } {
+    return {
+        data: {
+            id: arg0,
+            userName: 'mrtest',
+            accessFailedCount: 0,
+            email: 'test@test.com',
+            lastName: 'testington',
+            lockoutEnabled: false,
+            lockoutEnd: null,
+            name: 'test',
+            roles: ['admin', 'user'],
+        },
+        isLoading: false,
+    };
+}
+
+function useUpdateUserMutation(): { mutate: any } {
+    return { mutate: () => {} };
 }

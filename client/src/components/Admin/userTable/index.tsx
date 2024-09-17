@@ -1,6 +1,7 @@
 import { Alert, Checkbox, Space, Spin, Table, TableColumnsType, Tag } from 'antd';
 import { UserResponse } from '../../../api/user/types';
 import useUserList from '../../../api/user/useUserList';
+import EditUserAction from './EditUserAction';
 
 const columns: TableColumnsType<UserResponse> = [
     { title: 'Name', dataIndex: 'name' },
@@ -29,20 +30,19 @@ const columns: TableColumnsType<UserResponse> = [
         },
     },
     {
-        title: 'Failed attempts',
+        title: 'Failed login attempts',
         dataIndex: 'accessFailedCount',
     },
-    // {
-    //     title: 'Action',
-    //     dataIndex: '',
-    //     key: 'x',
-    //     render: (_, record) => (
-    //         <Space size="small" direction="horizontal">
-    //             <EditCategoryAction categoryName={record.categoryName} />
-    //             <DeleteCategoryAction categoryName={record.categoryName} />
-    //         </Space>
-    //     ),
-    // },
+    {
+        title: 'Action',
+        dataIndex: '',
+        key: 'x',
+        render: (_, record) => (
+            <Space size="small" direction="horizontal">
+                <EditUserAction id={record.id} />
+            </Space>
+        ),
+    },
 ];
 
 export default function UserTable() {
@@ -56,5 +56,5 @@ export default function UserTable() {
         return <Alert message="Failed to load users" type="error" />;
     }
 
-    return <Table columns={columns} rowKey="userName" dataSource={data.data.users} />;
+    return <Table columns={columns} rowKey="id" dataSource={data.data.users} />;
 }

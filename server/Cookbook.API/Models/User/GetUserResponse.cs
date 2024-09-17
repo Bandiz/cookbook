@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Cookbook.API.Models.User;
 
 public record GetUserResponse(
+	string id,
 	string Name, 
 	string LastName, 
 	List<string> Roles,

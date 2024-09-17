@@ -34,9 +34,11 @@ const items: TabsProps['items'] = [
     },
 ];
 
+const defaultActiveTab = items.find((x) => !x.disabled)?.key ?? '2';
+
 export default function AdminTabs() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [activeTab, setActiveTab] = useState(searchParams.get('activeTab') ?? '2');
+    const [activeTab, setActiveTab] = useState(searchParams.get('activeTab') ?? defaultActiveTab);
 
     const queryKey = searchParams.get('activeTab');
 
