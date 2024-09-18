@@ -9,7 +9,7 @@ export function Breadcrumbs() {
             items={[
                 {
                     title: (
-                        <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                        <Link className="ant-typography" to={ADMIN}>
                             Admin
                         </Link>
                     ),
@@ -17,7 +17,7 @@ export function Breadcrumbs() {
                 {
                     title: (
                         <Link
-                            className="ant-typography css-dev-only-do-not-override-mzwlov"
+                            className="ant-typography"
                             to={ADMIN + '?activeTab=3'}
                         >
                             Recipes

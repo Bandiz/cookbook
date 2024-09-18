@@ -59,7 +59,7 @@ export default function CreateCategory() {
                     items={[
                         {
                             title: (
-                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                                <Link className="ant-typography" to={ADMIN}>
                                     Admin
                                 </Link>
                             ),
@@ -67,7 +67,7 @@ export default function CreateCategory() {
                         {
                             title: (
                                 <Link
-                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
+                                    className="ant-typography"
                                     to={ADMIN + '?activeTab=2'}
                                 >
                                     Categories

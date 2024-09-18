@@ -1,35 +1,36 @@
+import { MinusCircleOutlined, PictureOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import {
+    Breadcrumb,
     Button,
+    Card,
     Checkbox,
     Col,
+    FloatButton,
     Form,
+    Image,
     Input,
     Layout,
+    message,
     Row,
     Select,
-    Spin,
-    Image,
-    Space,
-    Card,
-    Breadcrumb,
-    message,
     Skeleton,
-    FloatButton,
+    Space,
+    Spin,
 } from 'antd';
-import { Link, useParams } from 'react-router-dom';
-import { useRecipe, useUpdateRecipeMutation } from '../../api/recipe';
-import { useCategoryList } from '../../api/category';
-import { ADMIN } from '../../constants/routes';
-import { MinusCircleOutlined, PictureOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-import { Recipe } from '../../types';
+import { Link, useParams } from 'react-router-dom';
+import { useCategoryList } from '../../api/category';
+import { useRecipe, useUpdateRecipeMutation } from '../../api/recipe';
 import { ImageDrawer } from '../../components/Shared/imageDrawer';
+import { ADMIN } from '../../constants/routes';
+import { Recipe } from '../../types';
+import { SearchProps } from 'antd/es/input';
 
 export default function EditRecipe() {
     const { recipe } = useParams();
     const { data: recipeData, isLoading: loading } = useRecipe(recipe ?? '');
     const { data: categories } = useCategoryList();
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<Recipe>();
     const { mutate: updateRecipe, isLoading, isError, isSuccess } = useUpdateRecipeMutation();
     const [open, setOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
@@ -58,9 +59,17 @@ export default function EditRecipe() {
         return <Spin size="large" />;
     }
 
-    const onSubmit = (values: Partial<Recipe>) => {
+    const onSubmit = (values: Recipe) => {
         values.id = recipeData.id;
         updateRecipe(values);
+    };
+
+    const onImageSearch: SearchProps['onSearch'] = (_value, _e, info) => {
+        if (info?.source === 'input') {
+            showDrawer();
+        } else {
+            setCurrentImage('');
+        }
     };
 
     return (
@@ -71,17 +80,14 @@ export default function EditRecipe() {
                     items={[
                         {
                             title: (
-                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                                <Link className="ant-typography" to={ADMIN}>
                                     Admin
                                 </Link>
                             ),
                         },
                         {
                             title: (
-                                <Link
-                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
-                                    to={ADMIN + '?activeTab=3'}
-                                >
+                                <Link className="ant-typography" to={ADMIN + '?activeTab=3'}>
                                     Recipes
                                 </Link>
                             ),
@@ -269,12 +275,16 @@ export default function EditRecipe() {
                             </Col>
                             <Col span={8}>
                                 <Form.Item label="Main image" name="mainImage" initialValue={recipeData.mainImage}>
-                                    <Input placeholder="664a460f4a6667de0f5dddea" />
+                                    <Input.Search
+                                        placeholder="664a460f4a6667de0f5dddea"
+                                        allowClear
+                                        onSearch={onImageSearch}
+                                    />
                                 </Form.Item>
-                                {currentImage || recipeData.mainImage ? (
+                                {currentImage ? (
                                     <Image
-                                        preview={{ src: `/api/image/${currentImage || recipeData.mainImage}` }}
-                                        src={`/api/image/${currentImage || recipeData.mainImage}/preview`}
+                                        preview={{ src: `/api/image/${currentImage}` }}
+                                        src={`/api/image/${currentImage}/preview`}
                                         style={{
                                             maxWidth: 400,
                                         }}
@@ -286,12 +296,6 @@ export default function EditRecipe() {
                         </Row>
                         <ImageDrawer form={form} onClose={onClose} open={open} setCurrentImage={setCurrentImage} />
                     </Form>
-                    <FloatButton
-                        type="primary"
-                        icon={<PictureOutlined />}
-                        onClick={showDrawer}
-                        tooltip="Select Image"
-                    />
                 </Card>
             </Layout.Content>
         </Layout>

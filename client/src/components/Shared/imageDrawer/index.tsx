@@ -35,6 +35,8 @@ export function ImageDrawer({ form, onClose, open, setCurrentImage }: ImageDrawe
                                 onClick={() => {
                                     setCurrentImage(imageId);
                                     form.setFieldValue('mainImage', imageId);
+                                    onClose();
+                                    info.actions.onClose();
                                 }}
                             >
                                 Select as main image

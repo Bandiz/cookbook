@@ -31,7 +31,7 @@ const RecipePage = () => {
                     items={[
                         {
                             title: (
-                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={RECIPES}>
+                                <Link className="ant-typography" to={RECIPES}>
                                     Recipes
                                 </Link>
                             ),

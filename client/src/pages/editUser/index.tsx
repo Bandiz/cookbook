@@ -1,7 +1,7 @@
 import { Breadcrumb, Card, Col, Divider, Layout, Row, Spin, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { UserResponse } from '../../api/user/types';
-import { ADMIN } from '../../constants/routes';
+import { ADMIN, replaceRouteParams } from '../../constants/routes';
 
 export default function EditUser() {
     const { id } = useParams<{ id: string }>();
@@ -20,7 +20,7 @@ export default function EditUser() {
                     items={[
                         {
                             title: (
-                                <Link className="ant-typography css-dev-only-do-not-override-mzwlov" to={ADMIN}>
+                                <Link className="ant-typography" to={ADMIN}>
                                     Admin
                                 </Link>
                             ),
@@ -28,10 +28,10 @@ export default function EditUser() {
                         {
                             title: (
                                 <Link
-                                    className="ant-typography css-dev-only-do-not-override-mzwlov"
-                                    to={ADMIN + '?activeTab=1'}
+                                    className="ant-typography`"
+                                    to={replaceRouteParams(ADMIN, {}, { activeTab: '1' })}
                                 >
-                                    Categories
+                                    Users
                                 </Link>
                             ),
                         },
