@@ -1,20 +1,37 @@
-import { Alert, Card, Col, Layout, MenuProps, Row, Skeleton, Space, Spin, Tag } from 'antd';
+import { Alert, Card, Col, Layout, Row, Skeleton, Space, Spin, Tag } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useRecipes } from '../../api/recipe';
 import { RECIPE, replaceRouteParams } from '../../constants/routes';
 import { SiderMenu } from '../../components/Shared/Sider/SiderMenu';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { MenuInfo } from 'rc-menu/lib/interface';
+import { Recipe } from '../../types';
 
 export default function Recipes() {
     const { data: recipes, isLoading, isError } = useRecipes();
     const navigate = useNavigate();
+    const [_, setSearchParams] = useSearchParams();
 
-    const onClick: MenuProps['onClick'] = (e) => {
+    const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
+
+    useEffect(() => {
+        if (recipes) {
+            setFilteredRecipes([]);
+        }
+    }, [recipes]);
+
+    const onClick = (e: MenuInfo) => {
+        if (!recipes) {
+            return <NoRecipesAlert />;
+        }
         if (e.key.toLowerCase() === 'all') {
-            console.log('show featured recipes');
+            setFilteredRecipes(recipes);
+            setSearchParams({});
         } else {
-            // navigate(e.key.toLowerCase());
-            console.log('show featured recipes according to category');
+            const recipesFilteredByCategory = recipes.filter(recipe => recipe.categories.includes(e.key));
+            setFilteredRecipes(recipesFilteredByCategory);
+            setSearchParams({ category: e.key.toLowerCase() });
         }
     };
 
@@ -22,8 +39,8 @@ export default function Recipes() {
         return <Spin spinning size="large" />;
     }
 
-    if (isError || !recipes) {
-        return <Alert message="Failed to load recipes" type="error" />;
+    if (isError || !filteredRecipes) {
+        return <NoRecipesAlert />;
     }
 
     return (
@@ -31,7 +48,7 @@ export default function Recipes() {
             <SiderMenu onClick={onClick} />
             <Layout.Content>
                 <Row justify="center" gutter={[16, 16]} style={{ padding: '16px 0' }}>
-                    {recipes.map((recipe) => {
+                    {filteredRecipes.map((recipe) => {
                         return (
                             <Col key={recipe.id}>
                                 <Card
@@ -75,3 +92,7 @@ export default function Recipes() {
         </Layout>
     );
 }
+
+function NoRecipesAlert() {
+    return <Alert message="No recipes found" type="info" />;
+} 
