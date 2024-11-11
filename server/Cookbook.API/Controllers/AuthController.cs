@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
+using Cookbook.API.Models.Auth;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -33,9 +34,9 @@ public class AuthController(
 		{
 			googlePayload = await GoogleJsonWebSignature.ValidateAsync(t,
 				new GoogleJsonWebSignature.ValidationSettings()
-			{
-				Audience = [authenticationSettings.Google.ClientId]
-			});
+				{
+					Audience = [authenticationSettings.Google.ClientId]
+				});
 		}
 		catch
 		{
@@ -65,14 +66,27 @@ public class AuthController(
 
 
 	[HttpPost("login")]
-	public async Task<IActionResult> GetToken([FromForm] string userName, [FromForm] string password)
+	public async Task<IActionResult> GetToken([FromBody] LoginUserRequest request)
 	{
-		var user = await userManager.FindByNameAsync(userName);
+		var user = await userManager.FindByNameAsync(request.Username);
 
-		if (user == null || !await userManager.CheckPasswordAsync(user, password))
+		if (user == null)
 		{
 			return BadRequest("Username or password wrong");
 		}
+		var isLockedOut = await userManager.IsLockedOutAsync(user);
+		var isCorrectPassword = await userManager.CheckPasswordAsync(user, request.Password);
+
+		if (isLockedOut && isCorrectPassword)
+		{
+			return BadRequest("User is locked out");
+		}
+
+		if (!isCorrectPassword)
+		{
+			await userManager.AccessFailedAsync(user);
+			return BadRequest("Username or password wrong");
+		}	
 
 		await LoginUser(user);
 

@@ -1,40 +1,19 @@
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {
-    Box,
-    Button,
-    Divider,
-    FormControl,
-    Grid,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput,
-    Paper,
-    TextField,
-    Typography,
-} from '@mui/material';
-import React, { useRef, useState } from 'react';
+import { Button, Card, Col, Divider, Form, FormProps, Input, Row, Space } from 'antd';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { useGoogleSessionMutation, useLoginSessionMutation } from '../../api/session';
-import { useStyles } from './Login';
 
-interface FormState {
+type FieldType = {
     username?: string;
     password?: string;
-    showPassword: boolean;
-}
+};
 
 export default function Login() {
-    const [{ username, password, showPassword }, setFormState] = useState<FormState>({ showPassword: false });
-    const formRef = useRef<HTMLFormElement>();
     const googleSessionMutation = useGoogleSessionMutation();
     const loginSessionMutation = useLoginSessionMutation();
     const navigate = useNavigate();
     const location = useLocation();
-    const { classes } = useStyles();
 
     function handleOnSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
         if (response.hasOwnProperty('code')) {
@@ -48,31 +27,6 @@ export default function Login() {
         console.log(error);
     }
 
-    function handleOnSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        if (!username || !password) {
-            return;
-        }
-        const formData = new FormData(event.currentTarget);
-        loginSessionMutation.mutate(formData);
-        handleLogin();
-    }
-
-    function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setFormState((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-    }
-
-    function handleOnClickShowPassword() {
-        setFormState((prev) => ({
-            ...prev,
-            showPassword: !prev.showPassword,
-        }));
-    }
-
-    function handleOnMouseDownPassword(event: React.MouseEvent<HTMLButtonElement>) {
-        event.preventDefault();
-    }
-
     function handleLogin() {
         const params = new URLSearchParams(location.search);
         const returnUrl = params.get('returnTo');
@@ -83,123 +37,83 @@ export default function Login() {
         }
     }
 
+    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+        console.log('Success:', values);
+
+        if (!values.username || !values.password) {
+            return;
+        }
+        loginSessionMutation.mutate({
+            username: values.username!,
+            password: values.password!,
+        });
+        handleLogin();
+    };
+
+    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
     return (
-        <Box>
-            <Grid container className={classes.container} rowSpacing={3}>
-                <Grid item>
-                    <Paper className={classes.paper} elevation={3}>
-                        <Box ref={formRef} component="form" onSubmit={handleOnSubmit} className={classes.form}>
-                            <Typography variant="h5" sx={{ flex: '0 0 100%', textAlign: 'center' }}>
-                                Login with an existing account
-                            </Typography>
-
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    flex: '0 0 100%',
-                                    m: (theme) => theme.spacing(2, 0),
-                                }}
-                            >
-                                <TextField
-                                    id="username"
-                                    name="username"
-                                    label="User name"
-                                    placeholder="User name"
-                                    required
-                                    onChange={handleOnChange}
-                                    sx={{ m: 1, width: '25ch' }}
-                                />
-                                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-                                    <InputLabel htmlFor="password">Password</InputLabel>
-                                    <OutlinedInput
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        required
-                                        onChange={handleOnChange}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleOnClickShowPassword}
-                                                    onMouseDown={handleOnMouseDownPassword}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Password"
-                                    />
-                                </FormControl>
-                            </Box>
-
-                            <Button
-                                id="login"
-                                variant="contained"
-                                type="submit"
-                                disabled={!(username && password)}
-                                sx={{ flex: '0 0 50%' }}
-                            >
-                                Login
-                            </Button>
-                        </Box>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                position: 'relative',
-                                m: (theme) => theme.spacing(4, 0),
-                            }}
+        <Space direction="vertical" size={20} style={{ marginTop: 100 }}>
+            <Row justify="center">
+                <Col>
+                    <Card size="small" style={{ padding: 20 }}>
+                        <Form
+                            name="basic"
+                            labelCol={{ span: 8 }}
+                            // wrapperCol={{ span: 16 }}
+                            style={{ maxWidth: 600 }}
+                            onFinish={onFinish}
+                            onFinishFailed={onFinishFailed}
+                            autoComplete="off"
                         >
-                            <Divider orientation="horizontal" />
-
-                            <Typography
-                                className={classes.flex}
-                                sx={{
-                                    position: 'absolute',
-                                    alignSelf: 'center',
-                                    backgroundColor: 'white',
-                                    width: '50px',
-                                }}
-                                variant="caption"
+                            <Form.Item<FieldType>
+                                label="Username"
+                                name="username"
+                                rules={[{ required: true, message: 'Please input your username!' }]}
                             >
-                                OR
-                            </Typography>
-                        </Box>
+                                <Input />
+                            </Form.Item>
 
-                        <Box
-                            className={classes.flex}
-                            sx={{
-                                m: (theme) => theme.spacing(2, 0),
-                            }}
-                        >
-                            <GoogleLogin
-                                clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}
-                                onSuccess={handleOnSuccess}
-                                onFailure={handleOnFailure}
-                                buttonText="Login with Google"
-                            />
-                        </Box>
-                    </Paper>
-                </Grid>
+                            <Form.Item<FieldType>
+                                label="Password"
+                                name="password"
+                                rules={[{ required: true, message: 'Please input your password!' }]}
+                            >
+                                <Input.Password />
+                            </Form.Item>
 
-                <Grid item>
-                    <Paper className={classes.paper} elevation={3}>
-                        <Box className={classes.flex}>
-                            <Typography variant="subtitle1">Don't have an account?</Typography>
-
-                            <Button id="signup" variant="text">
-                                Sign up
-                            </Button>
-                        </Box>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Box>
+                            <Row justify="center">
+                                <Col>
+                                    <Form.Item label={null}>
+                                        <Button type="primary" htmlType="submit">
+                                            Login
+                                        </Button>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Card>
+                </Col>
+            </Row>
+            <Row justify="center">
+                <Col>
+                    <Divider orientation="center">OR</Divider>
+                </Col>
+            </Row>
+            <Row justify="center">
+                <Col>
+                    <Space>
+                        <GoogleLogin
+                            clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}
+                            onSuccess={handleOnSuccess}
+                            onFailure={handleOnFailure}
+                            buttonText="Login with Google"
+                        />
+                    </Space>
+                </Col>
+            </Row>
+        </Space>
     );
 }

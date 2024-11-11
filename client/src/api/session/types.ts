@@ -13,3 +13,8 @@ export type SessionCheck = {
     isLoggedIn: boolean;
     user?: User;
 };
+
+export type LoginRequest = {
+    username: string;
+    password: string;
+}

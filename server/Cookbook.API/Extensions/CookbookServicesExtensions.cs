@@ -1,4 +1,5 @@
-﻿using AspNetCore.Identity.Mongo;
+﻿using System;
+using AspNetCore.Identity.Mongo;
 using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Services;
@@ -22,6 +23,8 @@ public static class CookbookServicesExtensions
 		services.AddIdentityMongoDbProvider<CookbookUser>(
 			identity => 
 			{
+				identity.Lockout.MaxFailedAccessAttempts = 5;
+				identity.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 			},
 			mongo =>
 			{
