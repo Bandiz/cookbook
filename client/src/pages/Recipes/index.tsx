@@ -7,39 +7,41 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { Recipe } from '../../types';
+import { getFilteredRecipes } from '../../common/helper';
 
 export default function Recipes() {
     const { data: recipes, isLoading, isError } = useRecipes();
     const navigate = useNavigate();
-    const [_, setSearchParams] = useSearchParams();
-
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [category, setCategory] = useState(searchParams.get('category') ?? 'All');
     const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
-
+    
     useEffect(() => {
         if (recipes) {
-            setFilteredRecipes([]);
+            setFilteredRecipes(getFilteredRecipes(recipes, category));
         }
-    }, [recipes]);
+    }, [recipes, category]);
+
+    useEffect(() => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('category', category);
+        setSearchParams(newSearchParams);
+    }, [category, setSearchParams]);
+
 
     const onClick = (e: MenuInfo) => {
         if (!recipes) {
             return <NoRecipesAlert />;
         }
-        if (e.key.toLowerCase() === 'all') {
-            setFilteredRecipes(recipes);
-            setSearchParams({});
-        } else {
-            const recipesFilteredByCategory = recipes.filter(recipe => recipe.categories.includes(e.key));
-            setFilteredRecipes(recipesFilteredByCategory);
-            setSearchParams({ category: e.key.toLowerCase() });
-        }
+        const newCategory = e.key === 'all' ? 'All' : e.key;
+        setCategory(newCategory);
     };
 
     if (isLoading) {
         return <Spin spinning size="large" />;
     }
 
-    if (isError || !filteredRecipes) {
+    if (isError || !filteredRecipes.length) {
         return <NoRecipesAlert />;
     }
 
