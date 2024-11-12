@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
+using Cookbook.API.Commands;
+using Cookbook.API.Commands.User;
 using Cookbook.API.Configuration;
 using Cookbook.API.Entities;
 using Cookbook.API.Extensions;
 using Cookbook.API.Models.Auth;
 using Google.Apis.Auth;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +23,7 @@ namespace Cookbook.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController(
+	IMediator mediator,
 	AuthenticationSettings authenticationSettings,
 	UserManager<CookbookUser> userManager) : ControllerBase
 {
@@ -57,43 +62,34 @@ public class AuthController(
 
 		await LoginUser(user);
 
-		return Ok(new
-		{
-			user = user.GetAuthUserResponse()
-		});
+		return Ok(new LoginResponse(user));
 	}
 
-
-
 	[HttpPost("login")]
-	public async Task<IActionResult> GetToken([FromBody] LoginUserRequest request)
+	public async Task<IActionResult> GetToken(
+		[FromBody] LoginRequest request,
+		CancellationToken cancellationToken)
 	{
-		var user = await userManager.FindByNameAsync(request.Username);
+		var response = await mediator.Send(
+			new AuthenticateUserCommand(request),
+			cancellationToken);
 
-		if (user == null)
+		if (response is SuccessResponse<CookbookUser> success)
 		{
-			return BadRequest("Username or password wrong");
-		}
-		var isLockedOut = await userManager.IsLockedOutAsync(user);
-		var isCorrectPassword = await userManager.CheckPasswordAsync(user, request.Password);
-
-		if (isLockedOut && isCorrectPassword)
-		{
-			return BadRequest("User is locked out");
+			var user = success.Data;
+			await LoginUser(user);
+			return Ok(new LoginResponse(user));
 		}
 
-		if (!isCorrectPassword)
+		return response switch
 		{
-			await userManager.AccessFailedAsync(user);
-			return BadRequest("Username or password wrong");
-		}	
-
-		await LoginUser(user);
-
-		return Ok(new
-		{
-			user = user.GetAuthUserResponse()
-		});
+			ValidationResponse validationResponse => BadRequest(
+				validationResponse
+					.Result
+					.ToValidationResponse()),
+			BadRequestResponse badRequest => BadRequest(badRequest.Message),
+			_ => StatusCode(500, "An unexpected error occurred")
+		};
 	}
 
 	[HttpGet("isLoggedIn")]
@@ -104,22 +100,17 @@ public class AuthController(
 			var result = await HttpContext.AuthenticateAsync();
 			if (!result.Succeeded)
 			{
-				return Ok(new { IsLoggedIn = false });
+				return Ok();
 			}
 
 			var user = await userManager.FindByNameAsync(result.Principal.Identity.Name);
-			return Ok(new
-			{
-				IsLoggedIn = true,
-				User = user.GetAuthUserResponse()
-			});
+			return Ok(new LoginResponse(user));
 		}
 		catch (Exception)
 		{
-			return Ok(new { IsLoggedIn = false });
+			return Ok();
 		}
 	}
-
 
 	[Authorize]
 	[HttpDelete("logout")]

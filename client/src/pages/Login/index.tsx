@@ -46,8 +46,14 @@ export default function Login() {
         loginSessionMutation.mutate({
             username: values.username!,
             password: values.password!,
+        }, { 
+            onError: (error) => {
+                console.log('Error:', error);
+            },
+            onSuccess: () => {
+                handleLogin();
+            }
         });
-        handleLogin();
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {

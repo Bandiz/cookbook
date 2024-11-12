@@ -30,12 +30,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
             return defaultContextObject;
         }
 
-        const { isLoggedIn, user } = session.data;
+        const { isAdmin } = session.data;
 
         return {
-            isAuthenticated: isLoggedIn,
-            user: user ?? null,
-            isAdmin: user?.isAdmin ?? false,
+            isAuthenticated: typeof session.data !== 'undefined',
+            user: session.data,
+            isAdmin: isAdmin ?? false,
             isLoading: session.isLoading,
         };
     }, [session.data]);

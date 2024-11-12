@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { SessionKey } from '../apiQueryKeys';
 import httpClient from '../httpClient';
-import { createSessionObject } from './utils';
 
 export default function useLogoutSessionMutation() {
     const queryClient = useQueryClient();
@@ -12,7 +11,7 @@ export default function useLogoutSessionMutation() {
         },
         {
             onSuccess: () => {
-                queryClient.setQueryData(SessionKey, createSessionObject());
+                queryClient.setQueryData(SessionKey, null);
             },
         }
     );
