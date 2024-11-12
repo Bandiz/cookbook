@@ -25,7 +25,7 @@ const RecipePage = () => {
 
     return (
         <Layout>
-            <Layout.Content style={{ padding: '0 20px' }}>
+            <Layout.Content style={{ padding: '0 60px' }}>
                 <Breadcrumb
                     style={{ margin: '16px 0' }}
                     items={[
@@ -43,61 +43,58 @@ const RecipePage = () => {
                 />
                 <Card>
                     <Space direction="vertical" size="middle">
-                        <Row justify="space-evenly" gutter={[16, 16]}>
-                            <Space align="start">
-                                <Col>
-                                    <Image
-                                        preview={false}
-                                        src={`/api/image/${mainImage}/preview`}
-                                        // style={{ maxWidth: 200 }}
-                                    />
-                                </Col>
-                                <Col>
+                        <Row justify="space-between" gutter={[24,24]}>
+                            <Col xs={{ flex: '100%', order: 2 }} md={{flex: '50%', order: 1}}>
+                                <Image
+                                    preview={false}
+                                    src={`/api/image/${mainImage}/preview`}
+                                />
+                            </Col>
+                            <Col xs={{ flex: '100%', order: 1 }} md={{flex: '40%', order: 2}} lg={{flex: '40%'}} xl={{flex: '40%'}}>
+                                <Row justify='start'>
+                                    <Typography.Title>{title}</Typography.Title>
+                                </Row>
+                                <Space direction="vertical" size="middle">
                                     <Row>
-                                        <Typography.Title>{title}</Typography.Title>
+                                        {categories.map((category, index) => {
+                                            return (
+                                                <Tag color="green" key={index}>
+                                                    {category}
+                                                </Tag>
+                                            );
+                                        })}
                                     </Row>
-                                    <Space direction="vertical" size="middle">
-                                        <Row>
-                                            {categories.map((category, index) => {
-                                                return (
-                                                    <Tag color="green" key={index}>
-                                                        {category}
-                                                    </Tag>
-                                                );
-                                            })}
-                                        </Row>
-                                        <Row>
-                                            <Typography.Text>{description}</Typography.Text>
-                                        </Row>
-                                        <Row>
-                                            <Space direction="horizontal" size="large">
-                                                <Col>
-                                                    <Row>
-                                                        <Typography.Text strong>Total</Typography.Text>
-                                                    </Row>
-                                                    <Row>{totalTimeMinutes} mins</Row>
-                                                </Col>
-                                                <Col>
-                                                    <Row>
-                                                        <Typography.Text strong>Prep</Typography.Text>
-                                                    </Row>
-                                                    <Row>{prepTimeMinutes} mins</Row>
-                                                </Col>
-                                                <Col>
-                                                    <Row>
-                                                        <Typography.Text strong>Cook</Typography.Text>
-                                                    </Row>
-                                                    <Row>{cookTimeMinutes} mins</Row>
-                                                </Col>
-                                            </Space>
-                                        </Row>
-                                    </Space>
-                                </Col>
-                            </Space>
+                                    <Row>
+                                        <Typography.Text>{description}</Typography.Text>
+                                    </Row>
+                                    <Row>
+                                        <Space direction="horizontal" size="large">
+                                            <Col>
+                                                <Row>
+                                                    <Typography.Text strong>Total</Typography.Text>
+                                                </Row>
+                                                <Row>{totalTimeMinutes} mins</Row>
+                                            </Col>
+                                            <Col>
+                                                <Row>
+                                                    <Typography.Text strong>Prep</Typography.Text>
+                                                </Row>
+                                                <Row>{prepTimeMinutes} mins</Row>
+                                            </Col>
+                                            <Col>
+                                                <Row>
+                                                    <Typography.Text strong>Cook</Typography.Text>
+                                                </Row>
+                                                <Row>{cookTimeMinutes} mins</Row>
+                                            </Col>
+                                        </Space>
+                                    </Row>
+                                </Space>
+                            </Col>
                         </Row>
 
-                        <Row gutter={[24, 24]} justify="space-around">
-                            <Col flex={2}>
+                        <Row justify="space-around" gutter={[24, 24]}>
+                            <Col xs={{flex: '100%'}}  lg={{flex: '40%'}}>
                                 <Row>
                                     <Typography.Title level={5}>Ingredients</Typography.Title>
                                 </Row>
@@ -115,7 +112,7 @@ const RecipePage = () => {
                                 })}
                             </Col>
 
-                            <Col flex={3}>
+                            <Col xs={{flex: '100%'}}  lg={{flex: '60%'}}>
                                 <Row>
                                     <Typography.Title level={5}>Instructions</Typography.Title>
                                 </Row>
