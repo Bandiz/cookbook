@@ -47,7 +47,8 @@ public class CreateCategoryCommandHandler(
 			MainImage = request.MainImage,
 			Images = request.Images?.Distinct().ToList() ?? [],
 			CreatedBy = command.User,
-			CreatedAt = DateTime.UtcNow
+			CreatedAt = DateTime.UtcNow,
+			IsFeatured = request.IsFeatured
 		};
 
 		await dataAccess.Categories.InsertOneAsync(

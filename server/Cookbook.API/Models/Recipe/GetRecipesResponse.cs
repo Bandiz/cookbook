@@ -7,4 +7,5 @@ public record GetRecipesResponse(
 	string Title,
 	int TotalTimeMinutes,
 	string MainImage,
-	IEnumerable<string> Categories);
+	IEnumerable<string> Categories,
+	bool IsFeatured);

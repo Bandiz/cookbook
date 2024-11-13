@@ -6,4 +6,5 @@ public record CreateCategoryRequest(
 	string CategoryName,
 	bool Visible,
 	string MainImage,
-	List<string> Images);
+	List<string> Images,
+	bool IsFeatured);

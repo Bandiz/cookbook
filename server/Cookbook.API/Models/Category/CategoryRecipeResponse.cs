@@ -9,4 +9,5 @@ public record CategoryRecipeResponse(
 	string CreatedBy,
 	DateTime CreatedAt,
 	string UpdatedBy,
-	DateTime? UpdatedAt);
+	DateTime? UpdatedAt,
+	bool IsFeatured);

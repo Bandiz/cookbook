@@ -7,4 +7,5 @@ namespace Cookbook.API.Models.Category;
 public record UpdateCategoryRequest(
 	bool? Visible,
 	string? MainImage,
-	List<string>? Images);
+	List<string>? Images,
+	bool? IsFeatured);

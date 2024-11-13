@@ -41,4 +41,6 @@ public class Category
 	public List<string> Images { get; set; } = [];
 
 	public string MainImage { get; set; }
+
+	public bool IsFeatured { get; set; }
 }

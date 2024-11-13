@@ -21,5 +21,6 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
 		RuleForEach(x => x.Request.Ingredients).SetValidator(ingredientValidator);
 		RuleForEach(x => x.Request.Instructions).SetValidator(instructionValidator);
 		RuleFor(x => x.Request.IsPublished).NotNull();
+		RuleFor(x => x.Request.IsFeatured).NotNull();
 	}
 }

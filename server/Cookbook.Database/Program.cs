@@ -1,4 +1,5 @@
-﻿using MongoDBMigrations;
+﻿using MongoDB.Bson.Serialization.Conventions;
+using MongoDBMigrations;
 using System.Reflection;
 
 var migrationEngine = new MigrationEngine()
@@ -6,6 +7,9 @@ var migrationEngine = new MigrationEngine()
     .UseAssembly(Assembly.GetExecutingAssembly())
     .UseSchemeValidation(false);
 
+
+var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
+ConventionRegistry.Register("camelCase", conventionPack, t => true);
 
 migrationEngine.Run();
 

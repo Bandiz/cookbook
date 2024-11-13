@@ -13,5 +13,6 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 		RuleFor(x => x.Request.CategoryName).NotEmpty().MaximumLength(50);
 		RuleFor(x => x.Request.MainImage).SetValidator(imageValidator);
 		RuleFor(x => x.Request.Images).SetValidator(imagesValidator);
+		RuleFor(x => x.Request.IsFeatured).NotNull();
 	}
 }

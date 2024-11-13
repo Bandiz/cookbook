@@ -60,6 +60,12 @@ public class UpdateCategoryCommandHandler(
 			category.Images = request.Images;
 		}
 
+		if (request.IsFeatured.HasValue)
+		{
+			updated = true;
+			category.IsFeatured = request.IsFeatured.Value;
+		}
+
 		if (updated)
 		{
 			category.UpdatedAt = DateTime.UtcNow;

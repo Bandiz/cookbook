@@ -12,7 +12,8 @@ public record CategoryResponse(
 	string CreatedBy,
 	DateTime CreatedAt,
 	List<string> Images,
-	string MainImage)
+	string MainImage,
+	bool IsFeatured)
 {
 	public CategoryResponse(CategoryEntity category) : this(
 		category.CategoryName,
@@ -22,7 +23,8 @@ public record CategoryResponse(
 		category.CreatedBy,
 		category.CreatedAt,
 		category.Images,
-		category.MainImage)
+		category.MainImage,
+		category.IsFeatured)
 	{
 	}
 }

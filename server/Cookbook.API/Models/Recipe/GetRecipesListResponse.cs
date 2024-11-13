@@ -11,4 +11,5 @@ public record GetRecipesListResponse(
 	string UpdatedBy,
 	DateTime? UpdatedAt,
 	IEnumerable<string> Categories,
-	bool IsPublished);
+	bool IsPublished,
+	bool IsFeatured);

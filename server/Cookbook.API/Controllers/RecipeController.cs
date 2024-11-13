@@ -47,7 +47,8 @@ public class RecipeController(
 			recipe.Title,
 			recipe.TotalTimeMinutes,
 			recipe.MainImage,
-			recipe.Categories)));
+			recipe.Categories,
+			recipe.IsFeatured)));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -63,7 +64,8 @@ public class RecipeController(
 			recipe.UpdatedBy,
 			recipe.UpdatedAt,
 			recipe.Categories,
-			recipe.IsPublished)));
+			recipe.IsPublished,
+			recipe.IsFeatured)));
 	}
 
 

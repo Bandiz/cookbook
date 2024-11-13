@@ -117,6 +117,12 @@ public class UpdateRecipeCommandHandler(
 			recipe.IsPublished = request.IsPublished.Value;
 		}
 
+		if (request.IsFeatured.HasValue)
+		{
+			updated = true;
+			recipe.IsFeatured = request.IsFeatured.Value;
+		}
+
 		if (updated)
 		{
 			recipe.UpdatedBy = command.User;

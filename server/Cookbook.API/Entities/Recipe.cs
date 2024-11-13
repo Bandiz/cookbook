@@ -39,4 +39,6 @@ public class Recipe
 
 	public bool IsPublished { get; set; }
 
+	public bool IsFeatured { get; set; }
+
 }

@@ -76,7 +76,8 @@ public class CategoryController(
 					x.CreatedBy,
 					x.CreatedAt,
 					x.UpdatedBy,
-					x.UpdatedAt)).ToList()));
+					x.UpdatedAt,
+					x.IsFeatured)).ToList()));
 	}
 
 	[Authorize(Roles = "Admin")]

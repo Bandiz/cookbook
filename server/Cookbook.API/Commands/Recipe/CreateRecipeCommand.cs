@@ -56,9 +56,10 @@ public class CreateRecipeCommandHandler(
 			{
 				Description = x.Description,
 			}).ToList() ?? [],
-			IsPublished = request.IsPublished ?? false,
+			IsPublished = request.IsPublished,
 			CreatedBy = command.User,
-			CreatedAt = DateTime.UtcNow
+			CreatedAt = DateTime.UtcNow,
+			IsFeatured = request.IsFeatured,
 		};
 
 		await recipeCollection.InsertOneAsync(newRecipe, new(), cancellationToken);

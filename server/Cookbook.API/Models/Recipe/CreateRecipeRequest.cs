@@ -12,5 +12,6 @@ public record CreateRecipeRequest(
 	List<string> Categories,
 	List<InstructionRequest> Instructions,
 	List<IngredientRequest> Ingredients,
-	bool? IsPublished
+	bool IsPublished,
+	bool IsFeatured
 	);

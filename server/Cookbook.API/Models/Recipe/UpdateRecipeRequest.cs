@@ -13,5 +13,6 @@ public record UpdateRecipeRequest(
 	List<string>? Categories,
 	List<IngredientRequest>? Ingredients,
 	List<InstructionRequest>? Instructions,
-	bool? IsPublished
+	bool? IsPublished,
+	bool? IsFeatured
 	);

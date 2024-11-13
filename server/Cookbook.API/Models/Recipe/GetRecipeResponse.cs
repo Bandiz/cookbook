@@ -14,7 +14,8 @@ public record GetRecipeResponse(
 	string MainImage,
 	IEnumerable<string> Categories,
 	IEnumerable<InstructionResponse> Instructions,
-	IEnumerable<IngredientResponse> Ingredients)
+	IEnumerable<IngredientResponse> Ingredients,
+	bool IsFeatured)
 {
 	public GetRecipeResponse(RecipeEntity recipe) : this(
 		recipe.Id,
@@ -26,7 +27,8 @@ public record GetRecipeResponse(
 		recipe.MainImage,
 		recipe.Categories,
 		recipe.Instructions.Select(x => new InstructionResponse(x.Description)),
-		recipe.Ingredients.Select(x => new IngredientResponse(x)))
+		recipe.Ingredients.Select(x => new IngredientResponse(x)),
+		recipe.IsFeatured)
 	{
 	}
 }

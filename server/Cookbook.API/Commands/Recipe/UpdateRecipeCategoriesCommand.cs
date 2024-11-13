@@ -53,7 +53,7 @@ public class UpdateRecipeCategoriesCommandHandler(
 		{
 			var newCategoryCommand = new CreateCategoryCommand
 			{
-				Request = new(newCategory, false, recipe.MainImage, []),
+				Request = new(newCategory, false, recipe.MainImage, [], false),
 				User = recipe.UpdatedBy ?? recipe.CreatedBy,
 			};
 			// TODO: add error aggregation
