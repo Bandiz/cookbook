@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { Recipe } from '../../types';
-import { getFilteredRecipes } from '../../common/helper';
+import { getFilteredRecipes } from '../../common/helpers';
 import FeaturedCategoriesWithRecipes from './FeaturedCategoriesWithRecipes';
 
 export default function Recipes() {

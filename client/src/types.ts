@@ -29,6 +29,7 @@ export type Recipe = {
     cookTimeMinutes: number;
     instructions: Instructions[];
     ingredients: Ingredients[];
+    isFeatured: boolean;
 } & Auditable;
 
 export type Category = {
