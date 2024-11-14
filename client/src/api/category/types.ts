@@ -1,6 +1,14 @@
 import { Category, CategoryRecipes } from '../../types';
 
-export type CategoryNameListResponse = Array<string>;
+export interface PublicCategory {
+    categoryName: string;
+    mainImage: string;
+    isFeatured: boolean;
+}
+
+export type CategoryNameListResponse = {
+    categories: Array<PublicCategory>;
+};
 
 export type CategoryListResponse = Array<Category>;
 

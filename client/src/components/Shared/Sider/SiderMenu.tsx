@@ -8,11 +8,12 @@ interface SiderMenuProps {
 }
 
 export function SiderMenu({ onClick }: SiderMenuProps) {
-    const { data: categories } = useCategoryNameList();
+    const { data } = useCategoryNameList();
 
-    if (!categories) {
+    if (!data) {
         return null;
     }
+    const { categories } = data;
 
     return (
         <Sider breakpoint="md" collapsedWidth="0">
@@ -23,7 +24,7 @@ export function SiderMenu({ onClick }: SiderMenuProps) {
                 items={[
                     { key: 'all', label: 'All' },
                     ...categories.map((category) => {
-                        return { key: category, label: category };
+                        return { key: category.categoryName, label: category.categoryName };
                     }),
                 ]}
             />

@@ -26,9 +26,10 @@ public class CategoryController(
 	public IActionResult GetCategories()
 	{
 		var categories = categoryQueries
-			.GetCategories()
-			.Select(x => x.CategoryName);
-		return Ok(categories);
+			.GetCategories();
+		return Ok(new GetPublicCategoriesResponse(
+			categories
+				.ConvertAll(x => new GetPublicCategoryResponse(x))));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -42,7 +43,7 @@ public class CategoryController(
 			return NotFound(categoryName);
 		}
 
-		return Ok(new CategoryResponse(category));
+		return Ok(new GetCategoryResponse(category));
 	}
 
 	[Authorize(Roles = "Admin")]
@@ -51,7 +52,7 @@ public class CategoryController(
 	{
 		var categories = categoryQueries
 			.GetCategories(false)
-			.Select(x => new CategoryResponse(x));
+			.Select(x => new GetCategoryResponse(x));
 		return Ok(categories);
 	}
 
@@ -68,8 +69,8 @@ public class CategoryController(
 		var recipes = await recipeQueries.GetAllRecipes([categoryName]);
 
 		return Ok(
-			new CategoryRecipesResponse(recipes.Select(x =>
-				new CategoryRecipeResponse(
+			new GetCategoryRecipesResponse(recipes.Select(x =>
+				new GetCategoryRecipeResponse(
 					x.Id,
 					x.Title,
 					categoryName,
@@ -97,7 +98,7 @@ public class CategoryController(
 			SuccessResponse<Category> success => CreatedAtAction(
 				nameof(GetCategory),
 				new { categoryName = success.Data.CategoryName },
-				new CategoryResponse(success.Data)
+				new GetCategoryResponse(success.Data)
 			),
 			ValidationResponse validationResponse => BadRequest(
 				validationResponse
@@ -147,7 +148,7 @@ public class CategoryController(
 
 		return response switch
 		{
-			SuccessResponse<Category> success => Ok(new CategoryResponse(success.Data)),
+			SuccessResponse<Category> success => Ok(new GetCategoryResponse(success.Data)),
 			ValidationResponse validationResponse => BadRequest(
 				validationResponse
 					.Result
