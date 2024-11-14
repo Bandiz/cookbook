@@ -2,7 +2,7 @@
 - [ ] design, layout
 - [ ] error page/error pop-up if failed to login
 - [ ] restore password?
-- [ ] google login
+- [x] google login
 
 # home page
 - [ ] carousel (featured recipes only)

@@ -8,7 +8,15 @@ export default function useLoginSessionMutation() {
 
     return useMutation(
         async (request: LoginRequest) => {
-            const response = await httpClient.post<LoginResponse>('auth/login', request);
+            const formData = new FormData();
+            formData.append('username', request.username);
+            formData.append('password', request.password);
+
+            const response = await httpClient.post<LoginResponse>('auth/login', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             return response.data;
         },
         {

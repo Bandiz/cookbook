@@ -1,13 +1,9 @@
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { Button, Card, Col, Divider, Form, FormProps, Input, Row, Space } from 'antd';
-import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { useGoogleSessionMutation, useLoginSessionMutation } from '../../api/session';
-
-type FieldType = {
-    username?: string;
-    password?: string;
-};
+import { LoginRequest } from '../../api/session/types';
 
 export default function Login() {
     const googleSessionMutation = useGoogleSessionMutation();
@@ -15,19 +11,7 @@ export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    function handleOnSuccess(response: GoogleLoginResponse | GoogleLoginResponseOffline) {
-        if (response.hasOwnProperty('code')) {
-            return;
-        }
-        googleSessionMutation.mutate((response as GoogleLoginResponse).tokenId);
-        handleLogin();
-    }
-
-    function handleOnFailure(error: unknown) {
-        console.log(error);
-    }
-
-    function handleLogin() {
+    const handleLogin = () => {
         const params = new URLSearchParams(location.search);
         const returnUrl = params.get('returnTo');
         if (returnUrl) {
@@ -35,28 +19,36 @@ export default function Login() {
         } else {
             navigate('/');
         }
-    }
+    };
 
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        console.log('Success:', values);
-
-        if (!values.username || !values.password) {
+    const handleOnSuccess = (response: CredentialResponse) => {
+        if (!response.credential) {
+            console.error('No credential found in response');
             return;
         }
-        loginSessionMutation.mutate({
-            username: values.username!,
-            password: values.password!,
-        }, { 
-            onError: (error) => {
-                console.log('Error:', error);
-            },
-            onSuccess: () => {
-                handleLogin();
-            }
+        googleSessionMutation.mutate(response.credential, {
+            onSuccess: handleLogin,
         });
     };
 
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    const handleOnFailure = () => {
+        console.error('Failed to login with Google');
+    };
+
+    const onFinish: FormProps<LoginRequest>['onFinish'] = async (values: LoginRequest) => {
+        if (!values.username || !values.password) {
+            return;
+        }
+
+        await loginSessionMutation.mutateAsync(values, {
+            onError: (error) => {
+                console.log('Error:', error);
+            },
+            onSuccess: handleLogin,
+        });
+    };
+
+    const onFinishFailed: FormProps<LoginRequest>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
@@ -73,7 +65,7 @@ export default function Login() {
                             onFinishFailed={onFinishFailed}
                             autoComplete="off"
                         >
-                            <Form.Item<FieldType>
+                            <Form.Item<LoginRequest>
                                 label="Username"
                                 name="username"
                                 rules={[{ required: true, message: 'Please input your username!' }]}
@@ -81,7 +73,7 @@ export default function Login() {
                                 <Input />
                             </Form.Item>
 
-                            <Form.Item<FieldType>
+                            <Form.Item<LoginRequest>
                                 label="Password"
                                 name="password"
                                 rules={[{ required: true, message: 'Please input your password!' }]}
@@ -110,12 +102,9 @@ export default function Login() {
             <Row justify="center">
                 <Col>
                     <Space>
-                        <GoogleLogin
-                            clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`}
-                            onSuccess={handleOnSuccess}
-                            onFailure={handleOnFailure}
-                            buttonText="Login with Google"
-                        />
+                        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                            <GoogleLogin onSuccess={handleOnSuccess} onError={handleOnFailure} />
+                        </GoogleOAuthProvider>
                     </Space>
                 </Col>
             </Row>

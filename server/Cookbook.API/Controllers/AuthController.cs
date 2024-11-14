@@ -67,7 +67,7 @@ public class AuthController(
 
 	[HttpPost("login")]
 	public async Task<IActionResult> GetToken(
-		[FromBody] LoginRequest request,
+		[FromForm] LoginRequest request,
 		CancellationToken cancellationToken)
 	{
 		var response = await mediator.Send(
