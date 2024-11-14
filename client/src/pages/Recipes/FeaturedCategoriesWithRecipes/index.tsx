@@ -5,63 +5,68 @@ import { RECIPE, replaceRouteParams } from '../../../constants/routes';
 import { useNavigate } from 'react-router-dom';
 import { NoRecipesAlert } from '..';
 import { getFilteredRecipes } from '../../../common/helpers';
+import { useCategoryNameList } from '../../../api/category';
 
 export default function FeaturedCategoriesWithRecipes({ recipes }: { recipes: Recipe[] }) {
     const navigate = useNavigate();
-    console.log(recipes);
+    const { data } = useCategoryNameList();
 
-    if (!recipes) {
+    if (!recipes || !data) {
         return <NoRecipesAlert />;
     }
 
+    const { categories } = data;
+
     return (
         <>
-            {['Breakfast', 'Lunch', 'Dinner'].map((category) => (
-                <Row align="top" style={{ flexDirection: 'column', padding: '20px 0' }}>
-                    <Col>
-                        <Typography.Title level={2}>{category}</Typography.Title>
-                    </Col>
-                    <Col>
-                        <Space size={10}>
-                            {getFilteredRecipes(recipes, category).map((recipe) => (
-                                <Card
-                                    key={recipe.id}
-                                    onClick={() => {
-                                        navigate(replaceRouteParams(RECIPE, { id: recipe.id }));
-                                    }}
-                                    hoverable
-                                    style={{ width: 240, maxHeight: 370, height: '100%' }}
-                                    cover={
-                                        recipe.mainImage ? (
-                                            <img
-                                                alt={recipe.title}
-                                                src={`/api/image/${recipe.mainImage}`}
-                                                style={{ width: '100%', objectFit: 'cover', minHeight: 240 }}
-                                            />
-                                        ) : (
-                                            <Skeleton.Image style={{ width: 240, height: 240 }} />
-                                        )
-                                    }
-                                >
-                                    <Space direction="vertical" wrap>
-                                        <Meta title={recipe.title} />
-                                        <div>Total time: {recipe.totalTimeMinutes} min</div>
-                                        <div>
-                                            {recipe.categories.map((category) => {
-                                                return (
-                                                    <Tag key={category} color="lime">
-                                                        {category}
-                                                    </Tag>
-                                                );
-                                            })}
-                                        </div>
-                                    </Space>
-                                </Card>
-                            ))}
-                        </Space>
-                    </Col>
-                </Row>
-            ))}
+            {categories
+                .filter((category) => category.isFeatured)
+                .map(({ categoryName }) => (
+                    <Row align="top" style={{ flexDirection: 'column', padding: '20px 0' }}>
+                        <Col>
+                            <Typography.Title level={2}>{categoryName}</Typography.Title>
+                        </Col>
+                        <Col>
+                            <Space size={10}>
+                                {getFilteredRecipes(recipes, categoryName).map((recipe) => (
+                                    <Card
+                                        key={recipe.id}
+                                        onClick={() => {
+                                            navigate(replaceRouteParams(RECIPE, { id: recipe.id }));
+                                        }}
+                                        hoverable
+                                        style={{ width: 240, maxHeight: 370, height: '100%' }}
+                                        cover={
+                                            recipe.mainImage ? (
+                                                <img
+                                                    alt={recipe.title}
+                                                    src={`/api/image/${recipe.mainImage}`}
+                                                    style={{ width: '100%', objectFit: 'cover', minHeight: 240 }}
+                                                />
+                                            ) : (
+                                                <Skeleton.Image style={{ width: 240, height: 240 }} />
+                                            )
+                                        }
+                                    >
+                                        <Space direction="vertical" wrap>
+                                            <Meta title={recipe.title} />
+                                            <div>Total time: {recipe.totalTimeMinutes} min</div>
+                                            <div>
+                                                {recipe.categories.map((category) => {
+                                                    return (
+                                                        <Tag key={category} color="lime">
+                                                            {category}
+                                                        </Tag>
+                                                    );
+                                                })}
+                                            </div>
+                                        </Space>
+                                    </Card>
+                                ))}
+                            </Space>
+                        </Col>
+                    </Row>
+                ))}
         </>
     );
 }
