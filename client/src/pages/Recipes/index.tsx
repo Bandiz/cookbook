@@ -1,13 +1,13 @@
 import { Alert, Card, Col, Layout, Row, Skeleton, Space, Spin, Tag } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import { useRecipes } from '../../api/admin/recipe';
-import { RECIPE, replaceRouteParams } from '../../constants/routes';
-import { SiderMenu } from '../../components/Shared/Sider/SiderMenu';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { MenuInfo } from 'rc-menu/lib/interface';
-import { Recipe } from '../../types';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRecipes } from '../../api/public/recipe/useRecipes';
 import { getFilteredRecipes } from '../../common/helpers';
+import { SiderMenu } from '../../components/Shared/Sider/SiderMenu';
+import { RECIPE, replaceRouteParams } from '../../constants/routes';
+import { Recipe } from '../../types';
 import FeaturedCategoriesWithRecipes from './FeaturedCategoriesWithRecipes';
 
 export default function Recipes() {

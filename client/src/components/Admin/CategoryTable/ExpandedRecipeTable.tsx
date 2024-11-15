@@ -1,9 +1,9 @@
 import type { TableProps } from 'antd';
 import { Alert, Space, Spin, Table } from 'antd';
-import { useCategoryRecipes } from '../../../api/admin/category';
+import useCategoryRecipes from '../../../api/admin/category/useCategoryRecipes';
 import { Category, CategoryRecipe } from '../../../types';
-import { RemoveRecipeAction } from './RemoveRecipeAction';
 import { displayDate } from '../utils';
+import { RemoveRecipeAction } from './RemoveRecipeAction';
 
 const columns: TableProps<CategoryRecipe>['columns'] = [
     {

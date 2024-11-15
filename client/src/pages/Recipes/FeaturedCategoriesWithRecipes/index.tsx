@@ -5,7 +5,7 @@ import { RECIPE, replaceRouteParams } from '../../../constants/routes';
 import { useNavigate } from 'react-router-dom';
 import { NoRecipesAlert } from '..';
 import { getFilteredRecipes } from '../../../common/helpers';
-import { useCategoryNameList } from '../../../api/category';
+import useCategoryNameList from '../../../api/public/category/useCategoryNameList';
 
 export default function FeaturedCategoriesWithRecipes({ recipes }: { recipes: Recipe[] }) {
     const navigate = useNavigate();
