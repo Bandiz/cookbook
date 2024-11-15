@@ -23,6 +23,13 @@ const columns: TableColumnsType<Recipe> = [
         },
     },
     {
+        title: 'Is featured',
+        dataIndex: 'isFeatured',
+        render: (value: boolean) => {
+            return <Checkbox checked={value} disabled />;
+        },
+    },
+    {
         title: 'Categories',
         dataIndex: 'categories',
         render: (_, record) => {

@@ -115,20 +115,37 @@ export default function EditRecipe() {
                                 >
                                     <Input placeholder="Pancakes" />
                                 </Form.Item>
-                                <Form.Item>
-                                    <Form.Item
-                                        noStyle
-                                        name="isPublished"
-                                        valuePropName="checked"
-                                        initialValue={recipeData.isPublished}
-                                    >
-                                        <Checkbox style={{ marginRight: '10px' }} />
-                                    </Form.Item>
-                                    Is published
-                                </Form.Item>
+                                <Row>
+                                    <Col xs={{ flex: '50%' }}>
+                                        <Form.Item>
+                                            <Form.Item
+                                                noStyle
+                                                name="isPublished"
+                                                valuePropName="checked"
+                                                initialValue={recipeData.isPublished}
+                                            >
+                                                <Checkbox style={{ marginRight: '10px' }} />
+                                            </Form.Item>
+                                            Is published
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={{ flex: '50%' }}>
+                                        <Form.Item>
+                                            <Form.Item
+                                                noStyle
+                                                name="isFeatured"
+                                                valuePropName="checked"
+                                                initialValue={recipeData.isFeatured}
+                                            >
+                                                <Checkbox style={{ marginRight: '10px' }} />
+                                            </Form.Item>
+                                            Is featured
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
 
-                                <Row gutter={[20, 20]} justify="space-evenly">
-                                    <Col span={8}>
+                                <Row>
+                                    <Col xs={{ flex: '30%' }}>
                                         <Form.Item
                                             label="Prep Time (min)"
                                             name="prepTimeMinutes"
@@ -137,7 +154,7 @@ export default function EditRecipe() {
                                             <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
+                                    <Col xs={{ flex: '30%' }}>
                                         <Form.Item
                                             label="Cook Time (min)"
                                             name="cookTimeMinutes"
@@ -146,7 +163,7 @@ export default function EditRecipe() {
                                             <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
+                                    <Col xs={{ flex: '30%' }}>
                                         <Form.Item
                                             label="Total Time (min)"
                                             name="totalTimeMinutes"
