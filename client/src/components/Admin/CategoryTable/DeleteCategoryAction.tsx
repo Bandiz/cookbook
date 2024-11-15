@@ -1,13 +1,13 @@
-import { Button, Popconfirm } from 'antd';
-import { useDeleteCategoryMutation } from '../../../api/category';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Popconfirm } from 'antd';
+import useDeleteCategory from '../../../api/admin/category/useDeleteCategory';
 
 interface DeleteCategoryActionProps {
     categoryName: string;
 }
 
 export default function DeleteCategoryAction({ categoryName }: DeleteCategoryActionProps) {
-    const { mutate } = useDeleteCategoryMutation();
+    const { mutate } = useDeleteCategory();
     return (
         <Popconfirm
             title=""

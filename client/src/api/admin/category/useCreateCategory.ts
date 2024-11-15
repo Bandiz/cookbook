@@ -1,14 +1,14 @@
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { useMutation, useQueryClient } from 'react-query';
-import { useAuth } from '../../contexts/AuthContext';
-import { Category } from '../../types';
-import { CategoryListKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { useAuth } from '../../../contexts/AuthContext';
+import { Category } from '../../../types';
+import { CategoryListKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import { CategoryListResponse, CreateCategoryContext, CreateCategoryVariables } from './types';
 import { mapCategory } from './utils';
 
-export default function useCreateCategoryMutation() {
+export default function useCreateCategory() {
     const queryClient = useQueryClient();
     const { user } = useAuth();
 
@@ -31,6 +31,7 @@ export default function useCreateCategoryMutation() {
                         images: [],
                         createdAt: dayjs(),
                         createdBy: user?.email ?? '',
+                        isFeatured: false,
                     };
                     previousCategories.push(newCategory);
                     queryClient.setQueryData<CategoryListResponse>(CategoryListKey, previousCategories);

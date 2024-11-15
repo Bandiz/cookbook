@@ -1,8 +1,8 @@
 import { useQuery } from 'react-query';
-import { RecipeListKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { RecipeListKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import { mapRecipe } from './utils';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { RecipeListResponse } from './types';
 
 export function useRecipesList() {

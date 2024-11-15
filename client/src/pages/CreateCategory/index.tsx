@@ -1,34 +1,34 @@
+import { PictureOutlined, SaveOutlined } from '@ant-design/icons';
 import {
+    Breadcrumb,
+    Button,
+    Card,
     Checkbox,
     Col,
     Divider,
-    Layout,
-    Row,
-    Typography,
-    Image,
-    Breadcrumb,
-    Card,
-    Form,
-    Input,
-    Skeleton,
     Flex,
     FloatButton,
+    Form,
+    Image,
+    Input,
+    Layout,
     message,
-    Button,
+    Row,
+    Skeleton,
+    Typography,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useCreateCategory from '../../api/admin/category/useCreateCategory';
+import { ImageDrawer } from '../../components/Shared/imageDrawer';
 import { ADMIN } from '../../constants/routes';
 import { Category } from '../../types';
-import { PictureOutlined, SaveOutlined } from '@ant-design/icons';
-import { ImageDrawer } from '../../components/Shared/imageDrawer';
-import { useCreateCategoryMutation } from '../../api/category';
 
 export default function CreateCategory() {
     const [form] = Form.useForm<Category>();
     const [open, setOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
-    const { mutate: createCategory, isError, isLoading, isSuccess } = useCreateCategoryMutation();
+    const { mutate: createCategory, isError, isLoading, isSuccess } = useCreateCategory();
 
     const onSubmit = (values: Category) => {
         createCategory(values);
@@ -66,10 +66,7 @@ export default function CreateCategory() {
                         },
                         {
                             title: (
-                                <Link
-                                    className="ant-typography"
-                                    to={ADMIN + '?activeTab=2'}
-                                >
+                                <Link className="ant-typography" to={ADMIN + '?activeTab=2'}>
                                     Categories
                                 </Link>
                             ),

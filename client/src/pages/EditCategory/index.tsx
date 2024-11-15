@@ -12,7 +12,8 @@ import {
     Typography
 } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { useCategory, useUpdateCategoryMutation } from '../../api/category';
+import useCategory from '../../api/admin/category/useCategory';
+import useUpdateCategory from '../../api/admin/category/useUpdateCategory';
 import ExpandedRecipeTable from '../../components/Admin/CategoryTable/ExpandedRecipeTable';
 import { ADMIN } from '../../constants/routes';
 import UploadImages from './UploadImages';
@@ -20,7 +21,7 @@ import UploadImages from './UploadImages';
 export default function EditCategory() {
     const { category: categoryName } = useParams<{ category: string }>();
     const { data: category, isLoading } = useCategory(categoryName ?? '');
-    const { mutate: updateCategory } = useUpdateCategoryMutation();
+    const { mutate: updateCategory } = useUpdateCategory();
 
     if (!category || isLoading) {
         return <Spin size="large" />;

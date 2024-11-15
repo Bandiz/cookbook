@@ -1,4 +1,4 @@
-import { Category, CategoryRecipe } from '../../types';
+import { Category, CategoryRecipe } from '../../../types';
 import dayjs from 'dayjs';
 
 export function mapCategory(category: Category): Category {

@@ -1,11 +1,11 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { RecipeKey, RecipeListKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { RecipeKey, RecipeListKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import { DeleteRecipeContext, DeleteRecipeVariables, RecipeListResponse } from './types';
-import { Recipe } from '../../types';
+import { Recipe } from '../../../types';
 
-export default function useDeleteRecipeMutation() {
+export default function useDeleteRecipe() {
     const queryClient = useQueryClient();
 
     return useMutation<void, AxiosError, DeleteRecipeVariables, DeleteRecipeContext>(

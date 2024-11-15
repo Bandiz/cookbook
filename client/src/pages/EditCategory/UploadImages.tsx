@@ -2,10 +2,10 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Button, Image, Space, Upload } from 'antd';
 import { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
+import useUpdateCategory from '../../api/admin/category/useUpdateCategory';
 import { CategoryKey } from '../../api/apiQueryKeys';
-import { useUpdateCategoryMutation } from '../../api/category';
-import { Category } from '../../types';
 import { UploadImageResponse } from '../../api/image/types';
+import { Category } from '../../types';
 
 interface UploadImagesProps {
     category: Category;
@@ -13,7 +13,7 @@ interface UploadImagesProps {
 
 export default function UploadImages({ category }: UploadImagesProps) {
     const [currentImage, setCurrentImage] = useState(0);
-    const { mutate: updateCategory } = useUpdateCategoryMutation();
+    const { mutate: updateCategory } = useUpdateCategory();
     const queryClient = useQueryClient();
 
     const imagesPreview = useMemo(() => {

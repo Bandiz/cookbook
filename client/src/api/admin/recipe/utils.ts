@@ -1,4 +1,4 @@
-import { Recipe } from '../../types';
+import { Recipe } from '../../../types';
 import dayjs from 'dayjs';
 
 export function mapRecipe(recipe: Recipe): Recipe {

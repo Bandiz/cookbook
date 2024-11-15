@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useRecipesList } from '../../../api/recipe/useRecipesList';
+import { useRecipesList } from '../../../api/admin/recipe/useRecipesList';
 import { CREATE_RECIPE } from '../../../constants/routes';
 import { Recipe } from '../../../types';
 import { displayDate } from '../utils';

@@ -1,14 +1,14 @@
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { useMutation, useQueryClient } from 'react-query';
-import { useAuth } from '../../contexts/AuthContext';
-import { Recipe } from '../../types';
-import httpClient from '../httpClient';
+import { useAuth } from '../../../contexts/AuthContext';
+import { Recipe } from '../../../types';
+import httpClient from '../../httpClient';
 import { mapRecipe } from './utils';
 import { CreateRecipeContext, CreateRecipeVariables, RecipeListResponse } from './types';
-import { RecipeListKey } from '../apiQueryKeys';
+import { RecipeListKey } from '../../apiQueryKeys';
 
-export default function useCreateCategoryMutation() {
+export default function useCreateCategory() {
     const queryClient = useQueryClient();
     const { user } = useAuth();
 

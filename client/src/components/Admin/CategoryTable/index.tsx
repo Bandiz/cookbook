@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, FloatButton, Space, Spin, Table, TableColumnsType } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useCategoryList } from '../../../api/category';
+import { useCategoryList } from '../../../api/admin/category';
 import { CREATE_CATEGORY } from '../../../constants/routes';
 import { Category } from '../../../types';
 import { displayDate } from '../utils';

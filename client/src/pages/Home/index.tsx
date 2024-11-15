@@ -1,5 +1,5 @@
 import { Carousel, Spin } from 'antd';
-import { useRecipes } from '../../api/recipe';
+import { useRecipes } from '../../api/admin/recipe';
 
 function Home() {
     const { data: recipes, isLoading, isError } = useRecipes();

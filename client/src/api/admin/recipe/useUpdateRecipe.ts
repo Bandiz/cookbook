@@ -1,12 +1,12 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { Recipe } from '../../types';
-import { RecipeKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { Recipe } from '../../../types';
+import { RecipeKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import { UpdateRecipeVariables, UpdateRecipeContext } from './types';
 import { mapRecipe } from './utils';
 
-export function useUpdateRecipeMutation() {
+export function useUpdateRecipe() {
     const queryClient = useQueryClient();
 
     return useMutation<Recipe, AxiosError, UpdateRecipeVariables, UpdateRecipeContext>(

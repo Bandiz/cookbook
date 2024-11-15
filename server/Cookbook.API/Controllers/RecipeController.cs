@@ -31,6 +31,19 @@ public class RecipeController(
 		{
 			return NotFound(id);
 		}
+		return Ok(new GetPublicRecipeResponse(recipe));
+	}
+
+	[Authorize(Roles = "Admin")]
+	[HttpGet("admin/{id:int}")]
+	public IActionResult GetRecipeDetails(int id)
+	{
+		var recipe = recipeQueries.GetRecipe(id);
+
+		if (recipe == null)
+		{
+			return NotFound(id);
+		}
 		return Ok(new GetRecipeResponse(recipe));
 	}
 
@@ -42,7 +55,7 @@ public class RecipeController(
 		int count)
 	{
 		var recipes = recipeQueries.GetRecipes(searchText, count, categories);
-		return Ok(recipes.Select(recipe => new GetRecipesResponse(
+		return Ok(recipes.Select(recipe => new GetPublicRecipesResponse(
 			recipe.Id,
 			recipe.Title,
 			recipe.TotalTimeMinutes,
@@ -86,7 +99,7 @@ public class RecipeController(
 			SuccessResponse<Recipe> success => CreatedAtAction(
 				nameof(GetRecipe),
 				new { id = success.Data.Id },
-				new GetRecipeResponse(success.Data)),
+				new GetPublicRecipeResponse(success.Data)),
 			ValidationResponse validationResponse => BadRequest(
 				validationResponse
 					.Result
@@ -133,7 +146,7 @@ public class RecipeController(
 
 		return response switch
 		{
-			SuccessResponse<Recipe> success => Ok(new GetRecipeResponse(success.Data)),
+			SuccessResponse<Recipe> success => Ok(new GetPublicRecipeResponse(success.Data)),
 			ValidationResponse validationResponse => BadRequest(
 				validationResponse
 					.Result

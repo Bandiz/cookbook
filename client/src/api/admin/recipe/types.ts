@@ -1,4 +1,33 @@
-import { CategoryRecipes, Recipe } from '../../types';
+import { CategoryRecipes, Recipe } from '../../../types';
+
+interface InstructionResponse {
+    description: string;
+}
+
+interface IngredientResponse {
+    amount: number;
+    measurementType: string;
+    name: string;
+}
+
+export interface GetRecipeResponse {
+    id: number;
+    title: string;
+    description: string;
+    prepTimeMinutes: number;
+    cookTimeMinutes: number;
+    totalTimeMinutes: number;
+    mainImage: string;
+    categories: Array<string>;
+    instructions: Array<InstructionResponse>;
+    ingredients: Array<IngredientResponse>;
+    isPublished: boolean;
+    isFeatured: boolean;
+    createdBy: string;
+    createdAt: string;
+    updatedBy?: string;
+    updatedAt?: string;
+}
 
 export interface RemoveFromCategoryVariables {
     recipeId: string;
@@ -26,7 +55,7 @@ interface RecipeListContext {
 }
 
 export interface DeleteRecipeVariables {
-    recipe: string;
+    recipe: number;
 }
 
 export interface DeleteRecipeContext extends RecipeListContext {

@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { CategoryKey, CategoryListKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { CategoryKey, CategoryListKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import {
     CategoryListResponse,
     CategoryRecipesResponse,
@@ -10,7 +10,7 @@ import {
     DeleteCategoryVariables,
 } from './types';
 
-export default function useDeleteCategoryMutation() {
+export default function useDeleteCategory() {
     const queryClient = useQueryClient();
 
     return useMutation<void, AxiosError, DeleteCategoryVariables, DeleteCategoryContext>(

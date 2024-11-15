@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RecipeEntity = Cookbook.API.Entities.Recipe;
 
 namespace Cookbook.API.Models.Recipe;
 
-public record GetRecipeResponse(
+public record GetPublicRecipeResponse(
 	int Id,
 	string Title,
 	string Description,
@@ -16,14 +15,9 @@ public record GetRecipeResponse(
 	IEnumerable<string> Categories,
 	IEnumerable<InstructionResponse> Instructions,
 	IEnumerable<IngredientResponse> Ingredients,
-	bool IsPublished,
-	bool IsFeatured,
-	string CreatedBy,
-	DateTime CreatedAt,
-	string UpdatedBy,
-	DateTime? UpdatedAt)
+	bool IsFeatured)
 {
-	public GetRecipeResponse(RecipeEntity recipe) : this(
+	public GetPublicRecipeResponse(RecipeEntity recipe) : this(
 		recipe.Id,
 		recipe.Title,
 		recipe.Description,
@@ -34,12 +28,7 @@ public record GetRecipeResponse(
 		recipe.Categories,
 		recipe.Instructions.Select(x => new InstructionResponse(x.Description)),
 		recipe.Ingredients.Select(x => new IngredientResponse(x)),
-		recipe.IsPublished,
-		recipe.IsFeatured,
-		recipe.CreatedBy,
-		recipe.CreatedAt,
-		recipe.UpdatedBy,
-		recipe.UpdatedAt)
+		recipe.IsFeatured)
 	{
 	}
 }

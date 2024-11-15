@@ -1,6 +1,6 @@
-import { Button, Popconfirm } from 'antd';
-import { useRemoveFromCategoryMutation } from '../../../api/recipe';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Popconfirm } from 'antd';
+import { useRemoveFromCategory } from '../../../api/admin/recipe/useRemoveFromCategory';
 
 interface RemoveRecipeActionProps {
     recipeId: string;
@@ -8,7 +8,7 @@ interface RemoveRecipeActionProps {
 }
 
 export function RemoveRecipeAction({ recipeId, categoryName }: RemoveRecipeActionProps) {
-    const { mutate } = useRemoveFromCategoryMutation();
+    const { mutate } = useRemoveFromCategory();
     return (
         <Popconfirm
             title=""

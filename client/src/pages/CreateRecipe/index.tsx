@@ -4,21 +4,21 @@ import {
     Card,
     Checkbox,
     Col,
+    FloatButton,
     Form,
+    Image,
     Input,
     Layout,
     Row,
     Select,
     Skeleton,
     message,
-    Image,
-    FloatButton,
 } from 'antd';
-import { useCategoryList } from '../../api/category';
-import useCreateRecipeMutation from '../../api/recipe/useCreateRecipeMutation';
-import { Recipe } from '../../types';
 import { useEffect, useState } from 'react';
+import useCategoryList from '../../api/admin/category/useCategoryList';
+import useCreateRecipeMutation from '../../api/admin/recipe/useCreateRecipe';
 import { ImageDrawer } from '../../components/Shared/imageDrawer';
+import { Recipe } from '../../types';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Ingredients } from './Ingredients';
 import { Instructions } from './Instructions';

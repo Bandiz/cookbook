@@ -2,7 +2,7 @@
 
 namespace Cookbook.API.Models.Recipe;
 
-public record GetRecipesResponse(
+public record GetPublicRecipesResponse(
 	int Id,
 	string Title,
 	int TotalTimeMinutes,

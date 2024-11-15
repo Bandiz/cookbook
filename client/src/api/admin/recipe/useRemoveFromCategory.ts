@@ -1,11 +1,11 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { CategoryRecipes } from '../../types';
-import { CategoryListKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { CategoryRecipes } from '../../../types';
+import { CategoryListKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import { RemoveFromCategoryContext, RemoveFromCategoryVariables } from './types';
 
-export function useRemoveFromCategoryMutation() {
+export function useRemoveFromCategory() {
     const queryClient = useQueryClient();
 
     return useMutation<void, AxiosError, RemoveFromCategoryVariables, RemoveFromCategoryContext>(

@@ -1,11 +1,10 @@
-import { MinusCircleOutlined, PictureOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import {
     Breadcrumb,
     Button,
     Card,
     Checkbox,
     Col,
-    FloatButton,
     Form,
     Image,
     Input,
@@ -17,21 +16,22 @@ import {
     Space,
     Spin,
 } from 'antd';
+import { SearchProps } from 'antd/es/input';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useCategoryList } from '../../api/category';
-import { useRecipe, useUpdateRecipeMutation } from '../../api/recipe';
+import useCategoryList from '../../api/admin/category/useCategoryList';
+import { useRecipe } from '../../api/admin/recipe/useRecipe';
+import { useUpdateRecipe } from '../../api/admin/recipe/useUpdateRecipe';
 import { ImageDrawer } from '../../components/Shared/imageDrawer';
 import { ADMIN } from '../../constants/routes';
 import { Recipe } from '../../types';
-import { SearchProps } from 'antd/es/input';
 
 export default function EditRecipe() {
     const { recipe } = useParams();
-    const { data: recipeData, isLoading: loading } = useRecipe(recipe ?? '');
+    const { data, isLoading: loading } = useRecipe(recipe ?? '');
     const { data: categories } = useCategoryList();
     const [form] = Form.useForm<Recipe>();
-    const { mutate: updateRecipe, isLoading, isError, isSuccess } = useUpdateRecipeMutation();
+    const { mutate: updateRecipe, isLoading, isError, isSuccess } = useUpdateRecipe();
     const [open, setOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
 
@@ -55,9 +55,10 @@ export default function EditRecipe() {
     if (!categories) {
         return null;
     }
-    if (!recipeData || loading) {
+    if (!data || loading) {
         return <Spin size="large" />;
     }
+    const recipeData = data.data;
 
     const onSubmit = (values: Recipe) => {
         values.id = recipeData.id;

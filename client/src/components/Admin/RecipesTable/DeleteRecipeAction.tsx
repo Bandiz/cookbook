@@ -1,13 +1,13 @@
-import { Button, Popconfirm } from 'antd';
-import useDeleteRecipeMutation from '../../../api/recipe/useDeleteRecipeMutation';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Popconfirm } from 'antd';
+import useDeleteRecipe from '../../../api/admin/recipe/useDeleteRecipe';
 
 interface DeleteRecipeActionProps {
     recipe: string;
 }
 
 export function DeleteRecipeAction({ recipe }: DeleteRecipeActionProps) {
-    const { mutate } = useDeleteRecipeMutation();
+    const { mutate } = useDeleteRecipe();
 
     return (
         <Popconfirm

@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { useAuth } from '../../contexts/AuthContext';
-import { CategoryListKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { useAuth } from '../../../contexts/AuthContext';
+import { CategoryListKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 import { CategoryListResponse } from './types';
 import { mapCategory } from './utils';
 
