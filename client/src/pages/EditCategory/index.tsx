@@ -1,16 +1,4 @@
-import {
-    Breadcrumb,
-    Card,
-    Checkbox,
-    Col,
-    Divider,
-    Empty,
-    Image,
-    Layout,
-    Row,
-    Spin,
-    Typography
-} from 'antd';
+import { Breadcrumb, Card, Checkbox, Col, Divider, Empty, Image, Layout, Row, Space, Spin, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import useCategory from '../../api/admin/category/useCategory';
 import useUpdateCategory from '../../api/admin/category/useUpdateCategory';
@@ -42,10 +30,7 @@ export default function EditCategory() {
                         },
                         {
                             title: (
-                                <Link
-                                    className="ant-typography"
-                                    to={ADMIN + '?activeTab=2'}
-                                >
+                                <Link className="ant-typography" to={ADMIN + '?activeTab=2'}>
                                     Categories
                                 </Link>
                             ),
@@ -61,15 +46,8 @@ export default function EditCategory() {
                             <Divider>
                                 <Typography.Title level={3}>Main image & visibility</Typography.Title>
                             </Divider>
-                            <Row gutter={[20, 20]}>
-                                <Col
-                                    md={12}
-                                    sm={24}
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'right',
-                                    }}
-                                >
+                            <Row>
+                                <Col xs={{ flex: '100%' }} md={{ flex: '50%' }}>
                                     {!category.mainImage && <Empty description="No main image" />}
                                     {category.mainImage && (
                                         <Image
@@ -82,31 +60,31 @@ export default function EditCategory() {
                                         />
                                     )}
                                 </Col>
-                                <Col md={12} sm={24}>
-                                    <Checkbox
-                                        checked={category.visible}
-                                        onChange={(event) => {
-                                            updateCategory({
-                                                categoryName: category.categoryName,
-                                                visible: event.target.checked,
-                                            });
-                                        }}
-                                    >
-                                        Is visible
-                                    </Checkbox>
-                                </Col>
-                                <Col md={12} sm={24}>
-                                    <Checkbox
-                                        checked={category.isFeatured}
-                                        onChange={(event) => {
-                                            updateCategory({
-                                                categoryName: category.categoryName,
-                                                isFeatured: event.target.checked,
-                                            });
-                                        }}
-                                    >
-                                        Is featured
-                                    </Checkbox>
+                                <Col xs={{ flex: '100%' }} md={{ flex: '40%' }}>
+                                    <Space direction="vertical" size={10}>
+                                        <Checkbox
+                                            checked={category.visible}
+                                            onChange={(event) => {
+                                                updateCategory({
+                                                    categoryName: category.categoryName,
+                                                    visible: event.target.checked,
+                                                });
+                                            }}
+                                        >
+                                            Is visible
+                                        </Checkbox>
+                                        <Checkbox
+                                            checked={category.isFeatured}
+                                            onChange={(event) => {
+                                                updateCategory({
+                                                    categoryName: category.categoryName,
+                                                    isFeatured: event.target.checked,
+                                                });
+                                            }}
+                                        >
+                                            Is featured
+                                        </Checkbox>
+                                    </Space>
                                 </Col>
                             </Row>
                         </Col>
