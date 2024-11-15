@@ -29,6 +29,7 @@ export interface UpdateCategoryVariables {
     categoryName: string;
     visible?: boolean;
     mainImage?: string;
+    isFeatured?: boolean;
 }
 
 export interface UpdateCategoryContext {

@@ -37,6 +37,7 @@ export type Category = {
     visible: boolean;
     images: string[];
     mainImage: string | null;
+    isFeatured: boolean;
 } & Auditable;
 
 export type CategoryRecipes = {

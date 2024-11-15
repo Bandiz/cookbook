@@ -94,6 +94,19 @@ export default function EditCategory() {
                                         Is visible
                                     </Checkbox>
                                 </Col>
+                                <Col md={12} sm={24}>
+                                    <Checkbox
+                                        checked={category.isFeatured}
+                                        onChange={(event) => {
+                                            updateCategory({
+                                                categoryName: category.categoryName,
+                                                isFeatured: event.target.checked,
+                                            });
+                                        }}
+                                    >
+                                        Is featured
+                                    </Checkbox>
+                                </Col>
                             </Row>
                         </Col>
                     </Row>

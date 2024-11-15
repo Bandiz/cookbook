@@ -9,13 +9,13 @@ export default function useUpdateCategoryMutation() {
     const queryClient = useQueryClient();
 
     return useMutation<Category, AxiosError, UpdateCategoryVariables, UpdateCategoryContext>(
-        async ({ categoryName, visible, mainImage }) => {
-            const response = await httpClient.put<CategoryResponse>(`category/${categoryName}`, { visible, mainImage });
+        async ({ categoryName, visible, mainImage, isFeatured }) => {
+            const response = await httpClient.put<CategoryResponse>(`category/${categoryName}`, { visible, mainImage, isFeatured });
             return response.data;
         },
         {
             // TODO: Redo this
-            onMutate: ({ categoryName, visible, mainImage }) => {
+            onMutate: ({ categoryName, visible, mainImage, isFeatured }) => {
                 const previousCategory = queryClient.getQueryData<CategoryResponse>([CategoryKey, categoryName]);
 
                 if (!previousCategory) {
@@ -29,6 +29,9 @@ export default function useUpdateCategoryMutation() {
                 }
                 if (typeof mainImage !== 'undefined') {
                     categoryCopy.mainImage = mainImage;
+                }
+                if (typeof isFeatured !== 'undefined') {
+                    categoryCopy.isFeatured = isFeatured;
                 }
 
                 queryClient.setQueryData<CategoryResponse>([CategoryKey, categoryName], categoryCopy);

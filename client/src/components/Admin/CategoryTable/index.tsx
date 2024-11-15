@@ -19,6 +19,13 @@ const columns: TableColumnsType<Category> = [
         },
     },
     {
+        title: 'Is featured',
+        dataIndex: 'isFeatured',
+        render: (value: boolean) => {
+            return <Checkbox checked={value} disabled />;
+        },
+    },
+    {
         title: 'Images',
         dataIndex: 'images',
         render: (value: string[]) => value?.length ?? '-',
