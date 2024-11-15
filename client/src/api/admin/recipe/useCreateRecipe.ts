@@ -26,7 +26,7 @@ export default function useCreateCategory() {
                 if (previousRecipes) {
                     const newRecipe = {
                         ...recipe,
-                        id: Math.round(Math.random() * 1000000).toString(),
+                        id: Math.round(Math.random() * 1000000),
                         createdAt: dayjs(),
                         createdBy: user?.email ?? '',
                     } as Recipe;

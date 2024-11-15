@@ -1,16 +1,17 @@
+import { Breadcrumb, Card, Col, Image, Layout, Row, Space, Tag, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { useRecipe } from '../../api/admin/recipe';
+import { useRecipe } from '../../api/public/recipe/useRecipe';
 import { RECIPES } from '../../constants/routes';
-import { Breadcrumb, Card, Layout, Image, Row, Col, Typography, Space, Tag } from 'antd';
 
 const RecipePage = () => {
     const { id } = useParams();
 
-    const { data: recipe } = useRecipe(id!);
+    const { data } = useRecipe(id!);
 
-    if (!recipe) {
+    if (!data) {
         return null;
     }
+
     const {
         mainImage,
         title,
@@ -21,7 +22,7 @@ const RecipePage = () => {
         totalTimeMinutes,
         ingredients,
         instructions,
-    } = recipe;
+    } = data.data;
 
     return (
         <Layout>
@@ -43,15 +44,17 @@ const RecipePage = () => {
                 />
                 <Card>
                     <Space direction="vertical" size="middle">
-                        <Row justify="space-between" gutter={[24,24]}>
-                            <Col xs={{ flex: '100%', order: 2 }} md={{flex: '50%', order: 1}}>
-                                <Image
-                                    preview={false}
-                                    src={`/api/image/${mainImage}/preview`}
-                                />
+                        <Row justify="space-between" gutter={[24, 24]}>
+                            <Col xs={{ flex: '100%', order: 2 }} md={{ flex: '50%', order: 1 }}>
+                                <Image preview={false} src={`/api/image/${mainImage}/preview`} />
                             </Col>
-                            <Col xs={{ flex: '100%', order: 1 }} md={{flex: '40%', order: 2}} lg={{flex: '40%'}} xl={{flex: '40%'}}>
-                                <Row justify='start'>
+                            <Col
+                                xs={{ flex: '100%', order: 1 }}
+                                md={{ flex: '40%', order: 2 }}
+                                lg={{ flex: '40%' }}
+                                xl={{ flex: '40%' }}
+                            >
+                                <Row justify="start">
                                     <Typography.Title>{title}</Typography.Title>
                                 </Row>
                                 <Space direction="vertical" size="middle">
@@ -94,7 +97,7 @@ const RecipePage = () => {
                         </Row>
 
                         <Row justify="space-around" gutter={[24, 24]}>
-                            <Col xs={{flex: '100%'}}  lg={{flex: '40%'}}>
+                            <Col xs={{ flex: '100%' }} lg={{ flex: '40%' }}>
                                 <Row>
                                     <Typography.Title level={5}>Ingredients</Typography.Title>
                                 </Row>
@@ -112,7 +115,7 @@ const RecipePage = () => {
                                 })}
                             </Col>
 
-                            <Col xs={{flex: '100%'}}  lg={{flex: '60%'}}>
+                            <Col xs={{ flex: '100%' }} lg={{ flex: '60%' }}>
                                 <Row>
                                     <Typography.Title level={5}>Instructions</Typography.Title>
                                 </Row>

@@ -3,7 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import useDeleteRecipe from '../../../api/admin/recipe/useDeleteRecipe';
 
 interface DeleteRecipeActionProps {
-    recipe: string;
+    recipe: number;
 }
 
 export function DeleteRecipeAction({ recipe }: DeleteRecipeActionProps) {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { EDIT_RECIPE, replaceRouteParams } from '../../../constants/routes';
 
 interface EditRecipeActionProps {
-    recipe: string;
+    recipe: number;
 }
 
 export function EditRecipeAction({ recipe }: EditRecipeActionProps) {
