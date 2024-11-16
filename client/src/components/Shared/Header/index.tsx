@@ -1,7 +1,7 @@
 import { Avatar, Button, Layout, Menu, MenuProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { LoginOutlined, UserOutlined } from '@ant-design/icons';
-import { useLogoutSessionMutation } from '../../../api/session';
+import { useLogoutSessionMutation } from '../../../api/public/session';
 import { ABOUT, ADMIN, HOME, LOGIN, RECIPES } from '../../../constants/routes';
 import { useAuth } from '../../../contexts/AuthContext';
 import Logo from './Logo';

@@ -2,8 +2,8 @@ import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from '@react-oau
 import { Button, Card, Col, Divider, Form, FormProps, Input, Row, Space } from 'antd';
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router-dom';
-import { useGoogleSessionMutation, useLoginSessionMutation } from '../../api/session';
-import { LoginRequest } from '../../api/session/types';
+import { useGoogleSessionMutation, useLoginSessionMutation } from '../../api/public/session';
+import { LoginRequest } from '../../api/public/session/types';
 
 export default function Login() {
     const googleSessionMutation = useGoogleSessionMutation();

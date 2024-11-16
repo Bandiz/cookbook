@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react';
-import { useSession } from '../api/session';
-import { User } from '../api/session/types';
+import { useSession } from '../api/public/session';
+import { User } from '../api/public/session/types';
 
 interface AuthObject {
     isAuthenticated: boolean;

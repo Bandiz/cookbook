@@ -1,6 +1,6 @@
 import { Breadcrumb, Card, Col, Divider, Layout, Row, Spin, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { UserResponse } from '../../api/user/types';
+import { UserResponse } from '../../api/admin/user/types';
 import { ADMIN, replaceRouteParams } from '../../constants/routes';
 
 export default function EditUser() {

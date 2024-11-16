@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { useAuth } from '../../contexts/AuthContext';
-import httpClient from '../httpClient';
-import { ByCategoryKey } from '../apiQueryKeys';
+import { useAuth } from '../../../contexts/AuthContext';
+import httpClient from '../../httpClient';
+import { ByCategoryKey } from '../../apiQueryKeys';
 import { ImagesByCategoryResponse } from './types';
 
 export function useImagesByCategory() {

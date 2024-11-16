@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { SessionKey } from '../apiQueryKeys';
-import httpClient from '../httpClient';
+import { SessionKey } from '../../apiQueryKeys';
+import httpClient from '../../httpClient';
 
 export default function useLogoutSessionMutation() {
     const queryClient = useQueryClient();

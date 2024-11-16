@@ -1,6 +1,6 @@
+import { Button, Drawer, FormInstance, Image, message, Space, Typography } from 'antd';
 import React from 'react';
-import { Button, Drawer, Space, Typography, Image, message, FormInstance } from 'antd';
-import { useImagesByCategory } from '../../../api/image/useImagesByCategory';
+import { useImagesByCategory } from '../../../api/admin/image/useImagesByCategory';
 
 interface ImageDrawerProps {
     form: FormInstance;

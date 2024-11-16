@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import useUpdateCategory from '../../api/admin/category/useUpdateCategory';
 import { CategoryKey } from '../../api/apiQueryKeys';
-import { UploadImageResponse } from '../../api/image/types';
+import { UploadImageResponse } from '../../api/admin/image/types';
 import { Category } from '../../types';
 
 interface UploadImagesProps {

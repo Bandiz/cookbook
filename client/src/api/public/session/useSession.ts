@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { SessionKey } from '../apiQueryKeys';
-import { dataGet } from '../httpClient';
+import { SessionKey } from '../../apiQueryKeys';
+import { dataGet } from '../../httpClient';
 import { LoginResponse } from './types';
 
 export default function useSession() {
