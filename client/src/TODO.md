@@ -5,8 +5,8 @@
 - [x] google login
 
 # home page
-- [ ] carousel (featured recipes only)
-- [ ] list of categories and recipes, ie featured categories listed, each category (clickable) row with 3-5 recipes (clickable) listed
+- [x] carousel (featured recipes only)
+- [x] list of categories and recipes, ie featured categories listed, each category (clickable) row with 3-5 recipes (clickable) listed
 
 # categories page (public)
 - [ ] overview of all categories (main image + name tiles)
@@ -17,10 +17,10 @@
   - [ ] onClick navigate to recipe page
 
 # recipes page (public)
-- [ ] group recipes by category 
-  - [ ] side panel: All -> rest categories listed vertically. 
-  - [ ] On all 'category', main layout: display featured categories with n recipies
-  - [ ] On specific categories list all recipes as a tiled list
+- [x] group recipes by category 
+  - [x] side panel: All -> rest categories listed vertically. 
+  - [x] On all 'category', main layout: display featured categories with n recipies
+  - [x] On specific categories list all recipes as a tiled list
 
 # admin page 
 ## categories tab
