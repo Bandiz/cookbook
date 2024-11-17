@@ -17,9 +17,9 @@ export interface DeleteCategoryContext extends CategoryListContext {
 
 export interface UpdateCategoryVariables {
     categoryName: string;
-    visible?: boolean;
-    mainImage?: string;
-    isFeatured?: boolean;
+    visible?: boolean | null;
+    mainImage: string | null;
+    isFeatured?: boolean | null;
 }
 
 export interface UpdateCategoryContext {

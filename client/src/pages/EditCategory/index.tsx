@@ -68,6 +68,7 @@ export default function EditCategory() {
                                                 updateCategory({
                                                     categoryName: category.categoryName,
                                                     visible: event.target.checked,
+                                                    mainImage: category.mainImage,
                                                 });
                                             }}
                                         >
@@ -79,6 +80,7 @@ export default function EditCategory() {
                                                 updateCategory({
                                                     categoryName: category.categoryName,
                                                     isFeatured: event.target.checked,
+                                                    mainImage: category.mainImage,
                                                 });
                                             }}
                                         >

@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 import { Recipe } from '../../../types';
-import { RecipeKey } from '../../apiQueryKeys';
+import { RecipeKey, RecipeListKey } from '../../apiQueryKeys';
 import httpClient from '../../httpClient';
 import { UpdateRecipeVariables, UpdateRecipeContext } from './types';
 import { mapRecipe } from './utils';
@@ -38,6 +38,7 @@ export function useUpdateRecipe() {
             },
             onSettled: () => {
                 queryClient.invalidateQueries(RecipeKey);
+                queryClient.invalidateQueries(RecipeListKey);
             },
         }
     );
