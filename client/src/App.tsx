@@ -23,7 +23,7 @@ function App() {
         <Router>
             <Layout>
                 <Header />
-                <Layout style={{ height: 'calc(100vh - 64px)' }}>
+                <Layout.Content style={{ height: 'calc(100vh - 64px)' }}>
                     <Suspense fallback={<Loading />}>
                         <Routes>
                             <Route path={ROUTES.HOME} element={<Home />} />
@@ -53,7 +53,7 @@ function App() {
                             <Route path="*" element={<NotFound />} />
                         </Routes>
                     </Suspense>
-                </Layout>
+                </Layout.Content>
             </Layout>
         </Router>
     );

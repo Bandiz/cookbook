@@ -46,7 +46,7 @@ export default function Recipes() {
     }
 
     return (
-        <Layout hasSider>
+        <Layout hasSider style={{ minHeight: '100vh' }}>
             <SiderMenu onClick={onClick} />
             <Layout.Content style={{ padding: '0 40px' }}>
                 {category !== 'All' ? (
