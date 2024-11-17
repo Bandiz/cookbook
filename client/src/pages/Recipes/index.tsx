@@ -92,7 +92,7 @@ export default function Recipes() {
                         })}
                     </Row>
                 ) : (
-                    <FeaturedCategoriesWithRecipes recipes={recipes} />
+                    <FeaturedCategoriesWithRecipes />
                 )}
             </Layout.Content>
         </Layout>

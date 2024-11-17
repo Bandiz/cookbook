@@ -1,4 +1,4 @@
-import { Card, Col, Row, Skeleton, Space, Tag, Typography } from 'antd';
+import { Card, Col, Row, Skeleton, Space, Spin, Tag, Typography } from 'antd';
 import { Recipe } from '../../../types';
 import Meta from 'antd/es/card/Meta';
 import { RECIPE, replaceRouteParams } from '../../../constants/routes';
@@ -6,12 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { NoRecipesAlert } from '..';
 import { getFilteredRecipes } from '../../../common/helpers';
 import useCategoryNameList from '../../../api/public/category/useCategoryNameList';
+import { useRecipes } from '../../../api/public/recipe/useRecipes';
 
-export default function FeaturedCategoriesWithRecipes({ recipes }: { recipes: Recipe[] }) {
+export default function FeaturedCategoriesWithRecipes() {
+    const { data: recipes, isLoading, isError } = useRecipes();
     const navigate = useNavigate();
     const { data } = useCategoryNameList();
 
-    if (!recipes || !data) {
+    if (isLoading) {
+        return <Spin spinning size="large" />;
+    }
+
+    if (isError || !recipes || !data) {
         return <NoRecipesAlert />;
     }
 
