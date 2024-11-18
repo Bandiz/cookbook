@@ -13,12 +13,12 @@ export default function useCreateCategory() {
     const { user } = useAuth();
 
     return useMutation<Category, AxiosError, CreateCategoryVariables, CreateCategoryContext>(
-        async ({ categoryName, visible }) => {
-            const { data } = await httpClient.post('category', { categoryName, visible });
+        async ({ categoryName, visible, isFeatured }) => {
+            const { data } = await httpClient.post('category', { categoryName, visible, isFeatured });
             return mapCategory(data);
         },
         {
-            onMutate: ({ categoryName, visible }) => {
+            onMutate: ({ categoryName, visible, isFeatured }) => {
                 queryClient.cancelQueries(CategoryListKey);
 
                 const previousCategories = queryClient.getQueryData<CategoryListResponse>(CategoryListKey);
@@ -31,7 +31,7 @@ export default function useCreateCategory() {
                         images: [],
                         createdAt: dayjs(),
                         createdBy: user?.email ?? '',
-                        isFeatured: false,
+                        isFeatured,
                     };
                     previousCategories.push(newCategory);
                     queryClient.setQueryData<CategoryListResponse>(CategoryListKey, previousCategories);

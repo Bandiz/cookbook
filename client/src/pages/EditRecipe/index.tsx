@@ -117,7 +117,7 @@ export default function EditRecipe() {
                                     <Input placeholder="Pancakes" />
                                 </Form.Item>
                                 <Row>
-                                    <Col xs={{ flex: '50%' }}>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '50%' }}>
                                         <Form.Item>
                                             <Form.Item
                                                 noStyle
@@ -130,7 +130,7 @@ export default function EditRecipe() {
                                             Is published
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={{ flex: '50%' }}>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '50%' }}>
                                         <Form.Item>
                                             <Form.Item
                                                 noStyle
@@ -145,32 +145,32 @@ export default function EditRecipe() {
                                     </Col>
                                 </Row>
 
-                                <Row>
-                                    <Col xs={{ flex: '30%' }}>
+                                <Row align="bottom" justify="space-between">
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '30%' }}>
                                         <Form.Item
                                             label="Prep Time (min)"
                                             name="prepTimeMinutes"
                                             initialValue={recipeData.prepTimeMinutes}
                                         >
-                                            <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
+                                            <Input placeholder="10" type="number" min={0} />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={{ flex: '30%' }}>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '30%' }}>
                                         <Form.Item
                                             label="Cook Time (min)"
                                             name="cookTimeMinutes"
                                             initialValue={recipeData.cookTimeMinutes}
                                         >
-                                            <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
+                                            <Input placeholder="10" type="number" min={0} />
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={{ flex: '30%' }}>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '30%' }}>
                                         <Form.Item
                                             label="Total Time (min)"
                                             name="totalTimeMinutes"
                                             initialValue={recipeData.totalTimeMinutes}
                                         >
-                                            <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
+                                            <Input placeholder="10" type="number" min={0} />
                                         </Form.Item>
                                     </Col>
                                 </Row>
@@ -200,41 +200,60 @@ export default function EditRecipe() {
                                         {(fields, { add, remove }) => (
                                             <>
                                                 {fields.map(({ key, name, ...restField }) => (
-                                                    <Space
-                                                        key={key}
-                                                        style={{ display: 'flex', marginBottom: 2 }}
-                                                        align="baseline"
-                                                    >
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'amount']}
-                                                            label="Amount"
-                                                            rules={[{ required: true, message: 'Missing amount' }]}
-                                                        >
-                                                            <Input placeholder="1" style={{ width: '100px' }} />
-                                                        </Form.Item>
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'measurementType']}
-                                                            label="Measurement type"
-                                                            rules={[
-                                                                { required: true, message: 'Missing measurement type' },
-                                                            ]}
-                                                        >
-                                                            <Input placeholder="liter" type="text" />
-                                                        </Form.Item>
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'name']}
-                                                            label="Name"
-                                                            rules={[
-                                                                { required: true, message: 'Missing ingredient name' },
-                                                            ]}
-                                                        >
-                                                            <Input placeholder="milk" type="text" />
-                                                        </Form.Item>
-                                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                                    </Space>
+                                                    <Row>
+                                                        <Col xs={{ flex: '95%' }}>
+                                                            <Row key={key} justify="space-between" align="bottom">
+                                                                <Col xs={{ flex: '100%' }} lg={{ flex: '15%' }}>
+                                                                    <Form.Item
+                                                                        {...restField}
+                                                                        name={[name, 'amount']}
+                                                                        label="Amount"
+                                                                        rules={[
+                                                                            {
+                                                                                required: true,
+                                                                                message: 'Missing amount',
+                                                                            },
+                                                                        ]}
+                                                                    >
+                                                                        <Input placeholder="1" />
+                                                                    </Form.Item>
+                                                                </Col>
+                                                                <Col xs={{ flex: '100%' }} lg={{ flex: '30%' }}>
+                                                                    <Form.Item
+                                                                        {...restField}
+                                                                        name={[name, 'measurementType']}
+                                                                        label="Measurement type"
+                                                                        rules={[
+                                                                            {
+                                                                                required: true,
+                                                                                message: 'Missing measurement type',
+                                                                            },
+                                                                        ]}
+                                                                    >
+                                                                        <Input placeholder="liter" type="text" />
+                                                                    </Form.Item>
+                                                                </Col>
+                                                                <Col xs={{ flex: '100%' }} lg={{ flex: '35%' }}>
+                                                                    <Form.Item
+                                                                        {...restField}
+                                                                        name={[name, 'name']}
+                                                                        label="Name"
+                                                                        rules={[
+                                                                            {
+                                                                                required: true,
+                                                                                message: 'Missing ingredient name',
+                                                                            },
+                                                                        ]}
+                                                                    >
+                                                                        <Input placeholder="milk" type="text" />
+                                                                    </Form.Item>
+                                                                </Col>
+                                                            </Row>
+                                                        </Col>
+                                                        <Col xs={{ flex: '5%' }}>
+                                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                                        </Col>
+                                                    </Row>
                                                 ))}
                                                 <Form.Item>
                                                     <Button
@@ -256,21 +275,26 @@ export default function EditRecipe() {
                                         {(fields, { add, remove }) => (
                                             <>
                                                 {fields.map(({ key, name, ...restField }) => (
-                                                    <Space
-                                                        key={key}
-                                                        style={{ display: 'flex', marginBottom: 2 }}
-                                                        align="baseline"
-                                                    >
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'description']}
-                                                            label="Description"
-                                                            rules={[{ required: true, message: 'Missing description' }]}
-                                                        >
-                                                            <Input placeholder="Pour milk into a bowl" type="text" />
-                                                        </Form.Item>
-                                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                                    </Space>
+                                                    <Row key={key}>
+                                                        <Col xs={{ flex: '95%' }}>
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'description']}
+                                                                label="Description"
+                                                                rules={[
+                                                                    { required: true, message: 'Missing description' },
+                                                                ]}
+                                                            >
+                                                                <Input
+                                                                    placeholder="Pour milk into a bowl"
+                                                                    type="text"
+                                                                />
+                                                            </Form.Item>
+                                                        </Col>
+                                                        <Col xs={{ flex: '5%' }}>
+                                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                                        </Col>
+                                                    </Row>
                                                 ))}
                                                 <Form.Item>
                                                     <Button

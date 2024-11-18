@@ -26,14 +26,14 @@
 ## categories tab
 - [ ] add featured flag
   - [ ] quick action to toggle flag
-  - [ ] edit page: checkbox
-  - [ ] create page: checkbox
+  - [x] edit page: checkbox
+  - [x] create page: checkbox
 
 ## recipies tab
 - [ ] add featured flag
   - [ ] quick action to toggle flag
-  - [ ] edit page: checkbox
-  - [ ] create page: checkbox
+  - [x] edit page: checkbox
+  - [x] create page: checkbox
 - [ ] instructions could have 0 to many images (same endpoint as main image drawer)
 
 ## users tab

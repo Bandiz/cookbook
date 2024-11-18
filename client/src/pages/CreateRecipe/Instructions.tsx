@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Space } from 'antd';
 
 export function Instructions() {
     return (
@@ -8,17 +8,21 @@ export function Instructions() {
                 {(fields, { add, remove }) => (
                     <>
                         {fields.map(({ key, name, ...restField }) => (
-                            <Space key={key} style={{ display: 'flex', marginBottom: 2 }} align="baseline">
-                                <Form.Item
-                                    {...restField}
-                                    name={[name, 'description']}
-                                    label="Description"
-                                    rules={[{ required: true, message: 'Missing description' }]}
-                                >
-                                    <Input placeholder="Pour milk into a bowl" type="text" />
-                                </Form.Item>
-                                <MinusCircleOutlined onClick={() => remove(name)} />
-                            </Space>
+                            <Row key={key}>
+                                <Col xs={{ flex: '95%' }}>
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'description']}
+                                        label="Description"
+                                        rules={[{ required: true, message: 'Missing description' }]}
+                                    >
+                                        <Input placeholder="Pour milk into a bowl" type="text" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={{ flex: '5%' }}>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                </Col>
+                            </Row>
                         ))}
                         <Form.Item>
                             <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>

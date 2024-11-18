@@ -99,6 +99,12 @@ export default function CreateCategory() {
                                     </Form.Item>
                                     Is visible
                                 </Form.Item>
+                                <Form.Item>
+                                    <Form.Item noStyle name="isFeatured" valuePropName="checked">
+                                        <Checkbox style={{ marginRight: '10px' }} />
+                                    </Form.Item>
+                                    Is featured
+                                </Form.Item>
                             </Col>
                         </Row>
                         <Row>

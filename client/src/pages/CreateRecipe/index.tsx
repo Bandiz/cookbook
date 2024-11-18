@@ -77,27 +77,38 @@ export default function CreateRecipe() {
                                 >
                                     <Input placeholder="Pancakes" />
                                 </Form.Item>
-                                <Form.Item>
-                                    <Form.Item noStyle name="isPublished" valuePropName="checked">
-                                        <Checkbox style={{ marginRight: '10px' }} />
-                                    </Form.Item>
-                                    Is published
-                                </Form.Item>
-
-                                <Row gutter={[20, 20]} justify="space-evenly">
-                                    <Col span={8}>
+                                <Row>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '50%' }}>
+                                        <Form.Item>
+                                            <Form.Item noStyle name="isPublished" valuePropName="checked">
+                                                <Checkbox style={{ marginRight: '10px' }} />
+                                            </Form.Item>
+                                            Is published
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '50%' }}>
+                                        <Form.Item>
+                                            <Form.Item noStyle name="isFeatured" valuePropName="checked">
+                                                <Checkbox style={{ marginRight: '10px' }} />
+                                            </Form.Item>
+                                            Is featured
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row align="bottom" justify="space-between">
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '30%' }}>
                                         <Form.Item label="Prep Time (min)" name="prepTimeMinutes">
-                                            <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
+                                            <Input placeholder="10" type="number" min={0} />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '30%' }}>
                                         <Form.Item label="Cook Time (min)" name="cookTimeMinutes">
-                                            <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
+                                            <Input placeholder="10" type="number" min={0} />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={8}>
+                                    <Col xs={{ flex: '100%' }} md={{ flex: '30%' }}>
                                         <Form.Item label="Total Time (min)" name="totalTimeMinutes">
-                                            <Input placeholder="10" type="number" min={0} style={{ width: '100px' }} />
+                                            <Input placeholder="10" type="number" min={0} />
                                         </Form.Item>
                                     </Col>
                                 </Row>

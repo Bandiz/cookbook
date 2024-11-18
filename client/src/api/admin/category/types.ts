@@ -36,6 +36,7 @@ export type AddCategoryImagesContext = CategoryListContext;
 export interface CreateCategoryVariables {
     categoryName: string;
     visible: boolean;
+    isFeatured: boolean;
 }
 
 export type CreateCategoryContext = CategoryListContext;
