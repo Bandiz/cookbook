@@ -2,4 +2,4 @@
 
 namespace Cookbook.API.Models.User;
 
-public record GetUsersResponse(List<GetUserResponse> Users);
+public record GetUsersResponse(List<GetUserListResponse> Users);

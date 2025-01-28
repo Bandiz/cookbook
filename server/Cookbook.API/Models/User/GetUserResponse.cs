@@ -5,26 +5,30 @@ using Cookbook.API.Entities;
 namespace Cookbook.API.Models.User;
 
 public record GetUserResponse(
-	string id,
-	string Name,
-	string LastName,
-	List<string> Roles,
+	string Id,
 	string UserName,
-	string email,
-	DateTimeOffset? lockoutEnd,
-	bool lockoutEnabled,
-	int accessFailedCount)
+	string Email,
+	bool EmailConfirmed,
+	bool LockoutEnabled,
+	DateTimeOffset? LockoutEnd,
+	List<string> Roles,
+    string Name,
+	string LastName,
+	int AccessFailedCount,
+	string GoogleId)
 {
 	public GetUserResponse(CookbookUser user) : this(
 		user.Id.ToString(),
-		user.Name,
-		user.LastName,
-		user.Roles,
 		user.UserName,
 		user.Email,
-		user.LockoutEnd,
+		user.EmailConfirmed,
 		user.LockoutEnabled,
-		user.AccessFailedCount)
+		user.LockoutEnd,
+		user.Roles,
+        user.Name,
+		user.LastName,
+		user.AccessFailedCount,
+		user.GoogleId)
 	{
 	}
 }

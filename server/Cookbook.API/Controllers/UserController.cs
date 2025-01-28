@@ -42,15 +42,20 @@ public class UserController(IMediator mediator) : ControllerBase
 		[FromServices] UserManager<CookbookUser> userManager)
 	{
 		return Ok(new GetUsersResponse([.. userManager.Users.Select(x => 
-			new GetUserResponse(
-				x.Id.ToString(),
-				x.Name,
-				x.LastName,
-				x.Roles,
-				x.UserName,
-				x.Email,
-				x.LockoutEnd,
-				x.LockoutEnabled,
-				x.AccessFailedCount))]));
+			new GetUserListResponse(x))]));
+	}
+
+	[Authorize(Roles = "Admin")]
+	[HttpGet("{id}")]
+	public async Task<IActionResult> GetUser(
+		[FromRoute] string id,
+		[FromServices] UserManager<CookbookUser> userManager)
+	{
+		var user = await userManager.FindByIdAsync(id);
+		if (user == null)
+		{
+			return NotFound(id);
+		}
+		return Ok(new GetUserResponse(user));
 	}
 }
