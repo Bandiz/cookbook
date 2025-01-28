@@ -14,6 +14,7 @@ public static class ValidationExtensions
 		{
 			validationResults.Add(new ValidationResponse(error.PropertyName, error.ErrorMessage));
 		}
+
 		return validationResults;
 	}
 }

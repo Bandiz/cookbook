@@ -15,11 +15,11 @@ public class DeleteCategoryCommand : IRequest<CommandResponse>
 public class DeleteCategoryCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-	DeleteCategoryCommandValidator validator) : 
+	DeleteCategoryCommandValidator validator) :
 	IRequestHandler<DeleteCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
-		DeleteCategoryCommand request, 
+		DeleteCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
 		var result = await validator.ValidateAsync(request, cancellationToken);
@@ -56,7 +56,7 @@ public class DeleteCategoryCommandHandler(
 
 		await dataAccess.Categories.DeleteOneAsync(
 			x => x.CategoryName == categoryName,
-			cancellationToken: cancellationToken);
+			cancellationToken);
 
 		return CommandResponse.Ok();
 	}

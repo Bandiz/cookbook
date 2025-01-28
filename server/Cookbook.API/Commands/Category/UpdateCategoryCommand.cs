@@ -19,11 +19,11 @@ public class UpdateCategoryCommand : IRequest<CommandResponse>
 public class UpdateCategoryCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-    UpdateCategoryCommandValidator validator) : 
+	UpdateCategoryCommandValidator validator) :
 	IRequestHandler<UpdateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
-		UpdateCategoryCommand command, 
+		UpdateCategoryCommand command,
 		CancellationToken cancellationToken)
 	{
 		var result = await validator.ValidateAsync(command, cancellationToken);
@@ -32,7 +32,7 @@ public class UpdateCategoryCommandHandler(
 		{
 			return CommandResponse.Invalid(result);
 		}
-		
+
 		var categoryName = command.CategoryName;
 		var request = command.Request;
 		var category = await categoryQueries.GetCategory(categoryName);
@@ -40,6 +40,7 @@ public class UpdateCategoryCommandHandler(
 		{
 			return CommandResponse.NotFound(categoryName);
 		}
+
 		var updated = false;
 
 		if (request.Visible.HasValue && category.Visible != request.Visible)

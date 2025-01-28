@@ -1,6 +1,6 @@
 import { Breadcrumb, Card, Col, Divider, Layout, Row, Spin, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { UserResponse } from '../../api/admin/user/types';
+import { User } from '../../api/admin/user/types';
 import { ADMIN, replaceRouteParams } from '../../constants/routes';
 
 export default function EditUser() {
@@ -93,7 +93,7 @@ export default function EditUser() {
         </Layout>
     );
 }
-function useUser(arg0: string): { data: UserResponse; isLoading: boolean } {
+function useUser(arg0: string): { data: User; isLoading: boolean } {
     return {
         data: {
             id: arg0,

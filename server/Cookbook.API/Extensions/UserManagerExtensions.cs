@@ -12,16 +12,16 @@ public static class UserManagerExtensions
 		GoogleJsonWebSignature.Payload payload)
 	{
 		return CreateUserAsync(
-				manager,
-				payload.Email,
-				payload.Email,
-				null,
-				payload.GivenName,
-				payload.FamilyName,
-				payload.Name,
-				payload.EmailVerified,
-				payload.Subject
-			);
+			manager,
+			payload.Email,
+			payload.Email,
+			null,
+			payload.GivenName,
+			payload.FamilyName,
+			payload.Name,
+			payload.EmailVerified,
+			payload.Subject
+		);
 	}
 
 	public static async Task<CookbookUser> CreateUserAsync(
@@ -35,7 +35,7 @@ public static class UserManagerExtensions
 		bool? emailConfirmed,
 		string googleId)
 	{
-		var user = new CookbookUser()
+		var user = new CookbookUser
 		{
 			Email = email,
 			EmailConfirmed = emailConfirmed.HasValue && emailConfirmed.Value,
@@ -51,6 +51,7 @@ public static class UserManagerExtensions
 		{
 			user.PasswordHash = manager.PasswordHasher.HashPassword(user, password);
 		}
+
 		var result = await manager.CreateAsync(user);
 
 		if (!result.Succeeded)
@@ -60,5 +61,4 @@ public static class UserManagerExtensions
 
 		return user;
 	}
-
 }

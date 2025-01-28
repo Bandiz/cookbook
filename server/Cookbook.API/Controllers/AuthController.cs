@@ -34,14 +34,12 @@ public class AuthController(
 		{
 			return BadRequest("Google token is not provided");
 		}
+
 		GoogleJsonWebSignature.Payload googlePayload;
 		try
 		{
 			googlePayload = await GoogleJsonWebSignature.ValidateAsync(t,
-				new GoogleJsonWebSignature.ValidationSettings()
-				{
-					Audience = [authenticationSettings.Google.ClientId]
-				});
+				new() { Audience = [authenticationSettings.Google.ClientId] });
 		}
 		catch
 		{

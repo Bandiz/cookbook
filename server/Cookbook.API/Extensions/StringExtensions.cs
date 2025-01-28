@@ -1,6 +1,6 @@
-﻿using MongoDB.Bson;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
 
 namespace Cookbook.API.Extensions;
 
@@ -23,7 +23,7 @@ public static class StringExtensions
 		List<string> failedParsedIds = [];
 
 		var imagesIds = new List<string>(imagesToCheck)
-						.Where(x => !string.IsNullOrEmpty(x));
+			.Where(x => !string.IsNullOrEmpty(x));
 
 		foreach (var imageId in imagesIds)
 		{
@@ -32,6 +32,7 @@ public static class StringExtensions
 				failedParsedIds.Add(imageId);
 				continue;
 			}
+
 			parsedImageIds.Add(parsedId);
 		}
 

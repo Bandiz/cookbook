@@ -10,7 +10,7 @@ namespace Cookbook.API.Commands.User;
 public record AuthenticateUserCommand(LoginRequest Request) : IRequest<CommandResponse>;
 
 public class AuthenticateUserCommandHandler(
-	UserManager<CookbookUser> userManager) 
+	UserManager<CookbookUser> userManager)
 	: IRequestHandler<AuthenticateUserCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -25,6 +25,7 @@ public class AuthenticateUserCommandHandler(
 		{
 			return CommandResponse.BadRequest("Username or password wrong");
 		}
+
 		var isLockedOut = await userManager.IsLockedOutAsync(user);
 		var isCorrectPassword = await userManager.CheckPasswordAsync(user, request.Password);
 

@@ -1,8 +1,8 @@
-﻿using Cookbook.API.Services.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Cookbook.API.Services.Interfaces;
 using FluentValidation;
 using MongoDB.Bson;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Cookbook.API.Validators;
 

@@ -14,4 +14,4 @@ public record CreateRecipeRequest(
 	List<IngredientRequest> Ingredients,
 	bool IsPublished,
 	bool IsFeatured
-	);
+);

@@ -1,9 +1,9 @@
 import { Alert, Checkbox, Space, Spin, Table, TableColumnsType, Tag } from 'antd';
-import { UserResponse } from '../../../api/admin/user/types';
+import { User } from '../../../api/admin/user/types';
 import useUserList from '../../../api/admin/user/useUserList';
 import EditUserAction from './EditUserAction';
 
-const columns: TableColumnsType<UserResponse> = [
+const columns: TableColumnsType<User> = [
     { title: 'Name', dataIndex: 'name' },
     {
         title: 'Last name',

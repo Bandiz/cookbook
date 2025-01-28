@@ -13,7 +13,7 @@ public record DeleteImageCommand(string Id) : IRequest<CommandResponse>;
 
 public class DeleteImageCommandHandler(
 	IDataAccess dataAccess,
-	DeleteImageCommandValidator validator) : 
+	DeleteImageCommandValidator validator) :
 	IRequestHandler<DeleteImageCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -31,15 +31,16 @@ public class DeleteImageCommandHandler(
 		var _imageBucket = dataAccess.ImageBucket;
 		var filter = Builders<GridFSFileInfo>.Filter.Eq("metadata.parentImage", imageId);
 		var fileCursor = await _imageBucket.FindAsync(
-			filter, 
+			filter,
 			cancellationToken: cancellationToken
 		);
-		var fileInfo = fileCursor.FirstOrDefault(cancellationToken: cancellationToken);
+		var fileInfo = fileCursor.FirstOrDefault(cancellationToken);
 
 		if (fileInfo != null)
 		{
 			await _imageBucket.DeleteAsync(fileInfo.Id, cancellationToken);
 		}
+
 		await _imageBucket.DeleteAsync(imageId, cancellationToken);
 
 		return CommandResponse.Ok();

@@ -12,7 +12,7 @@ public record DeleteRecipeCommand(int Id) : IRequest<CommandResponse>;
 public class DeleteRecipeCommandHandler(
 	IRecipeQueries recipeQueries,
 	IDataAccess dataAccess,
-	DeleteRecipeCommandValidator validator) 
+	DeleteRecipeCommandValidator validator)
 	: IRequestHandler<DeleteRecipeCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ public class DeleteRecipeCommandHandler(
 		}
 
 		await dataAccess.Recipes.DeleteOneAsync(
-			x => x.Id == command.Id, 
+			x => x.Id == command.Id,
 			cancellationToken);
 
 		return CommandResponse.Ok();

@@ -18,7 +18,7 @@ public class CreateCategoryCommand : IRequest<CommandResponse>
 public class CreateCategoryCommandHandler(
 	IDataAccess dataAccess,
 	ICategoryQueries categoryQueries,
-	CreateCategoryCommandValidator validator) : 
+	CreateCategoryCommandValidator validator) :
 	IRequestHandler<CreateCategoryCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(
@@ -40,7 +40,7 @@ public class CreateCategoryCommandHandler(
 			return CommandResponse.BadRequest("Category already exists");
 		}
 
-		var category = new Entities.Category()
+		var category = new Entities.Category
 		{
 			CategoryName = request.CategoryName,
 			Visible = request.Visible,

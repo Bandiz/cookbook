@@ -14,18 +14,13 @@ public class Category
 	[BsonRepresentation(BsonType.String)]
 	public string CategoryName
 	{
-		get
-		{
-			return _categoryName;
-		}
+		get => _categoryName;
 
-		set
-		{
+		set =>
 			_categoryName = value
 				.ToLower()
 				.Trim()
 				.CapitalizeFirstLetter();
-		}
 	}
 
 	public bool Visible { get; set; }

@@ -6,7 +6,7 @@ namespace Cookbook.API.Validators.Category;
 public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>
 {
 	public CreateCategoryCommandValidator(
-		ImageValidator imageValidator, 
+		ImageValidator imageValidator,
 		ImagesValidator imagesValidator)
 	{
 		RuleFor(x => x.User).NotNull().NotEmpty();

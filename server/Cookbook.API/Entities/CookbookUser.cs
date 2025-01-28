@@ -1,4 +1,5 @@
-﻿using AspNetCore.Identity.Mongo.Model;
+﻿using System;
+using AspNetCore.Identity.Mongo.Model;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Cookbook.API.Entities;
@@ -13,6 +14,10 @@ public class CookbookUser : MongoUser
 	public string FullName { get; set; }
 
 	public string GoogleId { get; set; }
+
+	public string UpdatedBy { get; set; }
+
+	public DateTime? UpdatedAt { get; set; }
 
 	[BsonIgnore]
 	public bool IsAdmin

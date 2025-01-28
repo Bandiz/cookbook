@@ -1,9 +1,9 @@
-﻿using Cookbook.API.Services.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Cookbook.API.Services.Interfaces;
 using FluentValidation;
 using MongoDB.Bson;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Collections.Generic;
 
 namespace Cookbook.API.Validators;
 
@@ -30,11 +30,12 @@ public class ImagesValidator : AbstractValidator<List<string>>
 				return false;
 			}
 		}
+
 		return true;
 	}
 
 	private async Task<bool> ImagesExists(
-		List<string> imageIds, 
+		List<string> imageIds,
 		CancellationToken cancellationToken)
 	{
 		var objectIds = imageIds.ConvertAll(ObjectId.Parse);

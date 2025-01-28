@@ -13,7 +13,7 @@ public class CreateUserCommand : IRequest<CommandResponse>
 	public CreateUserRequest Request { get; set; }
 }
 
-public class CreateUserCommandHandler(UserManager<CookbookUser> userManager) : 
+public class CreateUserCommandHandler(UserManager<CookbookUser> userManager) :
 	IRequestHandler<CreateUserCommand, CommandResponse>
 {
 	public async Task<CommandResponse> Handle(

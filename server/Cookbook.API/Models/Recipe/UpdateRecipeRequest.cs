@@ -15,4 +15,4 @@ public record UpdateRecipeRequest(
 	List<InstructionRequest>? Instructions,
 	bool? IsPublished,
 	bool? IsFeatured
-	);
+);
